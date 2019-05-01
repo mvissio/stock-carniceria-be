@@ -1,4 +1,4 @@
-package com.aconcaguasf.deieapi.exceptions;
+package com.svcg.StockCustom.exceptions;
 
 public class RubroException extends Exception {
 
