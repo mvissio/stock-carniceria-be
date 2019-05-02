@@ -17,7 +17,7 @@ public interface UserRepository extends JpaRepository<User, Serializable> {
 
     User findByEmail(String email);
 
-    Optional<List<User>> findByRolIn(List<Rol> roles);
+    Optional<List<User>> findByRolIn(List<Rol> roles, Pageable pageable);
 
 
 }
