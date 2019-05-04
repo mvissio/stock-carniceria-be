@@ -2,6 +2,7 @@ package com.svcg.StockCustom.repository;
 
 import com.svcg.StockCustom.entity.Rol;
 import com.svcg.StockCustom.entity.User;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.io.Serializable;
