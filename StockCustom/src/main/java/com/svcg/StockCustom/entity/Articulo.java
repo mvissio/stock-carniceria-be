@@ -21,7 +21,7 @@ public class Articulo {
 	private Long articuloId;
 
 	@Column(name = "unidad_medida_id")
-	private Long idUnidadMedida;
+	private Long idCategory;
 
 	@NotEmpty
 	@Size(max = 100, message = "{validation.rol.username.size}")
@@ -54,12 +54,12 @@ public class Articulo {
 	public Articulo() {
 	}
 
-	public Articulo(Long articuloId, Long idUnidadMedida, String nombre,
+	public Articulo(Long articuloId, Long idCategory, String nombre,
 			String marca, String descripcion, Date fechaAlta, Date fechaBaja,
 			Date fechaVencimiento, int cantidadActual, boolean baja) {
 		super();
 		this.articuloId = articuloId;
-		this.idUnidadMedida = idUnidadMedida;
+		this.idCategory = idCategory;
 		this.nombre = nombre;
 		this.marca = marca;
 		this.descripcion = descripcion;
@@ -110,12 +110,12 @@ public class Articulo {
 		this.cantidadActual = cantidadActual;
 	}
 
-	public Long getIdUnidadMedida() {
-		return idUnidadMedida;
+	public Long getIdCategory() {
+		return idCategory;
 	}
 
-	public void setIdUnidadMedida(Long idUnidadMedida) {
-		this.idUnidadMedida = idUnidadMedida;
+	public void setIdCategory(Long idCategory) {
+		this.idCategory = idCategory;
 	}
 
 	public Date getFechaBaja() {
