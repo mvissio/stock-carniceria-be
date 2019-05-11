@@ -10,9 +10,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
+import com.svcg.StockCustom.entity.Article;
+import com.svcg.StockCustom.entity.Category;
 import com.svcg.StockCustom.repository.CategoryRepository;
 import com.svcg.StockCustom.service.CategoryService;
 
@@ -117,5 +121,16 @@ public class CategoryServiceImpl implements CategoryService {
 
         return category;
     }
+    
+    @Override
+	public com.svcg.StockCustom.entity.Category deleteCategory(Long id) {
+		Category category = categoryRepository.findByCategoryId(id);
+		category.setDisabled(true);
+		category.setDisabledDate(new Date());		
+		return categoryRepository.save(category);
+	}
+    
+    
+
 
 }

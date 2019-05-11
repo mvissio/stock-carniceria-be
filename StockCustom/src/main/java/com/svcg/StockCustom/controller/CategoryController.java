@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,4 +71,10 @@ public class CategoryController {
     public Category getCategoryById(@PathVariable("id")Long id) {
         return categoryService.getCategoryById(id);
     }
+    
+    @DeleteMapping("/{id}")
+    public com.svcg.StockCustom.entity.Category deleteCategory(@PathVariable("id")Long id){
+    	return categoryService.deleteCategory(id);
+    }
+    
 }

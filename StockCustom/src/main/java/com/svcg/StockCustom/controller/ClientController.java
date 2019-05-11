@@ -64,4 +64,9 @@ public class ClientController {
     public Client getClientById(@PathVariable("id")Long id) {
         return clientService.getClientById(id);
     }
+    
+    @DeleteMapping("/{id}")
+    public com.svcg.StockCustom.entity.Client deleteClient(@PathVariable("id")Long id){
+    	return clientService.deleteClient(id);
+    }
 }

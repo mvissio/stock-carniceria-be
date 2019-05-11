@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
+import com.svcg.StockCustom.entity.Article;
+import com.svcg.StockCustom.entity.Client;
 import com.svcg.StockCustom.repository.ClientRepository;
 import com.svcg.StockCustom.service.ClientService;
 
@@ -128,5 +130,13 @@ public class ClientServiceImpl implements ClientService {
 
         return client;
     }
+    
+    @Override
+	public com.svcg.StockCustom.entity.Client deleteClient(Long id) {
+		Client client = clientRepository.findByClientId(id);
+		client.setDisabled(true);
+		client.setDisabledDate(new Date());		
+		return clientRepository.save(client);
+	}
 
     }

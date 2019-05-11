@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
+import com.svcg.StockCustom.entity.Article;
 import com.svcg.StockCustom.entity.MeasurementUnit;
 import com.svcg.StockCustom.repository.MeasurementUnitRepository;
 import com.svcg.StockCustom.service.MeasurementUnitService;
@@ -124,6 +125,14 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 					this.messages.get("MESSAGE_CANT_CREATE_ARTICULO"), null);
 		}
 
+	}
+	
+	@Override
+	public MeasurementUnit deleteMeasurementUnit(Long id) {
+		MeasurementUnit measurementUnit = measurementUnitRepository.findByMeasurementUnitId(id);
+		measurementUnit.setDisabled(true);
+		measurementUnit.setDisabledDate(new Date());		
+		return measurementUnitRepository.save(measurementUnit);
 	}
 
 }

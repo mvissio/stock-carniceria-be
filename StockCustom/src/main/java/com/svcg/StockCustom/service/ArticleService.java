@@ -16,6 +16,8 @@ public interface ArticleService {
     Article getArticleById(Long id);
 
     Article updateArticle(Article article);
+    
+    Article deleteArticle(Long id);
 
 	
 }

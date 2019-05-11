@@ -126,11 +126,20 @@ public class ArticleServiceImpl implements ArticleService {
 		}
 
 	}
+		
 
 	private boolean articleNameExist(String name) {
 		com.svcg.StockCustom.entity.Article article = articleRepository
 				.findByName(name);
 		return article != null;
+	}
+
+	@Override
+	public Article deleteArticle(Long id) {
+		Article article = articleRepository.findByArticleId(id);
+		article.setDisabled(true);
+		article.setDisabledDate(new Date());		
+		return articleRepository.save(article);
 	}
 
 }
