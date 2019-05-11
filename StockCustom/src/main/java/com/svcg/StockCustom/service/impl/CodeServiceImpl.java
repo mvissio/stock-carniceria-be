@@ -11,8 +11,8 @@ public class CodeServiceImpl implements CodeService {
 	@Override
 	public Code createCode(Code codeData) {
 		Code code = new Code();
-		code.setArticleId(7654389L);
-		code.setNameArticle("Tartas");
+		code.setMeasurementUnitId(7654389L);
+		code.setNameMeasurementUnit("Tartas");
 		code.setPrice(250.75);
 		code.setWeight(500);		
 		return code;

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,13 +61,13 @@ public class ProviderController {
     }
 
     
-    @GetMapping("/name")
-    public Provider getProviderByName(String name) {
+    @GetMapping("/name/{name}")
+    public Provider getProviderByName(@PathVariable("name")String name) {
         return providerService.getProviderByName(name);
     }
 
-    @GetMapping("id")
-    public Provider getProviderById(Long id) {
+    @GetMapping("id/{id}")
+    public Provider getProviderById(@PathVariable("id")Long id) {
         return providerService.getProviderById(id);
     }
 }

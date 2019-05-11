@@ -1,5 +1,7 @@
 package com.svcg.StockCustom.entity;
 
+import java.util.Date;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -30,9 +32,17 @@ public class Provider {
 	@Column(name = "telephone", nullable = false)
 	private String telephone;
 
-	@Column(name = "enabled", nullable = false)
-	private boolean enabled;
+	
+	@Column(name = "create_date", nullable = false)
+	private Date createDate;
 
+	@Column(name = "disabled_date")
+	private Date disabledDate;
+
+	@Column(name = "disabled")
+	private boolean disabled;
+
+	
 	public Provider() {
 	}
 
@@ -76,13 +86,30 @@ public class Provider {
 		this.telephone = telephone;
 	}
 
-	public boolean isEnabled() {
-		return enabled;
+	public Date getCreateDate() {
+		return createDate;
 	}
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
 	}
 
+	public Date getDisabledDate() {
+		return disabledDate;
+	}
+
+	public void setDisabledDate(Date disabledDate) {
+		this.disabledDate = disabledDate;
+	}
+
+	public boolean isDisabled() {
+		return disabled;
+	}
+
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
+
+	
 	
 }

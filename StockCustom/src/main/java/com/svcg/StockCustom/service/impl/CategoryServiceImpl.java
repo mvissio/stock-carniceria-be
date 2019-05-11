@@ -1,5 +1,7 @@
 package com.svcg.StockCustom.service.impl;
 
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +11,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
 import com.svcg.StockCustom.component.Messages;
 import com.svcg.StockCustom.repository.CategoryRepository;
-import com.svcg.StockCustom.repository.MeasurementUnitRepository;
 import com.svcg.StockCustom.service.CategoryService;
-import com.svcg.StockCustom.service.MeasurementUnitService;
 
 @Service("categoryServiceImpl")
 public class CategoryServiceImpl implements CategoryService {
@@ -38,9 +39,13 @@ public class CategoryServiceImpl implements CategoryService {
         }        
 
         /**
-         * Guardo el usuario con sus roles
+         * Guardo la categoria
          */
+        
+        category.setCreateDate(new Date());
+        category.setDisabled(false);
         category = saveObjectCategory(category);
+		logger.info("category was saved successfully " + category );        
 
         return category;
     }

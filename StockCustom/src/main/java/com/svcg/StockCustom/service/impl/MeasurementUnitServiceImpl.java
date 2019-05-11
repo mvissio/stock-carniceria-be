@@ -13,13 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
-import com.svcg.StockCustom.entity.Article;
 import com.svcg.StockCustom.entity.MeasurementUnit;
 import com.svcg.StockCustom.repository.MeasurementUnitRepository;
 import com.svcg.StockCustom.service.MeasurementUnitService;
 
-@Service("unidadMedidaServiceImpl")
-public class UnidadMedidaServiceImpl implements MeasurementUnitService {
+@Service("measurementUnitServiceImpl")
+public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 
 	@Autowired
 	Messages messages;
@@ -34,7 +33,7 @@ public class UnidadMedidaServiceImpl implements MeasurementUnitService {
 	@Override
 	public MeasurementUnit saveMeasurementUnit(MeasurementUnit measurementUnit) {
 		/**
-		 * Save the article
+		 * Save the measurementUnit
 		 */
 
 		if (measurementUnit == null) {
@@ -48,7 +47,7 @@ public class UnidadMedidaServiceImpl implements MeasurementUnitService {
 		}
 		measurementUnit.setCreateDate(new Date());
 		measurementUnit.setDisabled(false);
-		measurementUnit = saveMeasurementUnit(measurementUnit);
+		measurementUnit = saveMeasurementUnitObjet(measurementUnit);
 		logger.info("measurementUnit was saved successfully " + measurementUnit );
 		return measurementUnit;
 

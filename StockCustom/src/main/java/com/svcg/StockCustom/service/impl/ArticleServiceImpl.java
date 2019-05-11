@@ -48,7 +48,7 @@ public class ArticleServiceImpl implements ArticleService {
 		}
 		article.setCreateDate(new Date());
 		article.setDisabled(false);
-		article = saveObjetoArticle(article);
+		article = saveArticleObjet(article);
 		logger.info("article was saved successfully " + article );
 		return article;
 
@@ -107,12 +107,12 @@ public class ArticleServiceImpl implements ArticleService {
 					this.messages.get("MESSAGE_NOT_FOUND_ARTICULO"), null);
 		}
 
-		article = saveObjetoArticle(article);
+		article = saveArticleObjet(article);
 		return article;
 
 	}
 
-	private com.svcg.StockCustom.entity.Article saveObjetoArticle(
+	private com.svcg.StockCustom.entity.Article saveArticleObjet(
 			com.svcg.StockCustom.entity.Article article) {
 		try {
 

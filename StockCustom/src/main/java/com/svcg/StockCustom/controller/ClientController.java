@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 
 
@@ -54,13 +55,13 @@ public class ClientController {
     }
 
     
-    @GetMapping("/name")
-    public Client getClientByName(String name) {
+    @GetMapping("/name/{name}")
+    public Client getClientByName(@PathVariable("name")String name) {
         return clientService.getClientByName(name);
     }
 
-    @GetMapping("id")
-    public Client getClientById(Long id) {
+    @GetMapping("id/{id}")
+    public Client getClientById(@PathVariable("id")Long id) {
         return clientService.getClientById(id);
     }
 }

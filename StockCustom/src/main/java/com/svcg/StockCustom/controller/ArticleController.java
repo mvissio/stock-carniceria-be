@@ -11,11 +11,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.svcg.StockCustom.entity.Article;
 import com.svcg.StockCustom.service.ArticleService;
 
@@ -56,13 +58,13 @@ public class ArticleController {
     }
     
 
-    @GetMapping("/name")
-    public Article getArticleByNombre(String name) {
+    @GetMapping("/name/{name}")
+    public Article getArticleByNombre(@PathVariable("name")String name) {
         return articleService.getArticleByName(name);
     }
 
-    @GetMapping("id")
-    public Article getArticleById(Long id) {
+    @GetMapping("id/{id}")
+    public Article getArticleById(@PathVariable("id")Long id) {
         return articleService.getArticleById(id);
     }
 

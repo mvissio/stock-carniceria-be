@@ -1,15 +1,7 @@
 package com.svcg.StockCustom.service.impl;
 
-import com.svcg.StockCustom.component.Messages;
-import com.svcg.StockCustom.entity.Client;
-import com.svcg.StockCustom.enums.RolName;
-import com.svcg.StockCustom.repository.ClientRepository;
-import com.svcg.StockCustom.repository.RolRepository;
-import com.svcg.StockCustom.repository.UserRepository;
-import com.svcg.StockCustom.service.ClientService;
-import com.svcg.StockCustom.service.UserService;
-import org.apache.tomcat.util.codec.binary.Base64;
-import org.json.JSONObject;
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +9,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import com.svcg.StockCustom.component.Messages;
+import com.svcg.StockCustom.repository.ClientRepository;
+import com.svcg.StockCustom.service.ClientService;
 
 @Service("clientServiceImpl")
 public class ClientServiceImpl implements ClientService {
@@ -57,10 +44,12 @@ public class ClientServiceImpl implements ClientService {
         
 
         /**
-         * Guardo el usuario con sus roles
+         * Save the client 
          */
-        client = saveObjectClient(client);
-
+        client.setCreateDate(new Date());
+        client.setDisabled(false);
+        logger.info("client was saved successfully " + client );
+        client = saveObjectClient(client);  
         return client;
     }
 
@@ -72,7 +61,7 @@ public class ClientServiceImpl implements ClientService {
         try {
             client = clientRepository.save(client);
             /**
-             * Devuelvo el user creado con el rol seteado
+             * Devuelvo el cliente creado 
              */
         } catch (Exception e) {
             logger.error("Exception: {} ", e);

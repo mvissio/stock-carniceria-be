@@ -13,8 +13,8 @@ public class Code {
 	private String qrcode;
 
 	// datos del codigo barra o qr
-	private Long articleId;
-	private String nameArticle;
+	private Long measurementUnitId;
+	private String nameMeasurementUnit;
 	private double price;
 	private double weight;
 
@@ -26,13 +26,13 @@ public class Code {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Code(String barcode, String qrcode, Long articleId,
-			String nameArticle, double price, double weight, Date createDate) {
+	public Code(String barcode, String qrcode, Long measurementUnitId,
+			String nameMeasurementUnit, double price, double weight, Date createDate) {
 		super();
 		this.barcode = barcode;
 		this.qrcode = qrcode;
-		this.articleId = articleId;
-		this.nameArticle = nameArticle;
+		this.measurementUnitId = measurementUnitId;
+		this.nameMeasurementUnit = nameMeasurementUnit;
 		this.price = price;
 		this.weight = weight;
 		this.createDate = createDate;
@@ -54,20 +54,20 @@ public class Code {
 		this.qrcode = qrcode;
 	}
 
-	public Long getArticleId() {
-		return articleId;
+	public Long getMeasurementUnitId() {
+		return measurementUnitId;
 	}
 
-	public void setArticleId(Long articleId) {
-		this.articleId = articleId;
+	public void setMeasurementUnitId(Long measurementUnitId) {
+		this.measurementUnitId = measurementUnitId;
 	}
 
-	public String getNameArticle() {
-		return nameArticle;
+	public String getNameMeasurementUnit() {
+		return nameMeasurementUnit;
 	}
 
-	public void setNameArticle(String nameArticle) {
-		this.nameArticle = nameArticle;
+	public void setNameMeasurementUnit(String nameMeasurementUnit) {
+		this.nameMeasurementUnit = nameMeasurementUnit;
 	}
 
 	public double getPrice() {

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,23 +51,23 @@ public class CategoryController {
     }
 
     @PutMapping("")
-    public Category updateCategory(@Valid @RequestBody Category provider, BindingResult bindingResult) throws MethodArgumentNotValidException {
+    public Category updateCategory(@Valid @RequestBody Category category, BindingResult bindingResult) throws MethodArgumentNotValidException {
         if (bindingResult.hasErrors()) {
             logger.error(String.valueOf(bindingResult.getAllErrors()));
             throw new MethodArgumentNotValidException(null, bindingResult);
         }
-        return categoryService.updateCategory(provider);
+        return categoryService.updateCategory(category);
 
     }
 
     
-    @GetMapping("/name")
-    public Category getCategoryByName(String name) {
+    @GetMapping("/name/{name}")
+    public Category getCategoryByName(@PathVariable("name")String name) {
         return categoryService.getCategoryByName(name);
     }
 
-    @GetMapping("id")
-    public Category getCategoryById(Long id) {
+    @GetMapping("id/{id}")
+    public Category getCategoryById(@PathVariable("id")Long id) {
         return categoryService.getCategoryById(id);
     }
 }

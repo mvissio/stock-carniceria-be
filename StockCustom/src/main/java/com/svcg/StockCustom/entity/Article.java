@@ -36,17 +36,17 @@ public class Article {
 	@Column(name = "description", length = 255)
 	private String description;
 
+	@Column(name = "expiration_date")
+	private Date expirationDate;
+	
+	@Column(name = "current_amount")
+	private int currentAmount;
+	
 	@Column(name = "create_date", nullable = false)
 	private Date createDate;
 
 	@Column(name = "disabled_date")
 	private Date disabledDate;
-
-	@Column(name = "expiration_date")
-	private Date expirationDate;
-
-	@Column(name = "current_amount")
-	private int currentAmount;
 
 	@Column(name = "disabled")
 	private boolean disabled;
@@ -54,7 +54,7 @@ public class Article {
 	public Article() {
 	}
 
-	public Article(Long articleId, Long measurementUnitId, String name,
+	public Article(Long measurementUnitId, Long articleId, String name,
 			String brand, String description, Date createDate,
 			Date disabledDate, Date expirationDate, int currentAmount,
 			boolean disabled) {
@@ -71,22 +71,7 @@ public class Article {
 		this.disabled = disabled;
 	}
 
-	public Long getArticleId() {
-		return articleId;
-	}
-
-	public void setArticleId(Long articleId) {
-		this.articleId = articleId;
-	}
-
-	public Long getMeasurementUnitId() {
-		return measurementUnitId;
-	}
-
-	public void setMeasurementUnitId(Long measurementUnitId) {
-		this.measurementUnitId = measurementUnitId;
-	}
-
+	
 	public String getName() {
 		return name;
 	}
@@ -151,5 +136,22 @@ public class Article {
 		this.disabled = disabled;
 	}
 
+	public Long getArticleId() {
+		return articleId;
+	}
+
+	public void setArticleId(Long articleId) {
+		this.articleId = articleId;
+	}
+
+	public Long getMeasurementUnitId() {
+		return measurementUnitId;
+	}
+
+	public void setMeasurementUnitId(Long measurementUnitId) {
+		this.measurementUnitId = measurementUnitId;
+	}
+
+	
 	
 }

@@ -11,8 +11,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import org.hibernate.annotations.ColumnDefault;
-
 @Entity
 @Table(name = "category")
 public class Category {
@@ -32,17 +30,14 @@ public class Category {
 	@Column(name = "description", length = 255)
 	private String description;
 	
-	@Column(name = "enabled")
-	@ColumnDefault("0")
-	private Boolean enabled;
-
-	//fecha baja
-	@Column(name = "delete_date")
-	private Date deleteDate;
-
-	//fecha alta
 	@Column(name = "create_date", nullable = false)
 	private Date createDate;
+
+	@Column(name = "disabled_date")
+	private Date disabledDate;
+
+	@Column(name = "disabled")
+	private boolean disabled;
 
 	public Category() {
 	}
@@ -70,23 +65,7 @@ public class Category {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-	public Boolean getEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public Date getDeleteDate() {
-		return deleteDate;
-	}
-
-	public void setDeleteDate(Date deleteDate) {
-		this.deleteDate = deleteDate;
-	}
-
+	
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -94,6 +73,24 @@ public class Category {
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
+
+	public Date getDisabledDate() {
+		return disabledDate;
+	}
+
+	public void setDisabledDate(Date disabledDate) {
+		this.disabledDate = disabledDate;
+	}
+
+	public boolean isDisabled() {
+		return disabled;
+	}
+
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
+	
+	
 
 	
 

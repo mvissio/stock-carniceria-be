@@ -27,10 +27,7 @@ public class MeasurementUnit {
 
 	@Column(name = "symbol", nullable = false, length = 2)
 	private String symbol;
-
-	@Column(name = "baja")
-	private Boolean baja;
-
+	
 	@Column(name = "create_date", nullable = false)
 	private Date createDate;
 
@@ -66,15 +63,7 @@ public class MeasurementUnit {
 	public void setSymbol(String symbol) {
 		this.symbol = symbol;
 	}
-
-	public Boolean getBaja() {
-		return baja;
-	}
-
-	public void setBaja(Boolean baja) {
-		this.baja = baja;
-	}
-
+	
 	public Date getCreateDate() {
 		return createDate;
 	}

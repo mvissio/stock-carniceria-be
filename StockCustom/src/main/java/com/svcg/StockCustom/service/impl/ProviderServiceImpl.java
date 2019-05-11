@@ -1,17 +1,7 @@
 package com.svcg.StockCustom.service.impl;
 
-import com.svcg.StockCustom.component.Messages;
-import com.svcg.StockCustom.entity.Client;
-import com.svcg.StockCustom.enums.RolName;
-import com.svcg.StockCustom.repository.ClientRepository;
-import com.svcg.StockCustom.repository.ProviderRepository;
-import com.svcg.StockCustom.repository.RolRepository;
-import com.svcg.StockCustom.repository.UserRepository;
-import com.svcg.StockCustom.service.ClientService;
-import com.svcg.StockCustom.service.ProviderService;
-import com.svcg.StockCustom.service.UserService;
-import org.apache.tomcat.util.codec.binary.Base64;
-import org.json.JSONObject;
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +9,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import com.svcg.StockCustom.component.Messages;
+import com.svcg.StockCustom.repository.ProviderRepository;
+import com.svcg.StockCustom.service.ProviderService;
 
 @Service("providerServiceImpl")
 public class ProviderServiceImpl implements ProviderService {
@@ -59,18 +44,21 @@ public class ProviderServiceImpl implements ProviderService {
         
 
         /**
-         * Guardo el usuario con sus roles
+         * Guardo el provider
          */
-        provider = saveObjectProvider(provider);
-
-        return provider;
+        provider.setCreateDate(new Date());
+        provider.setDisabled(false);
+        logger.info("provider was saved successfully " + provider );
+        provider = saveProviderObject(provider);        
+		return provider;
+       
     }
 
     /**
      * Guardo el usuario con sus roles
      */
 
-    private com.svcg.StockCustom.entity.Provider saveObjectProvider(com.svcg.StockCustom.entity.Provider provider) {
+    private com.svcg.StockCustom.entity.Provider saveProviderObject(com.svcg.StockCustom.entity.Provider provider) {
         try {
             provider = providerRepository.save(provider);
             /**
