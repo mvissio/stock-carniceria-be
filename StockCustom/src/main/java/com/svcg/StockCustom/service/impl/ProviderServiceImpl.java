@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
-import com.svcg.StockCustom.entity.Article;
 import com.svcg.StockCustom.entity.Provider;
 import com.svcg.StockCustom.repository.ProviderRepository;
 import com.svcg.StockCustom.service.ProviderService;
@@ -156,6 +155,18 @@ public class ProviderServiceImpl implements ProviderService {
 		provider.setDisabled(true);
 		provider.setDisabledDate(new Date());		
 		return providerRepository.save(provider);
+	}
+	
+	@Override
+	public Page<Provider> findByOnlyEnabledProvider(
+			Pageable pageable) {
+		Page<com.svcg.StockCustom.entity.Provider> providers = providerRepository
+				.findByDisabledIsFalse(pageable);
+		if (providers.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_PROVIDER"), null);
+		}
+		return providers;
 	}
 
 }

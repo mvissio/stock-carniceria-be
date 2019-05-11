@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
-import com.svcg.StockCustom.entity.Article;
 import com.svcg.StockCustom.entity.MeasurementUnit;
 import com.svcg.StockCustom.repository.MeasurementUnitRepository;
 import com.svcg.StockCustom.service.MeasurementUnitService;
@@ -49,7 +48,7 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 		measurementUnit.setCreateDate(new Date());
 		measurementUnit.setDisabled(false);
 		measurementUnit = saveMeasurementUnitObjet(measurementUnit);
-		logger.info("measurementUnit was saved successfully " + measurementUnit );
+		logger.info("measurementUnit was saved successfully " + measurementUnit);
 		return measurementUnit;
 
 	}
@@ -111,12 +110,13 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 				.findByName(name);
 		return measurementUnit != null;
 	}
-	
+
 	private com.svcg.StockCustom.entity.MeasurementUnit saveMeasurementUnitObjet(
 			com.svcg.StockCustom.entity.MeasurementUnit measurementUnit) {
 		try {
 
-			MeasurementUnit measurementUnitCreated = measurementUnitRepository.save(measurementUnit);
+			MeasurementUnit measurementUnitCreated = measurementUnitRepository
+					.save(measurementUnit);
 			return measurementUnitCreated;
 
 		} catch (Exception e) {
@@ -126,13 +126,26 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 		}
 
 	}
-	
+
 	@Override
 	public MeasurementUnit deleteMeasurementUnit(Long id) {
-		MeasurementUnit measurementUnit = measurementUnitRepository.findByMeasurementUnitId(id);
+		MeasurementUnit measurementUnit = measurementUnitRepository
+				.findByMeasurementUnitId(id);
 		measurementUnit.setDisabled(true);
-		measurementUnit.setDisabledDate(new Date());		
+		measurementUnit.setDisabledDate(new Date());
 		return measurementUnitRepository.save(measurementUnit);
+	}
+
+	@Override
+	public Page<MeasurementUnit> findByOnlyEnabledMeasurementUnit(
+			Pageable pageable) {
+		Page<com.svcg.StockCustom.entity.MeasurementUnit> measurementUnits = measurementUnitRepository
+				.findByDisabledIsFalse(pageable);
+		if (measurementUnits.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_MEASUREMENT_UNITS"), null);
+		}
+		return measurementUnits;
 	}
 
 }

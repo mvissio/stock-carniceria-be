@@ -66,6 +66,16 @@ public class ArticleServiceImpl implements ArticleService {
 		return articles;
 
 	}
+	
+	@Override
+	public Page<Article> findByOnlyEnabledArticle(Pageable pageable) {
+		Page<com.svcg.StockCustom.entity.Article> articles = articleRepository.findByDisabledIsFalse(pageable);
+		if (articles.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_ARTICULOS"), null);
+		}
+		return articles;	
+	}
 
 	@Override
 	public Article getArticleByName(String name) {
@@ -142,4 +152,6 @@ public class ArticleServiceImpl implements ArticleService {
 		return articleRepository.save(article);
 	}
 
+		
+	
 }

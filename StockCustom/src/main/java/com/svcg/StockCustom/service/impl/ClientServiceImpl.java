@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
-import com.svcg.StockCustom.entity.Article;
 import com.svcg.StockCustom.entity.Client;
 import com.svcg.StockCustom.repository.ClientRepository;
 import com.svcg.StockCustom.service.ClientService;
@@ -137,6 +136,16 @@ public class ClientServiceImpl implements ClientService {
 		client.setDisabled(true);
 		client.setDisabledDate(new Date());		
 		return clientRepository.save(client);
+	}
+    
+    @Override
+	public Page<Client> findByOnlyEnabledClient(Pageable pageable) {
+		Page<com.svcg.StockCustom.entity.Client> clients = clientRepository.findByDisabledIsFalse(pageable);
+		if (clients.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_CLIENT"), null);
+		}
+		return clients;	
 	}
 
     }

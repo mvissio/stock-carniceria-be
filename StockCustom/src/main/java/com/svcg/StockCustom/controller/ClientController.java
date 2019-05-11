@@ -1,6 +1,7 @@
 
 package com.svcg.StockCustom.controller;
 
+import com.svcg.StockCustom.entity.Category;
 import com.svcg.StockCustom.entity.Client;
 import com.svcg.StockCustom.service.ClientService;
 import org.slf4j.Logger;
@@ -32,6 +33,11 @@ public class ClientController {
     @GetMapping("")
     public Page<Client> getClients(Pageable pageable) {
         return clientService.getClients(pageable);
+    }
+    
+    @GetMapping("/enabled")
+    public Page<Client> getEnabledClients(Pageable pageable) {
+        return clientService.findByOnlyEnabledClient(pageable);
     }
 
     @PostMapping("")

@@ -18,6 +18,7 @@ public interface ArticleService {
     Article updateArticle(Article article);
     
     Article deleteArticle(Long id);
-
+    
+    Page<Article> findByOnlyEnabledArticle(Pageable pageable);
 	
 }

@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.svcg.StockCustom.entity.Article;
 import com.svcg.StockCustom.entity.Category;
 import com.svcg.StockCustom.service.CategoryService;
 
@@ -39,6 +41,11 @@ public class CategoryController {
     @GetMapping("")
     public Page<Category> getCategories(Pageable pageable) {
         return categoryService.getCategories(pageable);
+    }
+    
+    @GetMapping("/enabled")
+    public Page<Category> getEnabledCategories(Pageable pageable) {
+        return categoryService.findByOnlyEnabledCategory(pageable);
     }
 
     @PostMapping("")

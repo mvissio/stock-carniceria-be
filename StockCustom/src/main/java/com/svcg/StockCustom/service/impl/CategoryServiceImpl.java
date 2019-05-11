@@ -10,12 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
-import com.svcg.StockCustom.entity.Article;
 import com.svcg.StockCustom.entity.Category;
 import com.svcg.StockCustom.repository.CategoryRepository;
 import com.svcg.StockCustom.service.CategoryService;
@@ -94,6 +91,16 @@ public class CategoryServiceImpl implements CategoryService {
         }
         return categories;
     }
+    
+    @Override
+	public Page<Category> findByOnlyEnabledCategory(Pageable pageable) {
+		Page<com.svcg.StockCustom.entity.Category> categories = categoryRepository.findByDisabledIsFalse(pageable);
+		if (categories.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_CATEGORIES"), null);
+		}
+		return categories;	
+	}
         
     
     private boolean categoryNameExist(String name) {

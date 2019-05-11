@@ -37,6 +37,11 @@ public class ArticleController {
     public Page<Article> getArticles(Pageable pageable) {
         return articleService.getArticles(pageable);
     }
+    
+    @GetMapping("/enabled")
+    public Page<Article> getEnabledArticles(Pageable pageable) {
+        return articleService.findByOnlyEnabledArticle(pageable);
+    }
 
     @PostMapping("")
     public Article addArticle(@Valid @RequestBody Article article, BindingResult bindingResult) throws MethodArgumentNotValidException {

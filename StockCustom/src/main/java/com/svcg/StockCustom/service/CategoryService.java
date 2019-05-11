@@ -3,7 +3,6 @@ package com.svcg.StockCustom.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.svcg.StockCustom.entity.Article;
 import com.svcg.StockCustom.entity.Category;
 
 public interface CategoryService {
@@ -19,5 +18,7 @@ public interface CategoryService {
 	Category updateCategory(Category category);
 	
 	Category deleteCategory(Long id);
+	
+	Page<Category> findByOnlyEnabledCategory(Pageable pageable);
 
 }

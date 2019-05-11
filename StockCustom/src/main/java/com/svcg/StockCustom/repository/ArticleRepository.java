@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 import com.svcg.StockCustom.entity.Article;
 import com.svcg.StockCustom.entity.MeasurementUnit;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 @Repository("articleRepository")
 public interface ArticleRepository extends JpaRepository<Article,Serializable> {
 
@@ -17,5 +20,8 @@ public interface ArticleRepository extends JpaRepository<Article,Serializable> {
     Article findByArticleId(Long articleId);    
     
     Optional<List<Article>> findByMeasurementUnitIdIn(List<MeasurementUnit> unidadesMedida);
+    
+    Page<Article> findByDisabledIsFalse(Pageable pageable);
+	
 	
 }

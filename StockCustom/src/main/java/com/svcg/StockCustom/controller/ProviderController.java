@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.svcg.StockCustom.entity.Provider;
 import com.svcg.StockCustom.service.ProviderService;
 
@@ -39,6 +40,11 @@ public class ProviderController {
     @GetMapping("")
     public Page<Provider> getProviders(Pageable pageable) {
         return providerService.getProviders(pageable);
+    }
+    
+    @GetMapping("/enabled")
+    public Page<Provider> getEnabledProviders(Pageable pageable) {
+        return providerService.findByOnlyEnabledProvider(pageable);
     }
 
     @PostMapping("")

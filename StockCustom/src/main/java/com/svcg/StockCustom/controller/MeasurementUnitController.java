@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.svcg.StockCustom.entity.Client;
 import com.svcg.StockCustom.entity.MeasurementUnit;
 import com.svcg.StockCustom.service.MeasurementUnitService;
 
@@ -35,6 +37,11 @@ public class MeasurementUnitController {
 	public Page<MeasurementUnit> getMeasurementUnits(Pageable pageable) {
 		return measurementUnitService.getMeasurementUnits(pageable);
 	}
+	
+	@GetMapping("/enabled")
+    public Page<MeasurementUnit> getEnabledMeasurementUnits(Pageable pageable) {
+        return measurementUnitService.findByOnlyEnabledMeasurementUnit(pageable);
+    }
 
 	@PostMapping("")
 	public MeasurementUnit addMeasurementUnit(

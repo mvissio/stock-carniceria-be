@@ -4,7 +4,6 @@ package com.svcg.StockCustom.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.svcg.StockCustom.entity.Article;
 import com.svcg.StockCustom.entity.Provider;
 
 
@@ -22,5 +21,8 @@ public interface ProviderService {
     Provider updateProvider(Provider provider);
     
     Provider deleteProvider(Long id);
+    
+    Page<Provider> findByOnlyEnabledProvider(Pageable pageable);
+
     
 }
