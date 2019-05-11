@@ -1,5 +1,7 @@
 package com.svcg.StockCustom.service.impl;
 
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
-import com.svcg.StockCustom.entity.UnidadMedida;
-import com.svcg.StockCustom.repository.UnidadMedidaRepository;
-import com.svcg.StockCustom.service.UnidadMedidaService;
+import com.svcg.StockCustom.entity.Article;
+import com.svcg.StockCustom.entity.MeasurementUnit;
+import com.svcg.StockCustom.repository.MeasurementUnitRepository;
+import com.svcg.StockCustom.service.MeasurementUnitService;
 
 @Service("unidadMedidaServiceImpl")
-public class UnidadMedidaServiceImpl implements UnidadMedidaService {
+public class UnidadMedidaServiceImpl implements MeasurementUnitService {
 
 	@Autowired
 	Messages messages;
@@ -25,49 +28,103 @@ public class UnidadMedidaServiceImpl implements UnidadMedidaService {
 			.getLogger(UserServiceImpl.class);
 
 	@Autowired
-	@Qualifier("unidadMedidaRepository")
-	private UnidadMedidaRepository unidadMedidaRepository;
+	@Qualifier("measurementUnitRepository")
+	private MeasurementUnitRepository measurementUnitRepository;
 
 	@Override
-	public UnidadMedida saveUnidadMedida(UnidadMedida unidadMedida) {
-		// TODO Auto-generated method stub
-		return null;
+	public MeasurementUnit saveMeasurementUnit(MeasurementUnit measurementUnit) {
+		/**
+		 * Save the article
+		 */
+
+		if (measurementUnit == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					this.messages.get("MESSAGE_CANT_CREATE_ARTICULO"), null);
+		}
+		if (measurementUnitNameExist(measurementUnit.getName())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					this.messages.get("MESSAGE_ARTICULO_EXISTS")
+							+ measurementUnit.getName(), null);
+		}
+		measurementUnit.setCreateDate(new Date());
+		measurementUnit.setDisabled(false);
+		measurementUnit = saveMeasurementUnit(measurementUnit);
+		logger.info("measurementUnit was saved successfully " + measurementUnit );
+		return measurementUnit;
+
 	}
 
 	@Override
-	public Page<UnidadMedida> getUnidadMedidas(Pageable pageable) {
-		// TODO Auto-generated method stub
-		return null;
+	public Page<MeasurementUnit> getMeasurementUnits(Pageable pageable) {
+		Page<com.svcg.StockCustom.entity.MeasurementUnit> measurementUnit = measurementUnitRepository
+				.findAll(pageable);
+		if (measurementUnit.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_ARTICULOS"), null);
+		}
+		return measurementUnit;
+
 	}
 
 	@Override
-	public UnidadMedida getUnidadMedidaByNombre(String nombre) {
-		com.svcg.StockCustom.entity.UnidadMedida unidadMedida = unidadMedidaRepository
-				.findByNombre(nombre);
-		if (unidadMedida == null) {
+	public MeasurementUnit getMeasurementUnitByName(String name) {
+		com.svcg.StockCustom.entity.MeasurementUnit measurementUnit = measurementUnitRepository
+				.findByName(name);
+		if (measurementUnit == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					this.messages.get("MESSAGE_NOT_FOUND_USUARIO"), null);
 		}
 
-		return unidadMedida;
+		return measurementUnit;
 	}
 
 	@Override
-	public UnidadMedida getUnidadMedidaById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public MeasurementUnit getMeasurementUnitById(Long id) {
+		com.svcg.StockCustom.entity.MeasurementUnit measurementUnit = measurementUnitRepository
+				.findByMeasurementUnitId(id);
+		if (measurementUnit == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_ARTICULO"), null);
+		}
+		return measurementUnit;
 	}
 
 	@Override
-	public UnidadMedida updateUnidadMedida(UnidadMedida unidadMedida) {
-		// TODO Auto-generated method stub
-		return null;
+	public MeasurementUnit updateMeasurementUnit(MeasurementUnit measurementUnit) {
+		if (measurementUnit == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					this.messages.get("MESSAGE_CANT_CREATE_ARTICULO"), null);
+		}
+		com.svcg.StockCustom.entity.MeasurementUnit previousMeasurementUnit = measurementUnitRepository
+				.findByName(measurementUnit.getName());
+		if (previousMeasurementUnit == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_ARTICULO"), null);
+		}
+
+		measurementUnit = saveMeasurementUnitObjet(previousMeasurementUnit);
+		return measurementUnit;
 	}
 
-	private boolean unidadMedidaNameExist(String nombre) {
-		com.svcg.StockCustom.entity.UnidadMedida unidadMedida = unidadMedidaRepository
-				.findByNombre(nombre);
-		return unidadMedida != null;
+	private boolean measurementUnitNameExist(String name) {
+		com.svcg.StockCustom.entity.MeasurementUnit measurementUnit = measurementUnitRepository
+				.findByName(name);
+		return measurementUnit != null;
+	}
+	
+	private com.svcg.StockCustom.entity.MeasurementUnit saveMeasurementUnitObjet(
+			com.svcg.StockCustom.entity.MeasurementUnit measurementUnit) {
+		try {
+
+			MeasurementUnit measurementUnitCreated = measurementUnitRepository.save(measurementUnit);
+			return measurementUnitCreated;
+
+		} catch (Exception e) {
+			logger.error("Exception: {} ", e);
+			throw new ResponseStatusException(HttpStatus.CONFLICT,
+					this.messages.get("MESSAGE_CANT_CREATE_ARTICULO"), null);
+		}
+
 	}
 
 }

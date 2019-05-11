@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.svcg.StockCustom.component.Messages;
 import com.svcg.StockCustom.repository.CategoryRepository;
-import com.svcg.StockCustom.repository.UnidadMedidaRepository;
+import com.svcg.StockCustom.repository.MeasurementUnitRepository;
 import com.svcg.StockCustom.service.CategoryService;
-import com.svcg.StockCustom.service.UnidadMedidaService;
+import com.svcg.StockCustom.service.MeasurementUnitService;
 
 @Service("categoryServiceImpl")
 public class CategoryServiceImpl implements CategoryService {

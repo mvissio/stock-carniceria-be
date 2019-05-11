@@ -1,9 +1,7 @@
 package com.svcg.StockCustom.controller;
 
-import java.util.List;
 
 import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,57 +16,54 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.svcg.StockCustom.entity.Articulo;
-import com.svcg.StockCustom.entity.User;
-import com.svcg.StockCustom.enums.RolName;
-import com.svcg.StockCustom.service.ArticuloService;
+import com.svcg.StockCustom.entity.Article;
+import com.svcg.StockCustom.service.ArticleService;
 
 @RestController
-@RequestMapping(value = "/articulos")
-public class ArticuloController {
+@RequestMapping(value = "/articles")
+public class MeasurementUnitController {
 
 	@Autowired
-	@Qualifier("articuloServiceImpl")
-	private ArticuloService articuloService;
+	@Qualifier("articleServiceImpl")
+	private ArticleService articleService;
 	
 	private static final Logger logger = LoggerFactory
             .getLogger(UserController.class);
 
     @GetMapping("")
-    public Page<Articulo> getArticulos(Pageable pageable) {
-        return articuloService.getArticulos(pageable);
+    public Page<Article> getArticles(Pageable pageable) {
+        return articleService.getArticles(pageable);
     }
 
     @PostMapping("")
-    public Articulo addArticulo(@Valid @RequestBody Articulo articulo, BindingResult bindingResult) throws MethodArgumentNotValidException {
+    public Article addArticle(@Valid @RequestBody Article article, BindingResult bindingResult) throws MethodArgumentNotValidException {
         if (bindingResult.hasErrors()) {
             logger.error(String.valueOf(bindingResult.getAllErrors()));
             throw new MethodArgumentNotValidException(null, bindingResult);
         }
-        return articuloService.saveArticulo(articulo);
+        return articleService.saveArticle(article);
 
     }
 
     @PutMapping("")
-    public Articulo updateArticulo(@Valid @RequestBody Articulo articulo, BindingResult bindingResult) throws MethodArgumentNotValidException {
+    public Article updateArticle(@Valid @RequestBody Article article, BindingResult bindingResult) throws MethodArgumentNotValidException {
         if (bindingResult.hasErrors()) {
             logger.error(String.valueOf(bindingResult.getAllErrors()));
             throw new MethodArgumentNotValidException(null, bindingResult);
         }
-        return articuloService.updateArticulo(articulo);
+        return articleService.updateArticle(article);
 
     }
     
 
-    @GetMapping("/nombre")
-    public Articulo getArticuloByNombre(String nombre) {
-        return articuloService.getArticuloByNombre(nombre);
+    @GetMapping("/name")
+    public Article getArticleByNombre(String name) {
+        return articleService.getArticleByName(name);
     }
 
     @GetMapping("id")
-    public Articulo getArticuloById(Long id) {
-        return articuloService.getArticuloById(id);
+    public Article getArticleById(Long id) {
+        return articleService.getArticleById(id);
     }
 
 }
