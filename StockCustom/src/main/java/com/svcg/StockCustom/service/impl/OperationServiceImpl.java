@@ -1,26 +1,83 @@
 package com.svcg.StockCustom.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.svcg.StockCustom.component.Messages;
+import com.svcg.StockCustom.entity.Article;
+import com.svcg.StockCustom.entity.DetailOperation;
 import com.svcg.StockCustom.entity.Operation;
+import com.svcg.StockCustom.repository.ArticleRepository;
+import com.svcg.StockCustom.repository.DetailOperationRepository;
 import com.svcg.StockCustom.repository.OperationRepository;
 import com.svcg.StockCustom.service.OperationService;
 
 @Service("operationServiceImpl")
-public class OperationServiceImpl implements OperationService{
+public class OperationServiceImpl implements OperationService {
 
 	@Autowired
 	@Qualifier("operationRepository")
 	private OperationRepository operationRepository;
-	
+
+	@Autowired
+	@Qualifier("detailOperationRepository")
+	private DetailOperationRepository detailOperationRepository;
+
+	@Autowired
+	@Qualifier("articleRepository")
+	private ArticleRepository articleRepository;
+
+	@Autowired
+	Messages messages;
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(UserServiceImpl.class);
+
 	@Override
 	public Operation saveOperation(Operation operation) {
 		operation.setCreateDate(new Date());
-		return operationRepository.save(operation);
-	}
+		//como manejo el estado por ahora viene desde el front, el total , el subtotal ??
+		operation.setCreateDate(new Date());
+		Operation newOperation = operationRepository.save(operation);
+		logger.info("Operacion guardada con exito: " + newOperation.toString());
+		
+		if (newOperation != null) {
+			List<DetailOperation> detailOperationList = newOperation
+					.getDetailOperationlist();
 
+			// que sucede en el caso que se estan registrando despertidisios ??
+			// aplica ??
+
+			if (detailOperationList.size() > 0) {
+				logger.info("Cantidad de detalles de operacion es " + detailOperationList.size() + " para la operation con id " + newOperation.getOperationId());
+				for (DetailOperation detailOperation : detailOperationList) {
+					detailOperation.setOperationId(newOperation
+							.getOperationId());
+					detailOperationRepository.save(detailOperation);
+
+					// actualizo el stock del producto
+
+					Article article = articleRepository
+							.findByArticleId(detailOperation.getArticleId());
+					double newQuantityArticle = (article.getCurrentQuantity() - detailOperation
+							.getCantidad());
+					article.setCurrentQuantity(newQuantityArticle);
+					articleRepository.save(article);
+					logger.info("Stock de Articulo actualizado con exito: " + article.toString());
+
+				}
+			}
+
+		}
+		return newOperation;
+
+	}
+	
+	
 }

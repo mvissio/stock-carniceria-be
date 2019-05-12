@@ -36,12 +36,28 @@ public class Article {
 	@Column(name = "description", length = 255)
 	private String description;
 
+	//vencimiento, a futuro podemos hacer un informe de vencimientos futuros
+	
 	@Column(name = "expiration_date")
 	private Date expirationDate;
+
+	//el stock actual del producto. deberia ser nullable = false ??
+	//caso de la carne va a poner por ejemplo 1,5 kg ???
 	
-	@Column(name = "current_amount")
-	private int currentAmount;
-	
+	@Column(name = "current_quantity")
+	private double currentQuantity;
+
+	/*
+	 * este es el precio que tiene el producto al momento de ser vendido se
+	 * diferencia del precio en el detalle operacion que nos sirve para dejar un
+	 * registro a que precio se vendio en el momento de la compra si se
+	 * actualiza el precio en el articulo, no se actualiza en el detalle de la
+	 * operacion
+	 */
+
+	@Column(name = "current_price", nullable = false)
+	private double currentPrice;
+
 	@Column(name = "create_date", nullable = false)
 	private Date createDate;
 
@@ -53,25 +69,28 @@ public class Article {
 
 	public Article() {
 	}
-
-	public Article(Long measurementUnitId, Long articleId, String name,
-			String brand, String description, Date createDate,
-			Date disabledDate, Date expirationDate, int currentAmount,
-			boolean disabled) {
+	
+	public Article(Long articleId, Long measurementUnitId, String name,
+			String brand, String description, Date expirationDate,
+			double currentQuantity, double currentPrice, Date createDate,
+			Date disabledDate, boolean disabled) {
 		super();
 		this.articleId = articleId;
 		this.measurementUnitId = measurementUnitId;
 		this.name = name;
 		this.brand = brand;
 		this.description = description;
+		this.expirationDate = expirationDate;
+		this.currentQuantity = currentQuantity;
+		this.currentPrice = currentPrice;
 		this.createDate = createDate;
 		this.disabledDate = disabledDate;
-		this.expirationDate = expirationDate;
-		this.currentAmount = currentAmount;
 		this.disabled = disabled;
 	}
 
-	
+
+
+
 	public String getName() {
 		return name;
 	}
@@ -120,14 +139,6 @@ public class Article {
 		this.expirationDate = expirationDate;
 	}
 
-	public int getCurrentAmount() {
-		return currentAmount;
-	}
-
-	public void setCurrentAmount(int currentAmount) {
-		this.currentAmount = currentAmount;
-	}
-
 	public boolean isDisabled() {
 		return disabled;
 	}
@@ -151,7 +162,28 @@ public class Article {
 	public void setMeasurementUnitId(Long measurementUnitId) {
 		this.measurementUnitId = measurementUnitId;
 	}
+		
+	public double getCurrentQuantity() {
+		return currentQuantity;
+	}
 
+	public void setCurrentQuantity(double currentQuantity) {
+		this.currentQuantity = currentQuantity;
+	}
+
+	public double getCurrentPrice() {
+		return currentPrice;
+	}
+
+	public void setCurrentPrice(double currentPrice) {
+		this.currentPrice = currentPrice;
+	}
+
+	@Override
+	public String toString() {
+		return "id: " + articleId + " name: " + name + " brand: " + brand + " current quantity: " +  currentQuantity;
+				}
 	
 	
+
 }

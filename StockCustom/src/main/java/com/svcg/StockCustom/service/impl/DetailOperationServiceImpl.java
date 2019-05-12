@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import com.svcg.StockCustom.entity.DetailOperation;
 import com.svcg.StockCustom.repository.DetailOperationRepository;
-import com.svcg.StockCustom.repository.OperationRepository;
 import com.svcg.StockCustom.service.DetailOperationService;
 
 @Service("detailOperationService")
