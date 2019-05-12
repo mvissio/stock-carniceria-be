@@ -15,7 +15,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "operation_detail")
-public class OperationDetail {
+public class DetailOperation {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,32 +23,17 @@ public class OperationDetail {
 	private Long operationDetailId;
 	
 	@Column(name = "operation_id")
-	private Long idOperation;
-
-	@NotEmpty
-	@Size(max = 100, message = "{validation.rol.username.size}")
-	@Column(name = "name", nullable = false, length = 100)
-	private String name;
+	private Long operationId;		
 	
-	@NotEmpty
-	@Column(name = "date", length = 255)
-	private String date;
+	@Column(name = "precio")
+	private double precio;
 	
-	@Column(name = "enabled")
-	@ColumnDefault("0")
-	private Boolean enabled;
-
-	//fecha baja
-	@Column(name = "delete_date")
-	private Date deleteDate;
-
-	//fecha alta
-	@Column(name = "create_date", nullable = false)
-	private Date createDate;
+	@Column(name = "cantidad")
+	private double cantidad;
 	
 	
 
-	public OperationDetail() {
+	public DetailOperation() {
 	}
 
 	

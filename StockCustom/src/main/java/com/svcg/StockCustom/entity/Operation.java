@@ -1,6 +1,8 @@
 package com.svcg.StockCustom.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,83 +10,55 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import javax.persistence.Transient;
 
-import org.hibernate.annotations.ColumnDefault;
+import com.svcg.StockCustom.enums.OperationType;
 
 @Entity
-@Table(name = "category")
+@Table(name = "operation")
 public class Operation {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "category_id")
-	private Long categoryId;
-	
-	@NotEmpty
-	@Size(max = 100, message = "{validation.rol.username.size}")
-	@Column(name = "name", nullable = false, length = 100)
-	private String name;
-	
-	@NotEmpty
-	@Size(max = 255, message = "{validation.rol.username.size}")
-	@Column(name = "description", length = 255)
-	private String description;
-	
-	@Column(name = "enabled")
-	@ColumnDefault("0")
-	private Boolean enabled;
+	@Column(name = "operation_id")
+	private Long operationId;
 
-	//fecha baja
-	@Column(name = "delete_date")
-	private Date deleteDate;
-
-	//fecha alta
 	@Column(name = "create_date", nullable = false)
 	private Date createDate;
+
+	@Column(name = "disabled_date")
+	private Date disabledDate;
+
+	@Column(name = "disabled")
+	private boolean disabled;
+
+	@Column(name = "operation_type")
+	private OperationType operationType;
+
+	@Column(name = "total")
+	private double total;
+
+	@Column(name = "sub_total")
+	private double subTotal;
+
+	@Transient
+	private List<DetailOperation> detailOperationlist = new ArrayList<DetailOperation>();
 
 	public Operation() {
 	}
 
-	public Long getCategoryId() {
-		return categoryId;
-	}
-
-	public void setCategoryId(Long categoryId) {
-		this.categoryId = categoryId;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Boolean getEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public Date getDeleteDate() {
-		return deleteDate;
-	}
-
-	public void setDeleteDate(Date deleteDate) {
-		this.deleteDate = deleteDate;
+	public Operation(Long operationId, Date createDate, Date disabledDate,
+			boolean disabled, OperationType operationType, double total,
+			double subTotal, List<DetailOperation> detailOperationlist) {
+		super();
+		this.operationId = operationId;
+		this.createDate = createDate;
+		this.disabledDate = disabledDate;
+		this.disabled = disabled;
+		this.operationType = operationType;
+		this.total = total;
+		this.subTotal = subTotal;
+		this.detailOperationlist = detailOperationlist;
 	}
 
 	public Date getCreateDate() {
@@ -95,6 +69,62 @@ public class Operation {
 		this.createDate = createDate;
 	}
 
+	public Date getDisabledDate() {
+		return disabledDate;
+	}
+
+	public void setDisabledDate(Date disabledDate) {
+		this.disabledDate = disabledDate;
+	}
+
+	public boolean isDisabled() {
+		return disabled;
+	}
+
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
+
+	public Long getOperationId() {
+		return operationId;
+	}
+
+	public void setOperationId(Long operationId) {
+		this.operationId = operationId;
+	}
+
+	public OperationType getOperationType() {
+		return operationType;
+	}
+
+	public void setOperationType(OperationType operationType) {
+		this.operationType = operationType;
+	}
+
+	public double getTotal() {
+		return total;
+	}
+
+	public void setTotal(double total) {
+		this.total = total;
+	}
+
+	public double getSubTotal() {
+		return subTotal;
+	}
+
+	public void setSubTotal(double subTotal) {
+		this.subTotal = subTotal;
+	}
+
+	public List<DetailOperation> getDetailOperationlist() {
+		return detailOperationlist;
+	}
+
+	public void setDetailOperationlist(List<DetailOperation> detailOperationlist) {
+		this.detailOperationlist = detailOperationlist;
+	}
+	
 	
 
 }
