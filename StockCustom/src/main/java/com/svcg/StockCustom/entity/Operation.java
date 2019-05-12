@@ -48,7 +48,7 @@ public class Operation {
 	@Column(name = "payment_method")
 	private PaymentMethod paymentMethod;
 	
-	// para evaluar si se paga al contado o con tarjeta
+	// especificamos si se cancelo o se realizo
 	@Column(name = "operation_status")
 	private OperationStatus operationStatus;		
 

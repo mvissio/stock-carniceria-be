@@ -6,5 +6,9 @@ public interface OperationService {
 
 	Operation saveOperation(Operation operation);
 	
+	Operation getOperationById(Long id);
+	
+	Operation getCompleteOperationById(Long id);
+	
 	
 }

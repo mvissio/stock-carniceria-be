@@ -7,7 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
 import com.svcg.StockCustom.entity.Article;
@@ -78,6 +80,37 @@ public class OperationServiceImpl implements OperationService {
 		return newOperation;
 
 	}
+
+	@Override
+	public Operation getOperationById(Long id) {
+		com.svcg.StockCustom.entity.Operation operation = operationRepository
+				.findByOperationId(id);
+		if (operation == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+		}
+
+		return operation;
+	}
+
+	@Override
+	public Operation getCompleteOperationById(Long id) {
+
+		com.svcg.StockCustom.entity.Operation operation = operationRepository
+				.findByOperationId(id);
+		if (operation == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+		}else{
+			List<DetailOperation> detailOperationList = detailOperationRepository.findByOperationId(id);
+			operation.setDetailOperationlist(detailOperationList);			
+		}
+		
+		return operation;
+		
+	}
+	
+	
 	
 	
 }

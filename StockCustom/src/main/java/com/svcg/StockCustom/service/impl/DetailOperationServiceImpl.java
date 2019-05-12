@@ -1,5 +1,7 @@
 package com.svcg.StockCustom.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,11 @@ public class DetailOperationServiceImpl implements DetailOperationService {
 	@Override
 	public DetailOperation saveDetailOperation(DetailOperation detailOperation) {
 		return detailOperationRepository.save(detailOperation);
+	}
+
+	@Override
+	public List<DetailOperation> findDetailsOperation(Long operationId) {
+		return detailOperationRepository.findByOperationId(operationId);
 	}
 
 }
