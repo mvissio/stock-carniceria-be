@@ -55,6 +55,12 @@ public class UserController {
 
     }
 
+    @DeleteMapping("/username")
+    public User deleteUser(String username) {
+        return userService.setDisabledByUsername(username);
+    }
+
+
     @GetMapping("roles")
     public List<RolName> getRolesUsers() {
         return userService.getRolesUsers();
