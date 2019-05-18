@@ -2,6 +2,7 @@ package com.svcg.StockCustom.repository;
 
 import com.svcg.StockCustom.entity.Rol;
 import com.svcg.StockCustom.entity.User;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.io.Serializable;
@@ -17,7 +18,7 @@ public interface UserRepository extends JpaRepository<User, Serializable> {
 
     User findByEmail(String email);
 
-    Optional<List<User>> findByRolIn(List<Rol> roles);
+    Optional<List<User>> findByRolIn(List<Rol> roles, Pageable pageable);
 
 
 }
