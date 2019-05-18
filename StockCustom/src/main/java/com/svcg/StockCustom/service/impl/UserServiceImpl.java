@@ -189,4 +189,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public com.svcg.StockCustom.entity.User setDisabledByUsername(String username) {
+        com.svcg.StockCustom.entity.User user = getUserByUsername(username);
+        user.setEnabled(false);
+        saveUserAndRol(user);
+        return user;
+    }
 }
