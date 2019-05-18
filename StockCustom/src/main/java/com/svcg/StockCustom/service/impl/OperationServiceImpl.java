@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
@@ -42,6 +43,7 @@ public class OperationServiceImpl implements OperationService {
 			.getLogger(UserServiceImpl.class);
 
 	@Override
+	@Transactional
 	public Operation saveOperation(Operation operation) {
 		operation.setCreateDate(new Date());
 		//como manejo el estado por ahora viene desde el front, el total , el subtotal ??

@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.svcg.StockCustom.entity.Article;
 import com.svcg.StockCustom.entity.Operation;
 import com.svcg.StockCustom.service.OperationService;
 
