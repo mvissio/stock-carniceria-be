@@ -36,7 +36,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             com.svcg.StockCustom.entity.User credentials = new ObjectMapper().readValue(request.getInputStream(), com.svcg.StockCustom.entity.User.class);
 
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    credentials.getUsername(), credentials.getPassword(), (Collection<? extends GrantedAuthority>) new ArrayList<>()));
+                    credentials.getUsername(), credentials.getPassword(), new ArrayList<>()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
