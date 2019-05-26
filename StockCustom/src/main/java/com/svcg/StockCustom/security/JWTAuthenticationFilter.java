@@ -1,25 +1,33 @@
 package com.svcg.StockCustom.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import static com.svcg.StockCustom.constant.Constant.HEADER_AUTHORIZATION_KEY;
+import static com.svcg.StockCustom.constant.Constant.ISSUER_INFO;
+import static com.svcg.StockCustom.constant.Constant.SUPER_SECRET_KEY;
+import static com.svcg.StockCustom.constant.Constant.TOKEN_BEARER_PREFIX;
+import static com.svcg.StockCustom.constant.Constant.TOKEN_EXPIRATION_TIME;
+import static com.svcg.StockCustom.constant.Constant.USER_ID;
+import static com.svcg.StockCustom.constant.Constant.USER_ROLE;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 
-import static com.svcg.StockCustom.constant.Constant.*;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -36,7 +44,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             com.svcg.StockCustom.entity.User credentials = new ObjectMapper().readValue(request.getInputStream(), com.svcg.StockCustom.entity.User.class);
 
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    credentials.getUsername(), credentials.getPassword(), (Collection<? extends GrantedAuthority>) new ArrayList<>()));
+                    credentials.getUsername(), credentials.getPassword(), new ArrayList<>()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "operation_detail")
-public class DetailOperation {
+public class OperationDetail {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,25 +22,25 @@ public class DetailOperation {
 	@Column(name = "article_id", nullable = false)
 	private Long articleId;			
 	
-	@Column(name = "precio")
-	private double precio;
+	@Column(name = "price")
+	private double price;
 	
-	@Column(name = "cantidad")
-	private double cantidad;
+	@Column(name = "amount")
+	private double amount;
 	
 	
-	public DetailOperation() {
+	public OperationDetail() {
 	}
 
 
-	public DetailOperation(Long operationDetailId, Long operationId,
-			Long articleId, double precio, double cantidad) {
+	public OperationDetail(Long operationDetailId, Long operationId,
+			Long articleId, double price, double amount) {
 		super();
 		this.operationDetailId = operationDetailId;
 		this.operationId = operationId;
 		this.articleId = articleId;
-		this.precio = precio;
-		this.cantidad = cantidad;
+		this.price = price;
+		this.amount = amount;
 	}
 
 
@@ -74,28 +74,23 @@ public class DetailOperation {
 	}
 
 
-	public double getPrecio() {
-		return precio;
+	public double getPrice() {
+		return price;
 	}
 
 
-	public void setPrecio(double precio) {
-		this.precio = precio;
+	public void setPrice(double price) {
+		this.price = price;
 	}
 
 
-	public double getCantidad() {
-		return cantidad;
+	public double getAmount() {
+		return amount;
 	}
 
 
-	public void setCantidad(double cantidad) {
-		this.cantidad = cantidad;
+	public void setAmount(double amount) {
+		this.amount = amount;
 	}
-	
-	
-
-	
-	
 
 }

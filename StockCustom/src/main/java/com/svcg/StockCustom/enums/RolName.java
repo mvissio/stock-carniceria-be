@@ -1,6 +1,7 @@
 package com.svcg.StockCustom.enums;
 
 public enum RolName {
+	SUPERADMINISTRADOR("SUPERADMINISTRADOR"),
     ADMINISTRADOR("ADMINISTRADOR"),
     USUARIO("USUARIO");
 

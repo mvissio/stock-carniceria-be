@@ -59,7 +59,7 @@ public class Operation {
 	private double subTotal;
 
 	@Transient
-	private List<DetailOperation> detailOperationlist = new ArrayList<DetailOperation>();
+	private List<OperationDetail> detailOperationlist = new ArrayList<OperationDetail>();
 
 	public Operation() {
 	}
@@ -68,7 +68,7 @@ public class Operation {
 			Date createDate, Date disabledDate, boolean disabled,
 			OperationType operationType, PaymentMethod paymentMethod,
 			OperationStatus operationStatus, double total, double subTotal,
-			List<DetailOperation> detailOperationlist) {
+			List<OperationDetail> detailOperationlist) {
 		super();
 		this.operationId = operationId;
 		this.clientId = clientId;
@@ -143,11 +143,11 @@ public class Operation {
 		this.subTotal = subTotal;
 	}
 
-	public List<DetailOperation> getDetailOperationlist() {
+	public List<OperationDetail> getDetailOperationlist() {
 		return detailOperationlist;
 	}
 
-	public void setDetailOperationlist(List<DetailOperation> detailOperationlist) {
+	public void setDetailOperationlist(List<OperationDetail> detailOperationlist) {
 		this.detailOperationlist = detailOperationlist;
 	}
 

@@ -6,25 +6,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.svcg.StockCustom.entity.DetailOperation;
-import com.svcg.StockCustom.repository.DetailOperationRepository;
+import com.svcg.StockCustom.entity.OperationDetail;
+import com.svcg.StockCustom.repository.OperationDetailRepository;
 import com.svcg.StockCustom.service.DetailOperationService;
 
 @Service("detailOperationService")
 public class DetailOperationServiceImpl implements DetailOperationService {
 
 	@Autowired
-	@Qualifier("detailOperationRepository")
-	private DetailOperationRepository detailOperationRepository;
+	@Qualifier("operationDetailRepository")
+	private OperationDetailRepository operationDetailRepository;
 	
 	@Override
-	public DetailOperation saveDetailOperation(DetailOperation detailOperation) {
-		return detailOperationRepository.save(detailOperation);
+	public OperationDetail saveDetailOperation(OperationDetail detailOperation) {
+		return operationDetailRepository.save(detailOperation);
 	}
 
 	@Override
-	public List<DetailOperation> findDetailsOperation(Long operationId) {
-		return detailOperationRepository.findByOperationId(operationId);
+	public List<OperationDetail> findDetailsOperation(Long operationId) {
+		return operationDetailRepository.findByOperationId(operationId);
 	}
 
 }

@@ -14,10 +14,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
 import com.svcg.StockCustom.entity.Article;
-import com.svcg.StockCustom.entity.DetailOperation;
+import com.svcg.StockCustom.entity.OperationDetail;
 import com.svcg.StockCustom.entity.Operation;
 import com.svcg.StockCustom.repository.ArticleRepository;
-import com.svcg.StockCustom.repository.DetailOperationRepository;
+import com.svcg.StockCustom.repository.OperationDetailRepository;
 import com.svcg.StockCustom.repository.OperationRepository;
 import com.svcg.StockCustom.service.OperationService;
 
@@ -29,8 +29,8 @@ public class OperationServiceImpl implements OperationService {
 	private OperationRepository operationRepository;
 
 	@Autowired
-	@Qualifier("detailOperationRepository")
-	private DetailOperationRepository detailOperationRepository;
+	@Qualifier("operationDetailRepository")
+	private OperationDetailRepository operationDetailRepository;
 
 	@Autowired
 	@Qualifier("articleRepository")
@@ -52,7 +52,7 @@ public class OperationServiceImpl implements OperationService {
 		logger.info("Operacion guardada con exito: " + newOperation.toString());
 		
 		if (newOperation != null) {
-			List<DetailOperation> detailOperationList = newOperation
+			List<OperationDetail> detailOperationList = newOperation
 					.getDetailOperationlist();
 
 			// que sucede en el caso que se estan registrando despertidisios ??
@@ -60,17 +60,16 @@ public class OperationServiceImpl implements OperationService {
 
 			if (detailOperationList.size() > 0) {
 				logger.info("Cantidad de detalles de operacion es " + detailOperationList.size() + " para la operation con id " + newOperation.getOperationId());
-				for (DetailOperation detailOperation : detailOperationList) {
+				for (OperationDetail detailOperation : detailOperationList) {
 					detailOperation.setOperationId(newOperation
 							.getOperationId());
-					detailOperationRepository.save(detailOperation);
+					operationDetailRepository.save(detailOperation);
 
 					// actualizo el stock del producto
 
 					Article article = articleRepository
 							.findByArticleId(detailOperation.getArticleId());
-					double newQuantityArticle = (article.getCurrentQuantity() - detailOperation
-							.getCantidad());
+					double newQuantityArticle = (article.getCurrentQuantity() - detailOperation.getAmount());
 					article.setCurrentQuantity(newQuantityArticle);
 					articleRepository.save(article);
 					logger.info("Stock de Articulo actualizado con exito: " + article.toString());
@@ -104,7 +103,7 @@ public class OperationServiceImpl implements OperationService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
 		}else{
-			List<DetailOperation> detailOperationList = detailOperationRepository.findByOperationId(id);
+			List<OperationDetail> detailOperationList = operationDetailRepository.findByOperationId(id);
 			operation.setDetailOperationlist(detailOperationList);			
 		}
 		

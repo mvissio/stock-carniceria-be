@@ -20,13 +20,13 @@ public interface OperationRepository extends
 	Page<Operation> findByCreateDate(Date createDate, Pageable pageable);
 	
 	//Para busqueda de operaciones de venta al mismo cliente
-	Page<Operation> findByClientIdAndOperationType(Long clientId, Pageable pageable, OperationType operationType);
+	Page<Operation> findByClientIdAndOperationType(Long clientId, OperationType operationType, Pageable pageable);
 
 	//Para busqueda de operaciones de compra al mismo proveedor
-	Page<Operation> findByProviderIdAndOperationType(Long providerId, Pageable pageable, OperationType operationType);
+	Page<Operation> findByProviderIdAndOperationType(Long providerId, OperationType operationType, Pageable pageable);
 	
 	//Para busqueda de las ventas del dia y de las compras del dia
-	Page<Operation> findByCreateDateAndOperationType(Date createDate, Pageable pageable, OperationType operationType);
+	Page<Operation> findByCreateDateAndOperationType(Date createDate, OperationType operationType, Pageable pageable);
 	
 	//Para busqueda de operaciones de pago en efectivo o con tc
 	Page<Operation> findByPaymentMethod(PaymentMethod paymentMethod, Pageable pageable);
@@ -34,16 +34,7 @@ public interface OperationRepository extends
 	//Para busqueda de operaciones de pago en efectivo o con tc por cliente 
 	Page<Operation> findByClientIdAndPaymentMethod(Long clientId,PaymentMethod paymentMethod, Pageable pageable);
 	
-	
-		
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	//Para busqueda de operaciones por tipo en un intervalo de tiempo dado 
+	Page<Operation> findByOperationTypeAndCreateDateBetween(OperationType operationType, Date fromDate, Date toDate, Pageable pageable);
 
 }
