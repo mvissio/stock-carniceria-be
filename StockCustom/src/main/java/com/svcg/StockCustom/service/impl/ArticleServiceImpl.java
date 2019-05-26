@@ -111,7 +111,7 @@ public class ArticleServiceImpl implements ArticleService {
 					this.messages.get("MESSAGE_CANT_CREATE_ARTICULO"), null);
 		}
 		com.svcg.StockCustom.entity.Article previousArticle = articleRepository
-				.findByName(article.getName());
+				.findByArticleId(article.getArticleId());
 		if (previousArticle == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					this.messages.get("MESSAGE_NOT_FOUND_ARTICULO"), null);

@@ -69,12 +69,14 @@ public class ArticleController {
         return articleService.getArticleByName(name);
     }
 
-    @GetMapping("id/{id}")
+   
+    
+    @GetMapping("/id/{id}")
     public Article getArticleById(@PathVariable("id")Long id) {
         return articleService.getArticleById(id);
     }
     
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id/{id}")
     public Article deleteArticle(@PathVariable("id")Long id){
     	return articleService.deleteArticle(id);
     }
