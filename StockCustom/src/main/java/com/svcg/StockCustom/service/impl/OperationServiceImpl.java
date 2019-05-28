@@ -1,5 +1,6 @@
 package com.svcg.StockCustom.service.impl;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +16,8 @@ import org.springframework.web.server.ResponseStatusException;
 import com.svcg.StockCustom.component.Messages;
 import com.svcg.StockCustom.entity.Article;
 import com.svcg.StockCustom.entity.OperationDetail;
+import com.svcg.StockCustom.enums.OperationType;
+import com.svcg.StockCustom.enums.PaymentMethod;
 import com.svcg.StockCustom.entity.Operation;
 import com.svcg.StockCustom.repository.ArticleRepository;
 import com.svcg.StockCustom.repository.OperationDetailRepository;
@@ -109,6 +112,18 @@ public class OperationServiceImpl implements OperationService {
 		
 		return operation;
 		
+	}
+
+	@Override
+	public List<OperationType> getOperationTypes() {
+		List<OperationType> operationTypes = Arrays.asList(OperationType.values());
+        return operationTypes;
+	}
+
+	@Override
+	public List<PaymentMethod> getPaymentMethods() {
+		List<PaymentMethod> paymentMethods = Arrays.asList(PaymentMethod.values());
+        return paymentMethods;
 	}
 	
 	

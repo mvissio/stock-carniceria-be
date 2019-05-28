@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     private com.svcg.StockCustom.entity.User saveUserAndRol(com.svcg.StockCustom.entity.User user) {
         try {
-            user.setRol(rolRepository.findRolByNombre(user.getRol().getNombre()).get());
+            user.setRol(rolRepository.findRolByName(user.getRol().getName()).get());
             user = userRepository.save(user);
             /**
              * Devuelvo el user creado con el rol seteado
@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     private List<GrantedAuthority> buildAuthorities(com.svcg.StockCustom.entity.User user) {
         Set<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRol().getNombre()));
+        authorities.add(new SimpleGrantedAuthority(user.getRol().getName()));
         authorities.add(new SimpleGrantedAuthority(user.getUserId().toString()));
         return new ArrayList<>(authorities);
     }

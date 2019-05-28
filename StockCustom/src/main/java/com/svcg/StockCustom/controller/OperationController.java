@@ -1,5 +1,7 @@
 package com.svcg.StockCustom.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.svcg.StockCustom.entity.Operation;
+import com.svcg.StockCustom.enums.OperationType;
+import com.svcg.StockCustom.enums.PaymentMethod;
 import com.svcg.StockCustom.service.OperationService;
 
 @RestController
@@ -38,6 +42,16 @@ public class OperationController {
 		return operationService.saveOperation(operation);
 
 	}
+	
+	@GetMapping("operationTypes")
+    public List<OperationType> getOperationTypes() {
+        return operationService.getOperationTypes();
+    }
+	
+	@GetMapping("paymentMethods")
+    public List<PaymentMethod> getPaymentMethods() {
+        return operationService.getPaymentMethods();
+    }
 	
 	@GetMapping("id/{id}")
     public Operation getOperationById(@PathVariable("id")Long id) {

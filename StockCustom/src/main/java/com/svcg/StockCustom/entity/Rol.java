@@ -15,14 +15,14 @@ public class Rol {
 
     @NotEmpty
     @Size(max = 45, message = "{validation.rol.username.size}")
-    @Column(name = "nombre", nullable = false, length = 45)
-    private String nombre;
+    @Column(name = "name", nullable = false, length = 45)
+    private String name;
 
     public Rol() {
     }
 
-    public Rol(String nombre) {
-        this.nombre = nombre;
+    public Rol(String name) {
+        this.name = name;
     }
 
     public Long getRolId() {
@@ -33,11 +33,11 @@ public class Rol {
         this.rolId = rolId;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 }

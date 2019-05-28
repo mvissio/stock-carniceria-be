@@ -10,5 +10,5 @@ public interface RolRepository extends JpaRepository<Rol, Serializable> {
 
     Optional<Rol> findRolByRolId(Long rolId);
 
-    Optional<Rol> findRolByNombre(String nombre);
+    Optional<Rol> findRolByName(String name);
 }

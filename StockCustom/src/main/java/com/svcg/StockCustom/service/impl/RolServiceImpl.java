@@ -31,8 +31,8 @@ public class RolServiceImpl implements RolService {
         if (rol == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get("MESSAGE_CANT_CREATE_ROL"), null);
         }
-        if (!RolName.existsRol(rol.getNombre())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_ROLE") + rol.getNombre(), null);
+        if (!RolName.existsRol(rol.getName())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_ROLE") + rol.getName(), null);
         }
         try {
             rol = rolRepository.save(rol);
