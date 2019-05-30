@@ -23,7 +23,7 @@ import com.svcg.StockCustom.entity.MeasurementUnit;
 import com.svcg.StockCustom.service.MeasurementUnitService;
 
 @RestController
-@RequestMapping(value = "/measurementUnit")
+@RequestMapping(value = "/measurementUnits")
 public class MeasurementUnitController {
 
 	@Autowired
@@ -79,7 +79,7 @@ public class MeasurementUnitController {
 		return measurementUnitService.getMeasurementUnitById(id);
 	}
 
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/id/{id}")
 	public com.svcg.StockCustom.entity.MeasurementUnit deleteMeasurementUnit(
 			@PathVariable("id") Long id) {
 		return measurementUnitService.deleteMeasurementUnit(id);
