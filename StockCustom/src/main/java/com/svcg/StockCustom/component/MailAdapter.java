@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public interface MailAdapter {
 
-	void sendMail(String to, String subject, String body);
+	void sendMail(String to, String subject, String body) throws IOException;
 	void sendMailHTML(String to, String subject, String body) throws IOException;
 
 }

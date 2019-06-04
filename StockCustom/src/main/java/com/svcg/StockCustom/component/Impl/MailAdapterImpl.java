@@ -2,6 +2,8 @@ package com.svcg.StockCustom.component.Impl;
 
 import com.svcg.StockCustom.StockCustomGetPropertyValues;
 import com.svcg.StockCustom.component.MailAdapter;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -16,16 +18,21 @@ import java.util.Properties;
 @Service("MailAdapterImpl")
 public class MailAdapterImpl implements MailAdapter {
 
-	public JavaMailSenderImpl mailSender;
+    @Autowired
+	private JavaMailSenderImpl mailSender;
 
 	@Override
     @Async
-	public void sendMail(String to, String subject, String body) {
-	SimpleMailMessage message = new SimpleMailMessage();
-	message.setTo(to);
-	message.setSubject(subject);
-	message.setText(body);
-	mailSender.send(message);
+	public void sendMail(String to, String subject, String body) throws IOException {
+		StockCustomGetPropertyValues properties = new StockCustomGetPropertyValues();
+		Properties result = properties.getPropValues();
+	    SimpleMailMessage message = new SimpleMailMessage();
+	    message.setTo(to);
+	    message.setSubject(subject);
+	    message.setText(body);
+	    message.setFrom(result.getProperty("username"));
+	    this.setMailSender(result);
+	    mailSender.send(message);
 	}
 
 	@Async
@@ -48,7 +55,7 @@ public class MailAdapterImpl implements MailAdapter {
 				"        }\n" +
 				"        .title {\n" +
 				"            color: white;\n" +
-				"            background: #7E1974;\n" +
+				"            background: #2A3E52;\n" +
 				"            padding: 10px 0;\n" +
 				"            text-align: center;\n" +
 				"            font-size: 1.5em;\n" +
@@ -106,8 +113,6 @@ public class MailAdapterImpl implements MailAdapter {
 				"</head>\n" +
 				"<body>\n" +
 				"    <div class=\"header\">\n" +
-				"        <img style=\"outline:none;text-decoration:none;display:inline-block\" src=\"http://www.deie.mendoza.gov.ar/images/logo_mendoza.126909fc.png\" alt=\"\" style=\"float:left\">\n" +
-				"        <img style=\"outline:none;text-decoration:none;display:inline-block\" src=\"http://www.deie.mendoza.gov.ar/images/logo_DEIE.d3b443c2.png\" alt=\"\" style=\"float:right\">\n" +
 				"    </div>\n" +
 				"    <div class=\"title\">\n" + subject +
 				"        \n" +
@@ -117,7 +122,6 @@ public class MailAdapterImpl implements MailAdapter {
 				"    </div>\n" +
 				"    <div class=\"footer\">\n" +
 				"        <div class=footer-img>\n" +
-				"            <img style=\"outline:none;text-decoration:none;display:inline-block\" src=\"http://www.deie.mendoza.gov.ar/images/logo_footer.ee620798.png\" alt=\"\">\n" +
 				"        </div>\n" +
 				"        <div  class=\"footer-content\">\n" +
 				"                Dirección local<br> (5570)\n" +
@@ -128,32 +132,31 @@ public class MailAdapterImpl implements MailAdapter {
 				"    \n" +
 				"</body>\n" +
 				"</html>";
-
-		JavaMailSenderImpl sender = new JavaMailSenderImpl();
-		sender.setHost(result.getProperty("host"));
-		sender.setUsername(result.getProperty("username"));
-		sender.setPassword(result.getProperty("password"));
-		sender.setPort(Integer.parseInt(result.getProperty("smtp-port")));
-		sender.setProtocol("smtp");
-		sender.setDefaultEncoding("UTF-8");
-
-		Properties mailProperties = new Properties();
-		mailProperties.put("mail.smtp.auth", true);
-		mailProperties.put("mail.smtp.starttls.enable", true);
-		mailProperties.put("mail.smtp.starttls.required", true);
-		sender.setJavaMailProperties(mailProperties);
-		MimeMessage message = sender.createMimeMessage();
+		this.setMailSender(result);
+		MimeMessage message = mailSender.createMimeMessage();
 		try {
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
 			helper.setTo(to);
 			helper.setSubject(subject);
 			helper.setText(html, true);
-			//FileSystemResource res = new FileSystemResource(new File("c:/Sample.jpg"));
-			//helper.addInline("identifier1234", res);
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		}
-		sender.send(message);
+		mailSender.send(message);
 	}
+	
+	private void setMailSender(Properties result) {
+        Properties mailProperties = new Properties();
+        mailSender.setHost(result.getProperty("host"));
+        mailSender.setUsername(result.getProperty("username"));
+        mailSender.setPassword(result.getProperty("password"));
+        mailSender.setPort(Integer.parseInt(result.getProperty("smtp-port")));
+        mailSender.setProtocol("smtp");
+        mailSender.setDefaultEncoding("UTF-8");
+        mailProperties.put("mail.smtp.auth", true);
+        mailProperties.put("mail.smtp.starttls.enable", true);
+		mailProperties.put("mail.smtp.starttls.required", true);
+        mailSender.setJavaMailProperties(mailProperties);
+    }
 
 }
