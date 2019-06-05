@@ -1,6 +1,8 @@
 package com.svcg.StockCustom.controller;
 
 
+import java.util.List;
+
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,11 +64,15 @@ public class ArticleController {
         return articleService.updateArticle(article);
 
     }
-    
 
     @GetMapping("/name/{name}")
     public Article getArticleByNombre(@PathVariable("name")String name) {
         return articleService.getArticleByName(name);
+    }
+    
+    @GetMapping("/nameLike")
+    public List<Article> getArticleByNombreLike(String nameLike) {
+        return articleService.getArticleByNameLike(nameLike);
     }
 
     @GetMapping("id/{id}")

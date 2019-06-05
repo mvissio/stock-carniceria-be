@@ -1,5 +1,6 @@
 package com.svcg.StockCustom.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -8,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.svcg.StockCustom.entity.Article;
 import com.svcg.StockCustom.entity.Operation;
 import com.svcg.StockCustom.enums.OperationType;
 import com.svcg.StockCustom.enums.PaymentMethod;
@@ -33,7 +38,7 @@ public class OperationController {
 			.getLogger(UserController.class);
 
 	@PostMapping("")
-	public Operation addArticle(@Valid @RequestBody Operation operation,
+	public Operation addOperation(@Valid @RequestBody Operation operation,
 			BindingResult bindingResult) throws MethodArgumentNotValidException {
 		if (bindingResult.hasErrors()) {
 			logger.error(String.valueOf(bindingResult.getAllErrors()));
@@ -41,6 +46,11 @@ public class OperationController {
 		}
 		return operationService.saveOperation(operation);
 
+	}
+	
+	@GetMapping("/creationDate")
+	public Page<Operation> getOperationsByCreationDate(Date creationDate, Pageable pageable) {
+		return operationService.getOperationsByCreationDate(creationDate, pageable);
 	}
 	
 	@GetMapping("operationTypes")

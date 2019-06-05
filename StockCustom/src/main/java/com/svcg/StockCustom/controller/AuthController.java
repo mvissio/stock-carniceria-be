@@ -19,7 +19,7 @@ public class AuthController {
 
     @PostMapping("/recoverPassword")
     public ResponseModel<String> recoverPassword(@RequestParam String email) {
-    	ResponseModel<String> responseModel = new ResponseModel<String>(HttpStatus.OK.value(), HttpStatus.OK.toString());
+    	ResponseModel<String> responseModel = new ResponseModel<>(HttpStatus.OK.value(), HttpStatus.OK.toString());
     	responseModel.setResult(authService.resetPasswordByEmail(email));
 		return responseModel;
     }

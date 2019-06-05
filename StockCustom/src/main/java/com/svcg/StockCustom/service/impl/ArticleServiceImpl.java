@@ -1,6 +1,7 @@
 package com.svcg.StockCustom.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,10 +55,11 @@ public class ArticleServiceImpl implements ArticleService {
 
 	}
 
+
 	@Override
 	public Page<Article> getArticles(Pageable pageable) {
 
-		Page<com.svcg.StockCustom.entity.Article> articles = articleRepository
+		Page<Article> articles = articleRepository
 				.findAll(pageable);
 		if (articles.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -69,18 +71,18 @@ public class ArticleServiceImpl implements ArticleService {
 	
 	@Override
 	public Page<Article> findByOnlyEnabledArticle(Pageable pageable) {
-		Page<com.svcg.StockCustom.entity.Article> articles = articleRepository.findByDisabledIsFalse(pageable);
+		Page<Article> articles = articleRepository.findByDisabledIsFalse(pageable);
 		if (articles.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					this.messages.get("MESSAGE_NOT_FOUND_ARTICULOS"), null);
 		}
 		return articles;	
 	}
-
+	
 	@Override
 	public Article getArticleByName(String name) {
 
-		com.svcg.StockCustom.entity.Article article = articleRepository
+		Article article = articleRepository
 				.findByName(name);
 		if (article == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -90,10 +92,22 @@ public class ArticleServiceImpl implements ArticleService {
 		return article;
 
 	}
+	
+	@Override
+	public List<Article> getArticleByNameLike(String nameLike) {
+		List<Article> articles = articleRepository
+				.findByNameContaining(nameLike);
+		if (articles == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_ARTICULO"), null);
+		}
 
+		return articles;
+	}
+	
 	@Override
 	public Article getArticleById(Long id) {
-		com.svcg.StockCustom.entity.Article article = articleRepository
+		Article article = articleRepository
 				.findByArticleId(id);
 		if (article == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -110,7 +124,7 @@ public class ArticleServiceImpl implements ArticleService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					this.messages.get("MESSAGE_CANT_CREATE_ARTICULO"), null);
 		}
-		com.svcg.StockCustom.entity.Article previousArticle = articleRepository
+		Article previousArticle = articleRepository
 				.findByName(article.getName());
 		if (previousArticle == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -122,8 +136,8 @@ public class ArticleServiceImpl implements ArticleService {
 
 	}
 
-	private com.svcg.StockCustom.entity.Article saveArticleObjet(
-			com.svcg.StockCustom.entity.Article article) {
+	private Article saveArticleObjet(
+			Article article) {
 		try {
 
 			Article articleCreated = articleRepository.save(article);
@@ -137,9 +151,8 @@ public class ArticleServiceImpl implements ArticleService {
 
 	}
 		
-
 	private boolean articleNameExist(String name) {
-		com.svcg.StockCustom.entity.Article article = articleRepository
+		Article article = articleRepository
 				.findByName(name);
 		return article != null;
 	}
@@ -152,6 +165,4 @@ public class ArticleServiceImpl implements ArticleService {
 		return articleRepository.save(article);
 	}
 
-		
-	
 }

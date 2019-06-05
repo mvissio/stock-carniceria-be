@@ -22,6 +22,8 @@ public interface ArticleRepository extends JpaRepository<Article,Serializable> {
     Optional<List<Article>> findByMeasurementUnitIdIn(List<MeasurementUnit> unidadesMedida);
     
     Page<Article> findByDisabledIsFalse(Pageable pageable);
+
+	List<Article> findByNameContaining(String nameLike);
 	
 	
 }

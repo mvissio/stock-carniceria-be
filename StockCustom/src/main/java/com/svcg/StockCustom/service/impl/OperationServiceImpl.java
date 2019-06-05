@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,15 +57,15 @@ public class OperationServiceImpl implements OperationService {
 		logger.info("Operacion guardada con exito: " + newOperation.toString());
 		
 		if (newOperation != null) {
-			List<OperationDetail> detailOperationList = newOperation
-					.getDetailOperationlist();
+			List<OperationDetail> operationDetails = operation
+					.getOperationDetails();
 
 			// que sucede en el caso que se estan registrando despertidisios ??
 			// aplica ??
 
-			if (detailOperationList.size() > 0) {
-				logger.info("Cantidad de detalles de operacion es " + detailOperationList.size() + " para la operation con id " + newOperation.getOperationId());
-				for (OperationDetail detailOperation : detailOperationList) {
+			if (!operationDetails.isEmpty()) {
+				logger.info("Cantidad de detalles de operacion es " + operationDetails.size() + " para la operation con id " + newOperation.getOperationId());
+				for (OperationDetail detailOperation : operationDetails) {
 					detailOperation.setOperationId(newOperation
 							.getOperationId());
 					operationDetailRepository.save(detailOperation);
@@ -86,6 +88,17 @@ public class OperationServiceImpl implements OperationService {
 	}
 
 	@Override
+	public Page<Operation> getOperationsByCreationDate(Date createDate, Pageable pageable) {
+		Page<Operation> operations = operationRepository.findByCreateDate(createDate, pageable);
+		if (operations == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+		}
+
+		return operations;
+	}
+	
+	@Override
 	public Operation getOperationById(Long id) {
 		com.svcg.StockCustom.entity.Operation operation = operationRepository
 				.findByOperationId(id);
@@ -107,7 +120,7 @@ public class OperationServiceImpl implements OperationService {
 					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
 		}else{
 			List<OperationDetail> detailOperationList = operationDetailRepository.findByOperationId(id);
-			operation.setDetailOperationlist(detailOperationList);			
+			operation.setOperationDetails(detailOperationList);			
 		}
 		
 		return operation;
@@ -125,8 +138,5 @@ public class OperationServiceImpl implements OperationService {
 		List<PaymentMethod> paymentMethods = Arrays.asList(PaymentMethod.values());
         return paymentMethods;
 	}
-	
-	
-	
 	
 }
