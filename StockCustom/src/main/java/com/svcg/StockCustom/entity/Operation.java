@@ -4,13 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import com.svcg.StockCustom.enums.OperationStatus;
 import com.svcg.StockCustom.enums.OperationType;
@@ -60,6 +54,10 @@ public class Operation {
 
 	@Transient
 	private List<DetailOperation> detailOperationlist = new ArrayList<DetailOperation>();
+
+	@OneToOne
+	@JoinColumn(name = "fk_person")
+	private Person person;
 
 	public Operation() {
 	}
@@ -187,9 +185,12 @@ public class Operation {
 	public String toString() {
 		return "id: " + this.operationId + " operationType: " + operationType + " paymentMethod: " + paymentMethod + " operationStatus " + operationStatus; 
 	}
-	
-	
-	
-	
 
+	public Person getPerson() {
+		return person;
+	}
+
+	public void setPerson(Person person) {
+		this.person = person;
+	}
 }
