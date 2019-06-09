@@ -49,6 +49,7 @@ public class ArticleServiceImpl implements ArticleService {
 		}
 		article.setCreateDate(new Date());
 		article.setDisabled(false);
+		article.setExpirationDate(null);
 		article = saveArticleObjet(article);
 		logger.info("article was saved successfully " + article );
 		return article;
@@ -107,8 +108,7 @@ public class ArticleServiceImpl implements ArticleService {
 	
 	@Override
 	public Article getArticleById(Long id) {
-		Article article = articleRepository
-				.findByArticleId(id);
+		Article article = articleRepository.findByArticleId(id);
 		if (article == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					this.messages.get("MESSAGE_NOT_FOUND_ARTICULO"), null);
@@ -124,8 +124,7 @@ public class ArticleServiceImpl implements ArticleService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					this.messages.get("MESSAGE_CANT_CREATE_ARTICULO"), null);
 		}
-		Article previousArticle = articleRepository
-				.findByName(article.getName());
+		Article previousArticle = articleRepository.findByArticleId(article.getArticleId());
 		if (previousArticle == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					this.messages.get("MESSAGE_NOT_FOUND_ARTICULO"), null);

@@ -11,6 +11,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.ColumnDefault;
+
 @Entity
 @Table(name = "articles")
 public class Article {
@@ -25,7 +27,7 @@ public class Article {
 
 	@NotEmpty
 	@Size(max = 100, message = "{validation.rol.username.size}")
-	@Column(name = "name", nullable = false, length = 100)
+	@Column(name = "name", length = 100 ,nullable = false)
 	private String name;
 
 	@Size(max = 100, message = "{validation.rol.username.size}")
@@ -38,7 +40,8 @@ public class Article {
 
 	//vencimiento, a futuro podemos hacer un informe de vencimientos futuros
 	
-	@Column(name = "expiration_date")
+	@ColumnDefault("null")
+	@Column(name = "expiration_date",nullable = true )
 	private Date expirationDate;
 
 	//el stock actual del producto. deberia ser nullable = false ??
@@ -66,6 +69,8 @@ public class Article {
 
 	@Column(name = "disabled")
 	private boolean disabled;
+	
+	
 
 	public Article() {
 	}

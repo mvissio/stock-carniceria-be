@@ -15,14 +15,14 @@ public interface OperationService {
 	Operation saveOperation(Operation operation);
 	
 	Operation getOperationById(Long id);
-	
-	Operation getCompleteOperationById(Long id);
 
 	List<OperationType> getOperationTypes();
 
 	List<PaymentMethod> getPaymentMethods();
 
 	Page<Operation> getOperationsByCreationDate(Date createDate, Pageable pageable);
-	
-	
+
+    Operation cancelOperation(Long id);
+
+	Operation updateOperation(Operation operation);
 }

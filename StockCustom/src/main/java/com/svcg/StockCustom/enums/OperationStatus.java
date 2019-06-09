@@ -2,7 +2,8 @@ package com.svcg.StockCustom.enums;
 
 public enum OperationStatus {
     CANCELED("CANCELED"),
-    BUY("BUY");
+    SOLD("SOLD"),
+    PURCHASED("PURCHASED");
 
     private String nameOperation;
 

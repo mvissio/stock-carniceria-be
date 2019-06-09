@@ -2,12 +2,7 @@ package com.svcg.StockCustom.entity;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -29,10 +24,12 @@ public class Category {
 	@Size(max = 255, message = "{validation.rol.username.size}")
 	@Column(name = "description", length = 255)
 	private String description;
-	
+
+	@Temporal(TemporalType.DATE)
 	@Column(name = "create_date", nullable = false)
 	private Date createDate;
 
+	@Temporal(TemporalType.DATE)
 	@Column(name = "disabled_date")
 	private Date disabledDate;
 

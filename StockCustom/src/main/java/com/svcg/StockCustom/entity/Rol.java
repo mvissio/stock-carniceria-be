@@ -14,7 +14,7 @@ public class Rol {
     private Long rolId;
 
     @NotEmpty
-    @Size(max = 45, message = "{validation.rol.username.size}")
+    @Size(max = 45, message = "{validation.rol.name.size}")
     @Column(name = "name", nullable = false, length = 45)
     private String name;
 

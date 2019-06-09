@@ -2,12 +2,7 @@ package com.svcg.StockCustom.entity;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -27,10 +22,12 @@ public class MeasurementUnit {
 
 	@Column(name = "symbol", nullable = false, length = 2)
 	private String symbol;
-	
+
+	@Temporal(TemporalType.DATE)
 	@Column(name = "create_date", nullable = false)
 	private Date createDate;
 
+	@Temporal(TemporalType.DATE)
 	@Column(name = "disabled_date")
 	private Date disabledDate;
 

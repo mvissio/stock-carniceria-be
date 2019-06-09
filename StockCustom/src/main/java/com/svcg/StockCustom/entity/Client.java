@@ -32,9 +32,11 @@ public class Client {
 	@Column(name = "telephone", nullable = false)
 	private String telephone;
 
+	@Temporal(TemporalType.DATE)
 	@Column(name = "create_date", nullable = false)
 	private Date createDate;
 
+	@Temporal(TemporalType.DATE)
 	@Column(name = "disabled_date")
 	private Date disabledDate;
 

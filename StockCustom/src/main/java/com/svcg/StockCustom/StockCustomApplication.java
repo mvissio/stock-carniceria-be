@@ -11,11 +11,18 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
+
 @EnableAsync(proxyTargetClass=true)
 @EnableScheduling
 @SpringBootApplication
 public class StockCustomApplication extends SpringBootServletInitializer {
-
+	@PostConstruct
+	public void init(){
+		// Setting Spring Boot SetTimeZone
+		TimeZone.setDefault(TimeZone.getTimeZone("GMT-3"));
+	}
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(StockCustomApplication.class);

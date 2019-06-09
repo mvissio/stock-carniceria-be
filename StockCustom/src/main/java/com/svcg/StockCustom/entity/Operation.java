@@ -4,13 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import com.svcg.StockCustom.enums.OperationStatus;
 import com.svcg.StockCustom.enums.OperationType;
@@ -26,14 +20,20 @@ public class Operation {
 	private Long operationId;
 	
 	@Column(name = "client_id")
-	private Date clientId;
+	private Long clientId;
 
 	@Column(name = "provider_id")
-	private Date providerId;
-		
+	private Long providerId;
+
+	@Temporal(TemporalType.DATE)
 	@Column(name = "create_date", nullable = false)
 	private Date createDate;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_date_time", nullable = false)
+    private Date createDateTime;
+
+    @Temporal(TemporalType.DATE)
 	@Column(name = "disabled_date")
 	private Date disabledDate;
 
@@ -64,7 +64,7 @@ public class Operation {
 	public Operation() {
 	}
 
-	public Operation(Long operationId, Date clientId, Date providerId,
+	public Operation(Long operationId, Long clientId, Long providerId,
 			Date createDate, Date disabledDate, boolean disabled,
 			OperationType operationType, PaymentMethod paymentMethod,
 			OperationStatus operationStatus, double total, double subTotal,
@@ -95,7 +95,15 @@ public class Operation {
 		this.createDate = createDate;
 	}
 
-	public Date getDisabledDate() {
+    public Date getCreateDateTime() {
+        return createDateTime;
+    }
+
+    public void setCreateDateTime(Date createDateTime) {
+        this.createDateTime = createDateTime;
+    }
+
+    public Date getDisabledDate() {
 		return disabledDate;
 	}
 
@@ -151,19 +159,19 @@ public class Operation {
 		this.operationDetails = operationDetails;
 	}
 
-	public Date getClientId() {
+	public Long getClientId() {
 		return clientId;
 	}
 
-	public void setClientId(Date clientId) {
+	public void setClientId(Long clientId) {
 		this.clientId = clientId;
 	}
 
-	public Date getProviderId() {
+	public Long getProviderId() {
 		return providerId;
 	}
 
-	public void setProviderId(Date providerId) {
+	public void setProviderId(Long providerId) {
 		this.providerId = providerId;
 	}
 

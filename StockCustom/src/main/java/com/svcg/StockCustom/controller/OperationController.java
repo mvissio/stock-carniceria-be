@@ -13,12 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.svcg.StockCustom.entity.Article;
 import com.svcg.StockCustom.entity.Operation;
@@ -47,6 +42,17 @@ public class OperationController {
 		return operationService.saveOperation(operation);
 
 	}
+
+    @PutMapping("")
+    public Operation updateOperation(@Valid @RequestBody Operation operation,
+                                  BindingResult bindingResult) throws MethodArgumentNotValidException {
+        if (bindingResult.hasErrors()) {
+            logger.error(String.valueOf(bindingResult.getAllErrors()));
+            throw new MethodArgumentNotValidException(null, bindingResult);
+        }
+        return operationService.updateOperation(operation);
+
+    }
 	
 	@GetMapping("/creationDate")
 	public Page<Operation> getOperationsByCreationDate(Date creationDate, Pageable pageable) {
@@ -67,10 +73,10 @@ public class OperationController {
     public Operation getOperationById(@PathVariable("id")Long id) {
         return operationService.getOperationById(id);
     }
-	
-	@GetMapping("id/complete/{id}")
-    public Operation getCompleteOperationById(@PathVariable("id")Long id) {
-        return operationService.getCompleteOperationById(id);
-    }
+
+	@DeleteMapping("/cancel/id/{id}")
+	public Operation cancelOperation(@PathVariable("id") Long id) {
+		return operationService.cancelOperation(id);
+	}
 
 }
