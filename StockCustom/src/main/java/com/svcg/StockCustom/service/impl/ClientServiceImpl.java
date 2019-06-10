@@ -2,6 +2,7 @@ package com.svcg.StockCustom.service.impl;
 
 import java.util.Date;
 
+import com.svcg.StockCustom.entity.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
-import com.svcg.StockCustom.entity.Client;
 import com.svcg.StockCustom.repository.ClientRepository;
 import com.svcg.StockCustom.service.ClientService;
 
@@ -32,7 +32,7 @@ public class ClientServiceImpl implements ClientService {
 
     
     @Override
-    public com.svcg.StockCustom.entity.Client saveClient(com.svcg.StockCustom.entity.Client client) {
+    public Client saveClient(Client client) {
         if (client == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get("MESSAGE_CANT_CREATE_CLIENT"), null);
         }
@@ -58,7 +58,7 @@ public class ClientServiceImpl implements ClientService {
      * Guardo el usuario con sus roles
      */
 
-    private com.svcg.StockCustom.entity.Client saveObjectClient(com.svcg.StockCustom.entity.Client client) {
+    private Client saveObjectClient(Client client) {
         try {
             client = clientRepository.save(client);
             /**
@@ -74,11 +74,11 @@ public class ClientServiceImpl implements ClientService {
    
     
     @Override
-    public com.svcg.StockCustom.entity.Client updateClient(com.svcg.StockCustom.entity.Client client) {
+    public Client updateClient(Client client) {
         if (client == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get("MESSAGE_CANT_CREATE_CLIENT"), null);
         }
-        com.svcg.StockCustom.entity.Client previousClient = clientRepository.findByName(client.getName());
+        Client previousClient = clientRepository.findByName(client.getName());
         if (previousClient == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_CLIENT"), null);
         }
@@ -90,8 +90,8 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Page<com.svcg.StockCustom.entity.Client> getClients(Pageable pageable) {
-        Page<com.svcg.StockCustom.entity.Client> clients = clientRepository.findAll(pageable);
+    public Page<Client> getClients(Pageable pageable) {
+        Page<Client> clients = clientRepository.findAll(pageable);
         if (clients.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,  this.messages.get("MESSAGE_NOT_FOUND_CLIENTS"), null);
         }
@@ -100,19 +100,19 @@ public class ClientServiceImpl implements ClientService {
     
     
     private boolean emailExist(String email) {
-        com.svcg.StockCustom.entity.Client client = clientRepository.findByEmail(email);
+        Client client = clientRepository.findByEmail(email);
         return client != null;
     }
 
     private boolean clientNameExist(String name) {
-        com.svcg.StockCustom.entity.Client client = clientRepository.findByName(name);
+        Client client = clientRepository.findByName(name);
         return client != null;
     }
 
     
     @Override
-    public com.svcg.StockCustom.entity.Client getClientByName(String name) {
-        com.svcg.StockCustom.entity.Client client = clientRepository.findByName(name);
+    public Client getClientByName(String name) {
+        Client client = clientRepository.findByName(name);
         if(client == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_CLIENT"), null);
         }
@@ -121,8 +121,8 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public com.svcg.StockCustom.entity.Client getClientById(Long id) {
-        com.svcg.StockCustom.entity.Client client = clientRepository.findByClientId(id);
+    public Client getClientById(Long id) {
+        Client client = clientRepository.findByClientId(id);
         if(client == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_CLIENT"), null);
         }
@@ -131,7 +131,7 @@ public class ClientServiceImpl implements ClientService {
     }
     
     @Override
-	public com.svcg.StockCustom.entity.Client deleteClient(Long id) {
+	public Client deleteClient(Long id) {
 		Client client = clientRepository.findByClientId(id);
 		client.setDisabled(true);
 		client.setDisabledDate(new Date());		
@@ -140,7 +140,7 @@ public class ClientServiceImpl implements ClientService {
     
     @Override
 	public Page<Client> findByOnlyEnabledClient(Pageable pageable) {
-		Page<com.svcg.StockCustom.entity.Client> clients = clientRepository.findByDisabledIsFalse(pageable);
+		Page<Client> clients = clientRepository.findByDisabledIsFalse(pageable);
 		if (clients.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					this.messages.get("MESSAGE_NOT_FOUND_CLIENT"), null);

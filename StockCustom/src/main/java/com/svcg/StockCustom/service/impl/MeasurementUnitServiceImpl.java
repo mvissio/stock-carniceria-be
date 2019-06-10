@@ -2,6 +2,7 @@ package com.svcg.StockCustom.service.impl;
 
 import java.util.Date;
 
+import com.svcg.StockCustom.entity.MeasurementUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
-import com.svcg.StockCustom.entity.MeasurementUnit;
 import com.svcg.StockCustom.repository.MeasurementUnitRepository;
 import com.svcg.StockCustom.service.MeasurementUnitService;
 
@@ -55,7 +55,7 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 
 	@Override
 	public Page<MeasurementUnit> getMeasurementUnits(Pageable pageable) {
-		Page<com.svcg.StockCustom.entity.MeasurementUnit> measurementUnit = measurementUnitRepository
+		Page<MeasurementUnit> measurementUnit = measurementUnitRepository
 				.findAll(pageable);
 		if (measurementUnit.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -67,7 +67,7 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 
 	@Override
 	public MeasurementUnit getMeasurementUnitByName(String name) {
-		com.svcg.StockCustom.entity.MeasurementUnit measurementUnit = measurementUnitRepository
+		MeasurementUnit measurementUnit = measurementUnitRepository
 				.findByName(name);
 		if (measurementUnit == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -79,7 +79,7 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 
 	@Override
 	public MeasurementUnit getMeasurementUnitById(Long id) {
-		com.svcg.StockCustom.entity.MeasurementUnit measurementUnit = measurementUnitRepository
+		MeasurementUnit measurementUnit = measurementUnitRepository
 				.findByMeasurementUnitId(id);
 		if (measurementUnit == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -94,7 +94,7 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					this.messages.get("MESSAGE_CANT_CREATE_ARTICULO"), null);
 		}
-		com.svcg.StockCustom.entity.MeasurementUnit previousMeasurementUnit = measurementUnitRepository
+		MeasurementUnit previousMeasurementUnit = measurementUnitRepository
 				.findByName(measurementUnit.getName());
 		if (previousMeasurementUnit == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -106,13 +106,13 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 	}
 
 	private boolean measurementUnitNameExist(String name) {
-		com.svcg.StockCustom.entity.MeasurementUnit measurementUnit = measurementUnitRepository
+		MeasurementUnit measurementUnit = measurementUnitRepository
 				.findByName(name);
 		return measurementUnit != null;
 	}
 
-	private com.svcg.StockCustom.entity.MeasurementUnit saveMeasurementUnitObjet(
-			com.svcg.StockCustom.entity.MeasurementUnit measurementUnit) {
+	private MeasurementUnit saveMeasurementUnitObjet(
+			MeasurementUnit measurementUnit) {
 		try {
 
 			MeasurementUnit measurementUnitCreated = measurementUnitRepository
@@ -139,7 +139,7 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 	@Override
 	public Page<MeasurementUnit> findByOnlyEnabledMeasurementUnit(
 			Pageable pageable) {
-		Page<com.svcg.StockCustom.entity.MeasurementUnit> measurementUnits = measurementUnitRepository
+		Page<MeasurementUnit> measurementUnits = measurementUnitRepository
 				.findByDisabledIsFalse(pageable);
 		if (measurementUnits.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,

@@ -31,7 +31,7 @@ public class CategoryServiceImpl implements CategoryService {
 	private CategoryRepository categoryRepository;
 
     @Override
-    public com.svcg.StockCustom.entity.Category saveCategory(com.svcg.StockCustom.entity.Category category) {
+    public Category saveCategory(Category category) {
         if (category == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get("MESSAGE_CANT_CREATE_CLIENT"), null);
         }
@@ -55,7 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
      * Guardo el usuario con sus roles
      */
 
-    private com.svcg.StockCustom.entity.Category saveObjectCategory(com.svcg.StockCustom.entity.Category category) {
+    private Category saveObjectCategory(Category category) {
         try {
             category = categoryRepository.save(category);
             /**
@@ -71,11 +71,11 @@ public class CategoryServiceImpl implements CategoryService {
    
     
     @Override
-    public com.svcg.StockCustom.entity.Category updateCategory(com.svcg.StockCustom.entity.Category category) {
+    public Category updateCategory(Category category) {
         if (category == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get("MESSAGE_CANT_CREATE_PROVIDER"), null);
         }
-        com.svcg.StockCustom.entity.Category previousCategory = categoryRepository.findByName(category.getName());
+        Category previousCategory = categoryRepository.findByName(category.getName());
         if (previousCategory == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_PROVIDER"), null);
         }
@@ -84,8 +84,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Page<com.svcg.StockCustom.entity.Category> getCategories(Pageable pageable) {
-        Page<com.svcg.StockCustom.entity.Category> categories = categoryRepository.findAll(pageable);
+    public Page<Category> getCategories(Pageable pageable) {
+        Page<Category> categories = categoryRepository.findAll(pageable);
         if (categories.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,  this.messages.get("MESSAGE_NOT_FOUND_PROVIDERS"), null);
         }
@@ -94,7 +94,7 @@ public class CategoryServiceImpl implements CategoryService {
     
     @Override
 	public Page<Category> findByOnlyEnabledCategory(Pageable pageable) {
-		Page<com.svcg.StockCustom.entity.Category> categories = categoryRepository.findByDisabledIsFalse(pageable);
+		Page<Category> categories = categoryRepository.findByDisabledIsFalse(pageable);
 		if (categories.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					this.messages.get("MESSAGE_NOT_FOUND_CATEGORIES"), null);
@@ -104,14 +104,14 @@ public class CategoryServiceImpl implements CategoryService {
         
     
     private boolean categoryNameExist(String name) {
-        com.svcg.StockCustom.entity.Category category = categoryRepository.findByName(name);
+        Category category = categoryRepository.findByName(name);
         return category != null;
     }
 
     
     @Override
-    public com.svcg.StockCustom.entity.Category getCategoryByName(String name) {
-        com.svcg.StockCustom.entity.Category category = categoryRepository.findByName(name);
+    public Category getCategoryByName(String name) {
+        Category category = categoryRepository.findByName(name);
         if(category == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_PROVIDER"), null);
         }
@@ -120,8 +120,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public com.svcg.StockCustom.entity.Category getCategoryById(Long id) {
-        com.svcg.StockCustom.entity.Category category = categoryRepository.findByCategoryId(id);
+    public Category getCategoryById(Long id) {
+        Category category = categoryRepository.findByCategoryId(id);
         if(category == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_PROVIDER"), null);
         }
@@ -130,7 +130,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
     
     @Override
-	public com.svcg.StockCustom.entity.Category deleteCategory(Long id) {
+	public Category deleteCategory(Long id) {
 		Category category = categoryRepository.findByCategoryId(id);
 		category.setDisabled(true);
 		category.setDisabledDate(new Date());		

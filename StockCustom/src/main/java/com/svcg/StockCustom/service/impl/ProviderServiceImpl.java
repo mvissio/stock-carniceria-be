@@ -2,6 +2,7 @@ package com.svcg.StockCustom.service.impl;
 
 import java.util.Date;
 
+import com.svcg.StockCustom.entity.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
-import com.svcg.StockCustom.entity.Provider;
 import com.svcg.StockCustom.repository.ProviderRepository;
 import com.svcg.StockCustom.service.ProviderService;
 
@@ -31,8 +31,8 @@ public class ProviderServiceImpl implements ProviderService {
 			.getLogger(ProviderServiceImpl.class);
 
 	@Override
-	public com.svcg.StockCustom.entity.Provider saveProvider(
-			com.svcg.StockCustom.entity.Provider provider) {
+	public Provider saveProvider(
+			Provider provider) {
 		if (provider == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					this.messages.get("MESSAGE_CANT_CREATE_CLIENT"), null);
@@ -63,8 +63,8 @@ public class ProviderServiceImpl implements ProviderService {
 	 * Guardo el usuario con sus roles
 	 */
 
-	private com.svcg.StockCustom.entity.Provider saveProviderObject(
-			com.svcg.StockCustom.entity.Provider provider) {
+	private Provider saveProviderObject(
+			Provider provider) {
 		try {
 			provider = providerRepository.save(provider);
 			/**
@@ -79,13 +79,13 @@ public class ProviderServiceImpl implements ProviderService {
 	}
 
 	@Override
-	public com.svcg.StockCustom.entity.Provider updateProvider(
-			com.svcg.StockCustom.entity.Provider provider) {
+	public Provider updateProvider(
+			Provider provider) {
 		if (provider == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					this.messages.get("MESSAGE_CANT_CREATE_PROVIDER"), null);
 		}
-		com.svcg.StockCustom.entity.Provider previousProvider = providerRepository
+		Provider previousProvider = providerRepository
 				.findByName(provider.getName());
 		if (previousProvider == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -102,9 +102,9 @@ public class ProviderServiceImpl implements ProviderService {
 	}
 
 	@Override
-	public Page<com.svcg.StockCustom.entity.Provider> getProviders(
+	public Page<Provider> getProviders(
 			Pageable pageable) {
-		Page<com.svcg.StockCustom.entity.Provider> providers = providerRepository
+		Page<Provider> providers = providerRepository
 				.findAll(pageable);
 		if (providers.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -114,20 +114,20 @@ public class ProviderServiceImpl implements ProviderService {
 	}
 
 	private boolean emailExist(String email) {
-		com.svcg.StockCustom.entity.Provider provider = providerRepository
+		Provider provider = providerRepository
 				.findByEmail(email);
 		return provider != null;
 	}
 
 	private boolean providerNameExist(String name) {
-		com.svcg.StockCustom.entity.Provider provider = providerRepository
+		Provider provider = providerRepository
 				.findByName(name);
 		return provider != null;
 	}
 
 	@Override
-	public com.svcg.StockCustom.entity.Provider getProviderByName(String name) {
-		com.svcg.StockCustom.entity.Provider provider = providerRepository
+	public Provider getProviderByName(String name) {
+		Provider provider = providerRepository
 				.findByName(name);
 		if (provider == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -138,8 +138,8 @@ public class ProviderServiceImpl implements ProviderService {
 	}
 
 	@Override
-	public com.svcg.StockCustom.entity.Provider getProviderById(Long id) {
-		com.svcg.StockCustom.entity.Provider provider = providerRepository
+	public Provider getProviderById(Long id) {
+		Provider provider = providerRepository
 				.findByProviderId(id);
 		if (provider == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -160,7 +160,7 @@ public class ProviderServiceImpl implements ProviderService {
 	@Override
 	public Page<Provider> findByOnlyEnabledProvider(
 			Pageable pageable) {
-		Page<com.svcg.StockCustom.entity.Provider> providers = providerRepository
+		Page<Provider> providers = providerRepository
 				.findByDisabledIsFalse(pageable);
 		if (providers.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
