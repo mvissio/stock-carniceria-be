@@ -58,6 +58,13 @@ public class OperationController {
 	public Page<Operation> getOperationsByCreationDate(Date creationDate, Pageable pageable) {
 		return operationService.getOperationsByCreationDate(creationDate, pageable);
 	}
+	/*
+	@GetMapping("/operationType")
+	public Page<Operation> getOperationsByByCreationDateAndOperationType(Date creationDate, OperationType operationType, Pageable pageable)  {
+		return operationService.
+	}
+	*/
+	
 	
 	@GetMapping("operationTypes")
     public List<OperationType> getOperationTypes() {

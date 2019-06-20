@@ -173,4 +173,10 @@ public class OperationServiceImpl implements OperationService {
         }
     }
 
+	@Override
+	public Page<Operation> getOperationsByCreationDateAndOperationType(Date createDate, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

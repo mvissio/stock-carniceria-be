@@ -33,10 +33,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category saveCategory(Category category) {
         if (category == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get("MESSAGE_CANT_CREATE_CLIENT"), null);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get("MESSAGE_CANT_CREATE_CATEGORY"), null);
         }
         if (categoryNameExist(category.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get("MESSAGE_CLIENT_EXISTS") + category.getName(), null);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get("MESSAGE_CATEGORY_EXISTS") + category.getName(), null);
         }        
 
         /**
@@ -52,20 +52,19 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     /**
-     * Guardo el usuario con sus roles
+     * Guardo la categoria
      */
 
     private Category saveObjectCategory(Category category) {
         try {
             category = categoryRepository.save(category);
-            /**
-             * Devuelvo el user creado con el rol seteado
-             */
+            return category;
+            
         } catch (Exception e) {
             logger.error("Exception: {} ", e);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, this.messages.get("MESSAGE_CANT_CREATE_USER"), null);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, this.messages.get("MESSAGE_CANT_CREATE_CATEGORY"), null);
         }
-        return category;
+        
     }
 
    
@@ -73,13 +72,13 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category updateCategory(Category category) {
         if (category == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get("MESSAGE_CANT_CREATE_PROVIDER"), null);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get("MESSAGE_CANT_CREATE_CATEGORY"), null);
         }
-        Category previousCategory = categoryRepository.findByName(category.getName());
+        Category previousCategory = categoryRepository.findByCategoryId(category.getCategoryId());
         if (previousCategory == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_PROVIDER"), null);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_CATEGORY"), null);
         }
-        category = saveCategory(category);
+        category = saveObjectCategory(category);
         return category;
     }
 
@@ -87,7 +86,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Page<Category> getCategories(Pageable pageable) {
         Page<Category> categories = categoryRepository.findAll(pageable);
         if (categories.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,  this.messages.get("MESSAGE_NOT_FOUND_PROVIDERS"), null);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,  this.messages.get("MESSAGE_NOT_FOUND_CATEGORIES"), null);
         }
         return categories;
     }
@@ -113,7 +112,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Category getCategoryByName(String name) {
         Category category = categoryRepository.findByName(name);
         if(category == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_PROVIDER"), null);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_CATEGORY"), null);
         }
 
         return category;
@@ -123,7 +122,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Category getCategoryById(Long id) {
         Category category = categoryRepository.findByCategoryId(id);
         if(category == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_PROVIDER"), null);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_CATEGORY"), null);
         }
 
         return category;

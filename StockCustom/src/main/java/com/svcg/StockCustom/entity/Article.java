@@ -24,6 +24,10 @@ public class Article {
 
 	@Column(name = "measurement_unit_id")
 	private Long measurementUnitId;
+	
+	@Column(name = "category_id")
+	private Long categoryId;
+
 
 	@NotEmpty
 	@Size(max = 100, message = "{validation.rol.username.size}")
@@ -73,15 +77,19 @@ public class Article {
 	
 
 	public Article() {
+		
 	}
 	
-	public Article(Long articleId, Long measurementUnitId, String name,
-			String brand, String description, Date expirationDate,
-			double currentQuantity, double currentPrice, Date createDate,
-			Date disabledDate, boolean disabled) {
+
+	public Article(Long articleId, Long measurementUnitId, Long categoryId,
+			@NotEmpty @Size(max = 100, message = "{validation.rol.username.size}") String name,
+			@Size(max = 100, message = "{validation.rol.username.size}") String brand,
+			@Size(max = 255, message = "{validation.rol.username.size}") String description, Date expirationDate,
+			double currentQuantity, double currentPrice, Date createDate, Date disabledDate, boolean disabled) {
 		super();
 		this.articleId = articleId;
 		this.measurementUnitId = measurementUnitId;
+		this.categoryId = categoryId;
 		this.name = name;
 		this.brand = brand;
 		this.description = description;
@@ -92,6 +100,7 @@ public class Article {
 		this.disabledDate = disabledDate;
 		this.disabled = disabled;
 	}
+
 
 
 
@@ -183,6 +192,18 @@ public class Article {
 	public void setCurrentPrice(double currentPrice) {
 		this.currentPrice = currentPrice;
 	}
+	
+	
+
+	public Long getCategoryId() {
+		return categoryId;
+	}
+
+
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
+	}
+
 
 	@Override
 	public String toString() {

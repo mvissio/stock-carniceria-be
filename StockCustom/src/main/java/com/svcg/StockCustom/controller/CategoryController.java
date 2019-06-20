@@ -74,12 +74,12 @@ public class CategoryController {
         return categoryService.getCategoryByName(name);
     }
 
-    @GetMapping("id/{id}")
+    @GetMapping("/id/{id}")
     public Category getCategoryById(@PathVariable("id")Long id) {
         return categoryService.getCategoryById(id);
     }
     
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id/{id}")
     public com.svcg.StockCustom.entity.Category deleteCategory(@PathVariable("id")Long id){
     	return categoryService.deleteCategory(id);
     }

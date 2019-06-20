@@ -21,6 +21,8 @@ public interface OperationService {
 	List<PaymentMethod> getPaymentMethods();
 
 	Page<Operation> getOperationsByCreationDate(Date createDate, Pageable pageable);
+	
+	Page<Operation> getOperationsByCreationDateAndOperationType(Date createDate, Pageable pageable);
 
     Operation cancelOperation(Long id);
 
