@@ -16,12 +16,12 @@ public class Provider {
 	private Long providerId;
 
 	@NotEmpty
-	@Size(max = 100, message = "{validation.provider.name.size}")
+	@Size(max = 100)
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
 	
 	@NotEmpty
-	@Size(max = 255, message = "{validation.provider.address.size}")
+	@Size(max = 255)
 	@Column(name = "address", length = 255)
 	private String address;
 	

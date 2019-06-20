@@ -1,10 +1,16 @@
 package com.svcg.StockCustom.service.impl;
 
 import com.svcg.StockCustom.component.Messages;
+import com.svcg.StockCustom.constant.Constant;
+import com.svcg.StockCustom.entity.Rol;
 import com.svcg.StockCustom.enums.RolName;
+import com.svcg.StockCustom.exceptions.CustomRuntimeException;
 import com.svcg.StockCustom.repository.RolRepository;
 import com.svcg.StockCustom.repository.UserRepository;
 import com.svcg.StockCustom.service.UserService;
+import com.svcg.StockCustom.service.converter.UserConverter;
+import com.svcg.StockCustom.service.dto.UserDTO;
+
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -19,7 +25,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -39,12 +44,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Autowired
     Messages messages;
+    
+    @Autowired
+    private UserConverter userConverter;
 
-    private static final Logger logger = LoggerFactory
-            .getLogger(UserServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         com.svcg.StockCustom.entity.User user = userRepository.findByUsername(username);
         List<GrantedAuthority> authorities = buildAuthorities(user);
         return buildUser(user, authorities);
@@ -52,70 +59,70 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 
     @Override
-    public com.svcg.StockCustom.entity.User saveUser(com.svcg.StockCustom.entity.User user) {
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get("MESSAGE_CANT_CREATE_USER"), null);
+    public UserDTO saveUser(UserDTO userDTO) {
+        if (userDTO == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get(Constant.MESSAGE_CANT_CREATE_USER));
         }
-        if (userNameExist(user.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get("MESSAGE_USER_EXISTS") + user.getUsername(), null);
+        if (userNameExist(userDTO.getUsername())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_USER_EXIST), userDTO.getUsername()));
         }
-        if (emailExist(user.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get("MESSAGE_MAIL_EXISTS") + user.getEmail(), null);
-        }
-
-        if (user.getPassword() != null) {
-            user.setPassword(user.getPassword());
+        if (emailExist(userDTO.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_EMAIL_EXIST), userDTO.getEmail()));
         }
 
-        /**
-         * Guardo el usuario con sus roles
-         */
-        user = saveUserAndRol(user);
+        if (userDTO.getPassword() != null) {
+        	userDTO.setPassword(userDTO.getPassword());
+        }
 
-        return user;
+        return saveUserAndRol(userDTO, true);
     }
 
     /**
      * Guardo el usuario con sus roles
      */
 
-    private com.svcg.StockCustom.entity.User saveUserAndRol(com.svcg.StockCustom.entity.User user) {
+    private UserDTO saveUserAndRol(UserDTO userDTO, Boolean isSave) {
+    	UserDTO newUserDTO;
+
         try {
-            user.setRol(rolRepository.findRolByName(user.getRol().getName()).get());
-            user = userRepository.save(user);
+        	Optional<Rol> rol = rolRepository.findRolByName(userDTO.getRol().getName());
+        	if (rol.isPresent()) {
+        		userDTO.setRol(rol.get());        		
+        	}
+        	newUserDTO = this.userConverter.convertToDTO(userRepository.save(this.userConverter.convertToEntity(userDTO)));
             /**
              * Devuelvo el user creado con el rol seteado
              */
         } catch (Exception e) {
-            logger.error("Exception: {} ", e);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, this.messages.get("MESSAGE_CANT_CREATE_USER"), null);
+            logger.error(Constant.EXCEPTION, e);
+            String message = (isSave) ? this.messages.get(Constant.MESSAGE_CANT_CREATE_USER) : this.messages.get(Constant.MESSAGE_CANT_UPDATE_USER);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, message);
         }
-        return user;
+        return newUserDTO;
     }
 
     @Override
-    public com.svcg.StockCustom.entity.User updateUser(com.svcg.StockCustom.entity.User user) {
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get("MESSAGE_CANT_CREATE_USER"), null);
+    public UserDTO updateUser(UserDTO userDTO) {
+        if (userDTO == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get(Constant.MESSAGE_CANT_UPDATE_USER));
         }
-        com.svcg.StockCustom.entity.User previousUser = userRepository.findByUsername(user.getUsername());
+        com.svcg.StockCustom.entity.User previousUser = userRepository.findByUsername(userDTO.getUsername());
         if (previousUser == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_USUARIO"), null);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_USER_NOT_FOUND));
         }
-        if (!previousUser.getEmail().equals(user.getEmail()) && emailExist(user.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get("MESSAGE_MAIL_EXISTS") + user.getEmail());
+        if (!previousUser.getEmail().equals(userDTO.getEmail()) && emailExist(userDTO.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_EMAIL_EXIST), userDTO.getEmail()));
         }
-        user = saveUserAndRol(user);
-        return user;
+        return saveUserAndRol(userDTO, false);
     }
 
     @Override
-    public Page<com.svcg.StockCustom.entity.User> getUsers(Pageable pageable) {
+    public Page<UserDTO> getUsers(Pageable pageable) {
         Page<com.svcg.StockCustom.entity.User> users = userRepository.findAll(pageable);
         if (users.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,  this.messages.get("MESSAGE_NOT_FOUND_USUARIOS"), null);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,  this.messages.get(Constant.MESSAGE_USER_NOT_FOUND));
         }
-        return users;
+        return users.map(this.userConverter::convertToDTO);
     }
 
     private User buildUser(com.svcg.StockCustom.entity.User user, List<GrantedAuthority> authorities) {
@@ -142,28 +149,27 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public List<RolName> getRolesUsers() {
-        List<RolName> rolNames = Arrays.asList(RolName.values());
-        return rolNames;
+    	return Arrays.asList(RolName.values());
     }
 
     @Override
-    public com.svcg.StockCustom.entity.User getUserByUsername(String username) {
+    public UserDTO getUserByUsername(String username) {
         com.svcg.StockCustom.entity.User user = userRepository.findByUsername(username);
         if(user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_USUARIO"), null);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_USER_NOT_FOUND));
         }
 
-        return user;
+        return this.userConverter.convertToDTO(user);
     }
 
     @Override
-    public com.svcg.StockCustom.entity.User getUserById(Long id) {
+    public UserDTO getUserById(Long id) {
         com.svcg.StockCustom.entity.User user = userRepository.findByUserId(id);
         if(user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_USUARIO"), null);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_USER_NOT_FOUND));
         }
 
-        return user;
+        return this.userConverter.convertToDTO(user);
     }
 
     public String obtenerToken(HttpServletRequest request) {
@@ -174,8 +180,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             org.apache.tomcat.util.codec.binary.Base64 decoder = new Base64(true);
             return new String(decoder.decode(authorization.getBytes()));
         } catch (Exception e) {
-            logger.error("Error en obtenerToken" + e.getMessage());
-            throw new RuntimeException(e);
+            throw new CustomRuntimeException(e);
         }
     }
 
@@ -185,16 +190,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             String[] split = token.split(", ");
             return new JSONObject(split[1]);
         } catch (Exception e) {
-            logger.error("Error en obtenerJsonDeToken" + e.getMessage());
-            throw new RuntimeException(e);
+            throw new CustomRuntimeException(e);
         }
     }
 
     @Override
-    public com.svcg.StockCustom.entity.User setDisabledByUsername(String username) {
-        com.svcg.StockCustom.entity.User user = getUserByUsername(username);
-        user.setEnabled(false);
-        saveUserAndRol(user);
-        return user;
+    public UserDTO setDisabledByUsername(String username) {
+    	UserDTO userDTO = getUserByUsername(username);
+    	userDTO.setEnabled(false);
+        userDTO = saveUserAndRol(userDTO, false);
+        return userDTO;
     }
 }

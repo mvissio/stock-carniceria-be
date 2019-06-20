@@ -2,7 +2,6 @@ package com.svcg.StockCustom.configuration;
 
 import com.svcg.StockCustom.security.JWTAuthenticationFilter;
 import com.svcg.StockCustom.security.JWTAuthorizationFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,7 +19,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import static com.svcg.StockCustom.constant.Constant.LOGIN_URL;
-import static com.svcg.StockCustom.constant.Constant.RECOVER_PASSWORD;
+import static com.svcg.StockCustom.constant.Constant.RECOVER;
 
 @Configuration
 @EnableWebSecurity
@@ -50,8 +49,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .cors().and()
                 .csrf().disable()
-                .authorizeRequests().antMatchers(HttpMethod.POST, LOGIN_URL, RECOVER_PASSWORD).permitAll()
-                .antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security", "/swagger-ui.html", "/webjars/**","/swagger-resources/configuration/ui","/swagger-ui.html").permitAll()
+                .authorizeRequests().antMatchers(HttpMethod.POST, LOGIN_URL, RECOVER).permitAll()
+                .antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security", "/swagger-ui.html", "/webjars/**","/swagger-resources/configuration/ui").permitAll()
                 //.anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))

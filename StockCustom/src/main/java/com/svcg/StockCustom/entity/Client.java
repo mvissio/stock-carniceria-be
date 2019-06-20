@@ -16,12 +16,12 @@ public class Client {
 	private Long clientId;
 
 	@NotEmpty
-	@Size(max = 45, message = "{validation.client.name.size}")
+	@Size(max = 45)
 	@Column(name = "name", nullable = false, length = 45)
 	private String name;
 
 	@NotEmpty
-	@Size(max = 45, message = "{validation.client.surname.size}")
+	@Size(max = 45)
 	@Column(name = "surname", nullable = false, length = 45)
 	private String surname;
 

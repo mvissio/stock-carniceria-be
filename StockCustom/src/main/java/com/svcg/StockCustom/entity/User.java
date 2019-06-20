@@ -15,12 +15,12 @@ public class User {
     private Long userId;
 
     @NotEmpty
-    @Size(max = 45, message = "{validation.user.username.size}")
+    @Size(max = 45)
     @Column(name = "username", unique = true, nullable = false, length = 45)
     private String username;
 
     @NotEmpty
-    @Size(max = 60, message = "{validation.user.password.size}")
+    @Size(max = 60)
     @Column(name = "password", nullable = false, length = 60)
     private String password;
 

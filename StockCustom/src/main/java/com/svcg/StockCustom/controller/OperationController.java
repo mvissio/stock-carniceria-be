@@ -9,13 +9,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.svcg.StockCustom.entity.Article;
+import com.svcg.StockCustom.constant.Constant;
 import com.svcg.StockCustom.entity.Operation;
 import com.svcg.StockCustom.enums.OperationType;
 import com.svcg.StockCustom.enums.PaymentMethod;
@@ -36,8 +44,8 @@ public class OperationController {
 	public Operation addOperation(@Valid @RequestBody Operation operation,
 			BindingResult bindingResult) throws MethodArgumentNotValidException {
 		if (bindingResult.hasErrors()) {
-			logger.error(String.valueOf(bindingResult.getAllErrors()));
-			throw new MethodArgumentNotValidException(null, bindingResult);
+			bindingResult.getFieldErrors().stream().forEach(f -> logger.error(String.format(Constant.CONCAT2S, f.getField(), f.getDefaultMessage())));        	
+            throw new MethodArgumentNotValidException(MethodParameter.forExecutable(Operation.class.getDeclaredConstructors()[1],0), bindingResult);
 		}
 		return operationService.saveOperation(operation);
 
@@ -47,8 +55,8 @@ public class OperationController {
     public Operation updateOperation(@Valid @RequestBody Operation operation,
                                   BindingResult bindingResult) throws MethodArgumentNotValidException {
         if (bindingResult.hasErrors()) {
-            logger.error(String.valueOf(bindingResult.getAllErrors()));
-            throw new MethodArgumentNotValidException(null, bindingResult);
+        	bindingResult.getFieldErrors().stream().forEach(f -> logger.error(String.format(Constant.CONCAT2S, f.getField(), f.getDefaultMessage())));        	
+            throw new MethodArgumentNotValidException(MethodParameter.forExecutable(Operation.class.getDeclaredConstructors()[1],0), bindingResult);
         }
         return operationService.updateOperation(operation);
 

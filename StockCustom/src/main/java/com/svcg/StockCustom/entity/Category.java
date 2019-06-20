@@ -16,12 +16,12 @@ public class Category {
 	private Long categoryId;
 
 	@NotEmpty
-	@Size(max = 100, message = "{validation.rol.username.size}")
+	@Size(max = 100)
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
 	
 	@NotEmpty
-	@Size(max = 255, message = "{validation.rol.username.size}")
+	@Size(max = 255)
 	@Column(name = "description", length = 255)
 	private String description;
 

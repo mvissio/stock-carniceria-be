@@ -26,22 +26,22 @@ public class Article {
 	private Long measurementUnitId;
 
 	@NotEmpty
-	@Size(max = 100, message = "{validation.rol.username.size}")
+	@Size(max = 100)
 	@Column(name = "name", length = 100 ,nullable = false)
 	private String name;
 
-	@Size(max = 100, message = "{validation.rol.username.size}")
+	@Size(max = 100)
 	@Column(name = "brand", length = 100)
 	private String brand;
 
-	@Size(max = 255, message = "{validation.rol.username.size}")
+	@Size(max = 255)
 	@Column(name = "description", length = 255)
 	private String description;
 
 	//vencimiento, a futuro podemos hacer un informe de vencimientos futuros
 	
 	@ColumnDefault("null")
-	@Column(name = "expiration_date",nullable = true )
+	@Column(name = "expiration_date",nullable = true)
 	private Date expirationDate;
 
 	//el stock actual del producto. deberia ser nullable = false ??
