@@ -146,6 +146,7 @@ public class OperationServiceImpl implements OperationService {
     public Operation cancelOperation(Long id) {
         Operation operation = operationRepository.findByOperationId(id);
         this.disabledOperation(operation);
+        this.updateArticles(operation.getOperationDetails(), operation);
         return operationRepository.save(operation);
     }
 
@@ -165,11 +166,13 @@ public class OperationServiceImpl implements OperationService {
             // actualizo el stock del producto
             Article article = articleRepository
                     .findByArticleId(detailOperation.getArticleId());
-            double newQuantityArticle = (article.getCurrentQuantity() - detailOperation.getAmount());
-            article.setCurrentQuantity(newQuantityArticle);
-            articleRepository.save(article);
-            logger.info("Stock de Articulo actualizado con exito: " + article.toString());
-
+            //TODO: solo si la categoria no es carne(categoria carne es la con id 1) se debe sacar cuando este la funcionalidad de la balanza electronica 
+            if(article.getCategoryId() != 1) {
+            	double newQuantityArticle = (newOperation.isDisabled())? (article.getCurrentQuantity() + detailOperation.getAmount())  : (article.getCurrentQuantity() - detailOperation.getAmount());
+            	article.setCurrentQuantity(newQuantityArticle);
+            	articleRepository.save(article);
+            	logger.info("Stock de Articulo actualizado con exito: " + article.toString());
+            }
         }
     }
 

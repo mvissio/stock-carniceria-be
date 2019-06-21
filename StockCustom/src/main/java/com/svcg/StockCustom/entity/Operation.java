@@ -52,11 +52,14 @@ public class Operation {
 	@Column(name = "operation_status")
 	private OperationStatus operationStatus;		
 
-	@Column(name = "total")
+	@Column
 	private double total;
 
 	@Column(name = "sub_total")
 	private double subTotal;
+	
+	@Column
+	private double discount;
 
 	@Transient
 	private List<OperationDetail> operationDetails = new ArrayList<>();
@@ -64,18 +67,15 @@ public class Operation {
 	public Operation() {
 	}
 
-	public Operation(Long operationId, Long clientId, Long providerId,
-			Date createDate, Date disabledDate, boolean disabled,
+	public Operation(Long clientId, Long providerId,
+			Date createDate,
 			OperationType operationType, PaymentMethod paymentMethod,
 			OperationStatus operationStatus, double total, double subTotal,
 			List<OperationDetail> operationDetails) {
 		super();
-		this.operationId = operationId;
 		this.clientId = clientId;
 		this.providerId = providerId;
 		this.createDate = createDate;
-		this.disabledDate = disabledDate;
-		this.disabled = disabled;
 		this.operationType = operationType;
 		this.paymentMethod = paymentMethod;
 		this.operationStatus = operationStatus;
@@ -191,13 +191,21 @@ public class Operation {
 		this.operationStatus = operationStatus;
 	}
 
+	public double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(double discount) {
+		this.discount = discount;
+	}
+
 	@Override
 	public String toString() {
-		return "id: " + this.operationId + " operationType: " + operationType + " paymentMethod: " + paymentMethod + " operationStatus " + operationStatus; 
+		return "Operation [operationId=" + operationId + ", clientId=" + clientId + ", providerId=" + providerId
+				+ ", createDate=" + createDate + ", createDateTime=" + createDateTime + ", disabledDate=" + disabledDate
+				+ ", disabled=" + disabled + ", operationType=" + operationType + ", paymentMethod=" + paymentMethod
+				+ ", operationStatus=" + operationStatus + ", total=" + total + ", subTotal=" + subTotal + ", discount="
+				+ discount + ", operationDetails=" + operationDetails + "]";
 	}
-	
-	
-	
-	
 
 }
