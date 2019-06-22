@@ -1,6 +1,8 @@
 package com.svcg.StockCustom.repository;
 
 import com.svcg.StockCustom.entity.Box;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,4 +18,7 @@ public interface BoxRepository extends JpaRepository<Box, Serializable> {
 
     Box findByBoxId(Long boxId);
 
+    List<Box> findByDateCloseIsNullOrOpenIsTrue();
+
+    Page<Box> findByDateCloseIsNull(Pageable pageable);
 }

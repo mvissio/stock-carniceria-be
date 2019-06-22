@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
+import java.util.List;
 
 @Service("boxServiceImpl")
 public class BoxServiceImpl implements BoxService {
@@ -29,24 +30,40 @@ public class BoxServiceImpl implements BoxService {
 
     @Override
     public Box saveBox(Box box) {
-        return null;
+        Box newBox  = boxRepository.save(box);
+        return newBox;
     }
 
     @Override
     public Page<Box> getBoxs(Pageable pageable) {
         Page<Box> boxs = boxRepository.findAll(pageable);
         if (boxs.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,  this.messages.get("MESSAGE_NOT_FOUND_BOXS"), null);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_BOXS"), null);
         }
         return boxs;
     }
+
     @Override
     public Box getBoxById(Long id) {
         Box box = boxRepository.findByBoxId(id);
-        if(box == null) {
+        if (box == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_CAJAS"), null);
         }
         return box;
+    }
+
+    @Override
+    public List<Box> existOpenBox() {
+        return boxRepository.findByDateCloseIsNullOrOpenIsTrue();
+    }
+
+    @Override
+    public Page<Box> getBoxsOpen(Pageable pageable) {
+        Page<Box> boxs = boxRepository.findByDateCloseIsNull(pageable);
+        if (boxs.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_BOXS_OPEN"), null);
+        }
+        return boxs;
     }
 
     @Override
