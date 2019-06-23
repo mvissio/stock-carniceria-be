@@ -46,6 +46,10 @@ public interface OperationRepository extends
 	//Para busqueda de las operaciones por día y tipo de pago
 	Page<Operation> findByCreateDateAndPaymentMethod(Date createDate, PaymentMethod paymentMethod, Pageable pageable);
 		
+	//Para busqueda de las operaciones por día tipo de pago y tipo de operacion
+	Page<Operation> findByCreateDateAndPaymentMethodAndOperationType(Date createDate, PaymentMethod paymentMethod,OperationType operationType, Pageable pageable);
+		
+	
 	//*********************BUSQUEDA POR PERIODOS CREATED DATE Y TIPO, PAYMENT METHOD***************************
 	
 	//Para busqueda de operaciones por intervalo de tiempo dado 
@@ -57,6 +61,9 @@ public interface OperationRepository extends
 	//Para busqueda de operaciones por medio de pago en un intervalo de tiempo dado 
 	Page<Operation> findByPaymentMethodAndCreateDateBetween(PaymentMethod paymentMethod, Date fromDate, Date toDate, Pageable pageable);
 	
+	//Para busqueda de operaciones por medio de pago en un intervalo de tiempo dado 
+	Page<Operation> findByPaymentMethodAndOperationTypeAndCreateDateBetween(PaymentMethod paymentMethod,OperationType operationType, Date fromDate, Date toDate, Pageable pageable);
+		
 	
 	//*********************BUSQUEDA POR CLIENTE Y PROVEEDORES***************************
 	

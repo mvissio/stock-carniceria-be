@@ -46,6 +46,10 @@ public interface OperationService {
 	// Para busqueda de las operaciones por día y tipo de pago
 	Page<Operation> getOperationsByCreateDateAndPaymentMethod(Date createDate, PaymentMethod paymentMethod, Pageable pageable);
 
+	//Para busqueda de las operaciones por día tipo de pago y tipo de operacion
+	Page<Operation> getOperationsByCreateDateAndPaymentMethodAndOperationType(Date createDate, PaymentMethod paymentMethod,OperationType operationType, Pageable pageable);
+		
+	
 	// *********************BUSQUEDA POR PERIODOS CREATED DATE Y TIPO, PAYMENT METHOD***************************
 
 	// Para busqueda de operaciones por intervalo de tiempo dado
@@ -58,6 +62,10 @@ public interface OperationService {
 	// Para busqueda de operaciones por medio de pago en un intervalo de tiempo dado
 	Page<Operation> getOperationsByCreateDateBetweenAndByPaymentMethod(PaymentMethod paymentMethod, Date fromDate, Date toDate,
 			Pageable pageable);
+	
+	//Para busqueda de operaciones por medio de pago en un intervalo de tiempo dado 
+	Page<Operation> getOperationsByPaymentMethodAndOperationTypeAndCreateDateBetween(PaymentMethod paymentMethod,OperationType operationType, Date fromDate, Date toDate, Pageable pageable);
+		
 
 	// *********************BUSQUEDA POR CLIENTE Y PROVEEDORES***************************
 

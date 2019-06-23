@@ -312,5 +312,36 @@ public class OperationServiceImpl implements OperationService {
 		return operations;
 	}
 
+	@Override
+	public Page<Operation> getOperationsByCreateDateAndPaymentMethodAndOperationType(Date createDate,
+			PaymentMethod paymentMethod, OperationType operationType, Pageable pageable) {
+		
+		Page<Operation> operations = operationRepository.findByCreateDateAndPaymentMethodAndOperationType(createDate,
+				paymentMethod, operationType, pageable);
+		if (operations == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+		}
+
+		return operations;
+
+		
+	}
+
+	@Override
+	public Page<Operation> getOperationsByPaymentMethodAndOperationTypeAndCreateDateBetween(PaymentMethod paymentMethod,
+			OperationType operationType, Date fromDate, Date toDate, Pageable pageable) {
+	
+		Page<Operation> operations = operationRepository.findByPaymentMethodAndOperationTypeAndCreateDateBetween(paymentMethod,
+				 operationType,  fromDate,  toDate, pageable);
+		if (operations == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+		}
+
+		return operations;
+		
+	}
+
 	
 }

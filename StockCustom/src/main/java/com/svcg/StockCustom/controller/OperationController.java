@@ -128,6 +128,11 @@ public class OperationController {
 			return operationService.getOperationsByOperationTypeAndPaymentMethod(creationDate,paymentMethod,pageable);
 		}
 		
+		@GetMapping("/byDateAndPaymentMethodAndOperationType")
+		public Page<Operation> getOperationsByCreationDateAndPaymentMethodOperationType(@Valid @RequestParam Date creationDate,@Valid @RequestParam PaymentMethod paymentMethod,@Valid @RequestParam OperationType operationType, Pageable pageable)  {
+			return operationService.getOperationsByCreateDateAndPaymentMethodAndOperationType(creationDate, paymentMethod, operationType, pageable);
+		}
+		
 		
 		// *********************BUSQUEDA POR PERIODOS CREATED DATE Y TIPO, PAYMENT 	METHOD***************************
 
@@ -146,6 +151,11 @@ public class OperationController {
 		@GetMapping("/byPeriodAndPaymentMethod")
 		public Page<Operation> getOperationsByCreateDateBetweenAndByPaymentMethod(@Valid @RequestParam PaymentMethod paymentMethod, @Valid @RequestParam Date fromDate, @Valid @RequestParam Date toDate, Pageable pageable)  {
 			return operationService.getOperationsByCreateDateBetweenAndByPaymentMethod(paymentMethod, fromDate, toDate, pageable);
+		}
+		
+		@GetMapping("/byPeriodAndPaymentMethodAndOperationType")
+		public Page<Operation> getOperationsByCreateDateBetweenAndByPaymentMethodAndOperationType(@Valid @RequestParam PaymentMethod paymentMethod,@Valid @RequestParam OperationType operationType, @Valid @RequestParam Date fromDate, @Valid @RequestParam Date toDate, Pageable pageable)  {
+			return operationService.getOperationsByPaymentMethodAndOperationTypeAndCreateDateBetween(paymentMethod,operationType,fromDate,toDate,pageable);
 		}
 	
 		// *********************BUSQUEDA POR CLIENTE Y PROVEEDORES***************************
