@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         /**
          * Guardo el usuario con sus roles
          */
-        user = saveUserAndRol(user);
+        user = saveUserAndRol(user, true);
 
         return user;
     }
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
      * Guardo el usuario con sus roles
      */
 
-    private com.svcg.StockCustom.entity.User saveUserAndRol(com.svcg.StockCustom.entity.User user) {
+    private com.svcg.StockCustom.entity.User saveUserAndRol(com.svcg.StockCustom.entity.User user, Boolean isSave) {
         try {
             user.setRol(rolRepository.findRolByName(user.getRol().getName()).get());
             user = userRepository.save(user);
@@ -88,7 +88,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
              */
         } catch (Exception e) {
             logger.error("Exception: {} ", e);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, this.messages.get("MESSAGE_CANT_CREATE_USER"), null);
+            String message = (isSave) ? this.messages.get("MESSAGE_CANT_CREATE_USER") : this.messages.get("MESSAGE_CANT_UPDATE_USER");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, message, null);
         }
         return user;
     }
@@ -105,7 +106,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         if (!previousUser.getEmail().equals(user.getEmail()) && emailExist(user.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get("MESSAGE_MAIL_EXISTS") + user.getEmail());
         }
-        user = saveUserAndRol(user);
+        user = saveUserAndRol(user, false);
         return user;
     }
 
@@ -194,7 +195,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public com.svcg.StockCustom.entity.User setDisabledByUsername(String username) {
         com.svcg.StockCustom.entity.User user = getUserByUsername(username);
         user.setEnabled(false);
-        saveUserAndRol(user);
+        saveUserAndRol(user, false);
         return user;
     }
 }

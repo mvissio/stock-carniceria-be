@@ -16,7 +16,7 @@ public class MeasurementUnit {
 	private Long measurementUnitId;
 
 	@NotEmpty
-	@Size(max = 100, message = "{validation.rol.username.size}")
+	@Size(max = 100)
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
 

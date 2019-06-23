@@ -1,13 +1,14 @@
 
 package com.svcg.StockCustom.controller;
 
-import com.svcg.StockCustom.entity.Category;
+import com.svcg.StockCustom.constant.Constant;
 import com.svcg.StockCustom.entity.Client;
 import com.svcg.StockCustom.service.ClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
@@ -42,9 +43,9 @@ public class ClientController {
 
     @PostMapping("")
     public Client addClient(@Valid @RequestBody Client client, BindingResult bindingResult) throws MethodArgumentNotValidException {
-        if (bindingResult.hasErrors()) {
-            logger.error(String.valueOf(bindingResult.getAllErrors()));
-            throw new MethodArgumentNotValidException(null, bindingResult);
+    	if (bindingResult.hasErrors()) {
+        	bindingResult.getFieldErrors().stream().forEach(f -> logger.error(String.format(Constant.CONCAT2S, f.getField(), f.getDefaultMessage())));        	
+            throw new MethodArgumentNotValidException(MethodParameter.forExecutable(Client.class.getDeclaredConstructors()[1],0), bindingResult);
         }
         return clientService.saveClient(client);
 
@@ -52,9 +53,9 @@ public class ClientController {
 
     @PutMapping("")
     public Client updateClient(@Valid @RequestBody Client client, BindingResult bindingResult) throws MethodArgumentNotValidException {
-        if (bindingResult.hasErrors()) {
-            logger.error(String.valueOf(bindingResult.getAllErrors()));
-            throw new MethodArgumentNotValidException(null, bindingResult);
+    	if (bindingResult.hasErrors()) {
+        	bindingResult.getFieldErrors().stream().forEach(f -> logger.error(String.format(Constant.CONCAT2S, f.getField(), f.getDefaultMessage())));        	
+            throw new MethodArgumentNotValidException(MethodParameter.forExecutable(Client.class.getDeclaredConstructors()[1],0), bindingResult);
         }
         return clientService.updateClient(client);
 

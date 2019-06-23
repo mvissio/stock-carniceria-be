@@ -17,7 +17,11 @@ public class Constant {
     public static final String USER_ROLE = "rol";
     public static final String USER_ID= "userId";
 
-
+    // Logger
+	 public static final String EXCEPTION = "Exception: {} ";
+	 public static final String CONCAT2S = "%s : %s";
+	 public static final String CONCAT = "%s";
+	 
     //Password
     public static final String NUMEROS = "0123456789";
     public static final String MAYUSCULAS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
