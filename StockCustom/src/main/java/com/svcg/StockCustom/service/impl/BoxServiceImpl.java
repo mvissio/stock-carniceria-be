@@ -2,7 +2,9 @@ package com.svcg.StockCustom.service.impl;
 
 import com.svcg.StockCustom.component.Messages;
 import com.svcg.StockCustom.entity.Box;
+import com.svcg.StockCustom.entity.Operation;
 import com.svcg.StockCustom.repository.BoxRepository;
+import com.svcg.StockCustom.repository.OperationRepository;
 import com.svcg.StockCustom.service.BoxService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,10 @@ public class BoxServiceImpl implements BoxService {
     @Autowired
     @Qualifier("boxRepository")
     private BoxRepository boxRepository;
+
+    @Autowired
+    @Qualifier("operationRepository")
+    private OperationRepository operationRepository;
     Messages messages;
 
     private static final Logger logger = LoggerFactory
@@ -66,6 +72,15 @@ public class BoxServiceImpl implements BoxService {
         return boxs;
     }
 
+    @Override
+    public Page<Operation> getAllOperationByBoxId(Long boxId, Pageable pageable) {
+        Page<Operation> operations = operationRepository.findAllByBoxId(boxId, pageable);
+        if (operations == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+        }
+        return operations;
+    }
     @Override
     public Box updateBox(Box box) {
         return null;

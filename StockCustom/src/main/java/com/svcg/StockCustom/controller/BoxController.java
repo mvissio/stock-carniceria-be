@@ -1,6 +1,7 @@
 package com.svcg.StockCustom.controller;
 
 import com.svcg.StockCustom.entity.Box;
+import com.svcg.StockCustom.entity.Operation;
 import com.svcg.StockCustom.service.impl.BoxServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/boxs")
@@ -51,4 +51,10 @@ public class BoxController {
     public List<Box> getOpenBoxsList(Pageable pageable) {
         return boxService.existOpenBox();
     }
+
+    @GetMapping("/operationsBox")
+    public Page<Operation> getOperations(Long boxId, Pageable pageable) {
+        return boxService.getAllOperationByBoxId(boxId, pageable);
+    }
+
 }

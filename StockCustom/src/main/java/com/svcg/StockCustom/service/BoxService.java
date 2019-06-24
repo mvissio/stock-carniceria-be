@@ -1,6 +1,7 @@
 package com.svcg.StockCustom.service;
 
 import com.svcg.StockCustom.entity.Box;
+import com.svcg.StockCustom.entity.Operation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -24,4 +25,6 @@ public interface BoxService {
     Box updateBox(Box box);
 
     List<Box> existOpenBox();
+
+    Page<Operation> getAllOperationByBoxId(Long box, Pageable pageable);
 }

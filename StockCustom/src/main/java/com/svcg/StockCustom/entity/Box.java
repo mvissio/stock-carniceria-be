@@ -37,6 +37,7 @@ public class Box {
     @Column(name = "detail_close")
     @Size( max = 255, message = "{validation.rol.name.size}")
     private String detailClose;
+
     @Transient
     private List<Operation> operationList = new ArrayList<>();
 
