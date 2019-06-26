@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "operation_detail")
@@ -22,9 +23,11 @@ public class OperationDetail {
 	@Column(name = "article_id", nullable = false)
 	private Long articleId;			
 	
+	@NotNull
 	@Column(name = "price")
 	private double price;
 	
+	@NotNull
 	@Column(name = "amount")
 	private double amount;
 	

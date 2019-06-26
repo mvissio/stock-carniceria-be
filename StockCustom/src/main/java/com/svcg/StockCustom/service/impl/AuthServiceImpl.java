@@ -35,11 +35,11 @@ public class AuthServiceImpl implements AuthService {
             .getLogger(AuthServiceImpl.class);
 
     @Override
-    public String resetPasswordByEmail(String email) throws NullPointerException {
+    public String resetPasswordByEmail(String email) throws IOException {
         User user = userRepository.findByEmail(email);
         String responseMessage;
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_MAIL_NOT_EXISTS"), null);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_EMAIL_NOT_EXISTS));
         }
         String pass = newPass();
         BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
@@ -50,8 +50,8 @@ public class AuthServiceImpl implements AuthService {
             userRepository.save(user);
             responseMessage = this.messages.get("MESSAGE_MAIL_RESTORE");
         } catch (Exception e) {
-            logger.error("Exception: {} ", e);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, this.messages.get("MESSAGE_CANT_RESET_PASSWORD"), null);
+            logger.error(Constant.EXCEPTION, e);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, this.messages.get(Constant.MESSAGE_CANT_RESET_PASS));
         }
         return responseMessage;
     }
@@ -63,12 +63,12 @@ public class AuthServiceImpl implements AuthService {
                         Constant.ESPECIALES,10);
     }
 
-    private void sendNewPass(String pass, String email) throws NullPointerException {
+    private void sendNewPass(String pass, String email) throws IOException {
 
         try {
             mailAdapterImpl.sendMailHTML(email, "Password Restablecido", "Nuevo Password : " + pass);
         }catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, this.messages.get("MESSAGE_CANT_SEND_MAIL_NEW_PASSWORD"), null);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, this.messages.get(Constant.MESSAGE_CANT_SEND_MAIL_NEW_PASS));
         }
     }
 

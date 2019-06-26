@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
+import com.svcg.StockCustom.constant.Constant;
 import com.svcg.StockCustom.repository.ProviderRepository;
 import com.svcg.StockCustom.service.ProviderService;
 
@@ -34,18 +35,13 @@ public class ProviderServiceImpl implements ProviderService {
 	public Provider saveProvider(
 			Provider provider) {
 		if (provider == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					this.messages.get("MESSAGE_CANT_CREATE_CLIENT"), null);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get(Constant.MESSAGE_CANT_CREATE_PROVIDER));
 		}
 		if (providerNameExist(provider.getName())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					this.messages.get("MESSAGE_CLIENT_EXISTS")
-							+ provider.getName(), null);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_PROVIDER_EXISTS), provider.getName()));
 		}
 		if (emailExist(provider.getEmail())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					this.messages.get("MESSAGE_MAIL_EXISTS")
-							+ provider.getEmail(), null);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_EMAIL_EXIST), provider.getEmail()));
 		}
 
 		/**
@@ -53,8 +49,8 @@ public class ProviderServiceImpl implements ProviderService {
 		 */
 		provider.setCreateDate(new Date());
 		provider.setDisabled(false);
-		logger.info("provider was saved successfully " + provider);
-		provider = saveProviderObject(provider);
+		logger.info("provider was saved successfully {}", provider);
+		provider = saveProviderObject(provider, true);
 		return provider;
 
 	}
@@ -63,17 +59,16 @@ public class ProviderServiceImpl implements ProviderService {
 	 * Guardo el usuario con sus roles
 	 */
 
-	private Provider saveProviderObject(
-			Provider provider) {
+	private Provider saveProviderObject(Provider provider, Boolean isSave) {
 		try {
 			provider = providerRepository.save(provider);
 			/**
 			 * Devuelvo el user creado con el rol seteado
 			 */
 		} catch (Exception e) {
-			logger.error("Exception: {} ", e);
-			throw new ResponseStatusException(HttpStatus.CONFLICT,
-					this.messages.get("MESSAGE_CANT_CREATE_USER"), null);
+			logger.error(Constant.EXCEPTION, e);
+            String message = (isSave) ? this.messages.get(Constant.MESSAGE_CANT_CREATE_PROVIDER) : this.messages.get(Constant.MESSAGE_CANT_UPDATE_PROVIDER);
+			throw new ResponseStatusException(HttpStatus.CONFLICT, message);
 		}
 		return provider;
 	}
@@ -82,22 +77,18 @@ public class ProviderServiceImpl implements ProviderService {
 	public Provider updateProvider(
 			Provider provider) {
 		if (provider == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					this.messages.get("MESSAGE_CANT_CREATE_PROVIDER"), null);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get(Constant.MESSAGE_CANT_CREATE_PROVIDER));
 		}
 		Provider previousProvider = providerRepository
 				.findByName(provider.getName());
 		if (previousProvider == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_PROVIDER"), null);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_PROVIDER));
 		}
 		if (!previousProvider.getEmail().equals(provider.getEmail())
 				&& emailExist(provider.getEmail())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					this.messages.get("MESSAGE_MAIL_EXISTS")
-							+ provider.getEmail());
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_EMAIL_EXIST), provider.getEmail()));
 		}
-		provider = saveProvider(provider);
+		provider = saveProviderObject(provider, false);
 		return provider;
 	}
 
@@ -107,8 +98,7 @@ public class ProviderServiceImpl implements ProviderService {
 		Page<Provider> providers = providerRepository
 				.findAll(pageable);
 		if (providers.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_PROVIDERS"), null);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_PROVIDERS));
 		}
 		return providers;
 	}
@@ -130,8 +120,7 @@ public class ProviderServiceImpl implements ProviderService {
 		Provider provider = providerRepository
 				.findByName(name);
 		if (provider == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_PROVIDER"), null);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_PROVIDER));
 		}
 
 		return provider;
@@ -142,8 +131,7 @@ public class ProviderServiceImpl implements ProviderService {
 		Provider provider = providerRepository
 				.findByProviderId(id);
 		if (provider == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_PROVIDER"), null);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_PROVIDER));
 		}
 
 		return provider;
@@ -163,8 +151,7 @@ public class ProviderServiceImpl implements ProviderService {
 		Page<Provider> providers = providerRepository
 				.findByDisabledIsFalse(pageable);
 		if (providers.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_PROVIDER"), null);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_PROVIDER));
 		}
 		return providers;
 	}

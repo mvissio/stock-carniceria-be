@@ -47,7 +47,7 @@ public class Article {
 	//vencimiento, a futuro podemos hacer un informe de vencimientos futuros
 	
 	@ColumnDefault("null")
-	@Column(name = "expiration_date",nullable = true )
+	@Column(name = "expiration_date",nullable = true)
 	private Date expirationDate;
 
 	//el stock actual del producto. deberia ser nullable = false ??

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
+import com.svcg.StockCustom.constant.Constant;
 import com.svcg.StockCustom.entity.Article;
 import com.svcg.StockCustom.repository.ArticleRepository;
 import com.svcg.StockCustom.service.ArticleService;
@@ -39,19 +40,16 @@ public class ArticleServiceImpl implements ArticleService {
 		 */
 
 		if (article == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					this.messages.get("MESSAGE_CANT_CREATE_ARTICULO"), null);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get(Constant.MESSAGE_CANT_CREATE_ARTICLE));
 		}
 		if (articleNameExist(article.getName())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					this.messages.get("MESSAGE_ARTICULO_EXISTS")
-							+ article.getName(), null);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_ARTICLE_EXISTS), article.getName()));
 		}
 		article.setCreateDate(new Date());
 		article.setDisabled(false);
 		article.setExpirationDate(null);
-		article = saveArticleObjet(article);
-		logger.info("article was saved successfully " + article );
+		article = saveArticleObjet(article, true);
+		logger.info("article was saved successfully {}", article);
 		return article;
 
 	}
@@ -63,8 +61,7 @@ public class ArticleServiceImpl implements ArticleService {
 		Page<Article> articles = articleRepository
 				.findAll(pageable);
 		if (articles.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_ARTICULOS"), null);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLES));
 		}
 		return articles;
 
@@ -74,8 +71,7 @@ public class ArticleServiceImpl implements ArticleService {
 	public Page<Article> findByOnlyEnabledArticle(Pageable pageable) {
 		Page<Article> articles = articleRepository.findByDisabledIsFalse(pageable);
 		if (articles.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_ARTICULOS"), null);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLES));
 		}
 		return articles;	
 	}
@@ -86,8 +82,7 @@ public class ArticleServiceImpl implements ArticleService {
 		Article article = articleRepository
 				.findByName(name);
 		if (article == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_ARTICULO"), null);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLE));
 		}
 
 		return article;
@@ -99,8 +94,7 @@ public class ArticleServiceImpl implements ArticleService {
 		List<Article> articles = articleRepository
 				.findByNameContaining(nameLike);
 		if (articles == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_ARTICULO"), null);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLE));
 		}
 
 		return articles;
@@ -110,8 +104,7 @@ public class ArticleServiceImpl implements ArticleService {
 	public Article getArticleById(Long id) {
 		Article article = articleRepository.findByArticleId(id);
 		if (article == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_ARTICULO"), null);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLE));
 		}
 
 		return article;
@@ -121,33 +114,27 @@ public class ArticleServiceImpl implements ArticleService {
 	public Article updateArticle(Article article) {
 
 		if (article == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					this.messages.get("MESSAGE_CANT_CREATE_ARTICULO"), null);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get(Constant.MESSAGE_CANT_UPDATE_ARTICLE));
 		}
 		Article previousArticle = articleRepository.findByArticleId(article.getArticleId());
 		if (previousArticle == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_ARTICULO"), null);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLE));
 		}
 
-		article = saveArticleObjet(article);
+		article = saveArticleObjet(article, false);
 		return article;
 
 	}
 
-	private Article saveArticleObjet(
-			Article article) {
+	private Article saveArticleObjet(Article article, Boolean isSave) {
 		try {
-
-			Article articleCreated = articleRepository.save(article);
-			return articleCreated;
+			return  articleRepository.save(article);
 
 		} catch (Exception e) {
-			logger.error("Exception: {} ", e);
-			throw new ResponseStatusException(HttpStatus.CONFLICT,
-					this.messages.get("MESSAGE_CANT_CREATE_ARTICULO"), null);
+			logger.error(Constant.EXCEPTION, e);
+            String message = (isSave) ? this.messages.get(Constant.MESSAGE_CANT_CREATE_ARTICLE) : this.messages.get(Constant.MESSAGE_CANT_UPDATE_ARTICLE);
+			throw new ResponseStatusException(HttpStatus.CONFLICT, message);
 		}
-
 	}
 		
 	private boolean articleNameExist(String name) {

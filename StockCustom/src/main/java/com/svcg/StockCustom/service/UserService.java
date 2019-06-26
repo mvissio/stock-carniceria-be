@@ -1,30 +1,33 @@
 package com.svcg.StockCustom.service;
 
 
-import com.svcg.StockCustom.entity.User;
-import com.svcg.StockCustom.enums.RolName;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import com.svcg.StockCustom.enums.RolName;
+import com.svcg.StockCustom.service.dto.UserDTO;
 
 public interface UserService {
 
-    User saveUser(User user);
+	UserDTO saveUser(@Valid UserDTO userDTO);
 
-    Page<User> getUsers(Pageable pageable);
+    Page<UserDTO> getUsers(Pageable pageable);
 
     List<RolName> getRolesUsers();
 
-    User getUserByUsername(String username);
+    UserDTO getUserByUsername(String username);
 
-    User setDisabledByUsername(String username);
+    UserDTO setDisabledByUsername(String username);
 
-    User getUserById(Long id);
+    UserDTO getUserById(Long id);
 
-    User updateUser(User user);
+    UserDTO updateUser(@Valid UserDTO userDTO);
 
     String obtenerToken(HttpServletRequest request);
 

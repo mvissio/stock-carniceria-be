@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
+import com.svcg.StockCustom.constant.Constant;
 import com.svcg.StockCustom.entity.Article;
 import com.svcg.StockCustom.entity.OperationDetail;
 import com.svcg.StockCustom.enums.OperationType;
@@ -55,7 +56,7 @@ public class OperationServiceImpl implements OperationService {
 		operation.setCreateDate(new Date());
 		operation.setCreateDateTime(new Date());
 		Operation newOperation = operationRepository.save(operation);
-		logger.info("Operacion guardada con exito: " + newOperation.toString());
+		logger.info("Operacion guardada con exito: {}", newOperation.toString());
 		
 		if (newOperation != null) {
 			List<OperationDetail> operationDetails = operation
@@ -95,7 +96,7 @@ public class OperationServiceImpl implements OperationService {
             if (opd.getArticleId().equals(opd.getArticleId())) {
                 article.setCurrentQuantity(article.getCurrentQuantity() + opd.getAmount());
                 articleRepository.save(article);
-                logger.info("Stock de Articulo restaurado con exito: " + article.toString());
+                logger.info("Stock de Articulo restaurado con exito: {}", article);
             }
         });
         newOperation = operationRepository.save(newOperation);
@@ -109,8 +110,7 @@ public class OperationServiceImpl implements OperationService {
 	public Page<Operation> getOperationsByCreationDate(Date createDate, Pageable pageable) {
 		Page<Operation> operations = operationRepository.findByCreateDate(createDate, pageable);
 		if (operations == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
 		}
 
 		return operations;
@@ -121,8 +121,7 @@ public class OperationServiceImpl implements OperationService {
 		Operation operation = operationRepository
 				.findByOperationId(id);
 		if (operation == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
 		}
         List<OperationDetail> detailOperationList = operationDetailRepository.findByOperationId(id);
         operation.setOperationDetails(detailOperationList);
@@ -132,14 +131,12 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	public List<OperationType> getOperationTypes() {
-		List<OperationType> operationTypes = Arrays.asList(OperationType.values());
-        return operationTypes;
+		return  Arrays.asList(OperationType.values());
 	}
 
 	@Override
 	public List<PaymentMethod> getPaymentMethods() {
-		List<PaymentMethod> paymentMethods = Arrays.asList(PaymentMethod.values());
-        return paymentMethods;
+		 return  Arrays.asList(PaymentMethod.values());
 	}
 
     @Override
@@ -157,7 +154,7 @@ public class OperationServiceImpl implements OperationService {
     }
 
     private void updateArticles(List<OperationDetail> operationDetails, Operation newOperation) {
-        logger.info("Cantidad de detalles de operacion es " + operationDetails.size() + " para la operation con id " + newOperation.getOperationId());
+        logger.info("Cantidad de detalles de operacion es {}  para la operation con id {}", operationDetails.size(), newOperation.getOperationId());
         for (OperationDetail detailOperation : operationDetails) {
             detailOperation.setOperationId(newOperation
                     .getOperationId());
@@ -171,7 +168,7 @@ public class OperationServiceImpl implements OperationService {
             	double newQuantityArticle = (newOperation.isDisabled())? (article.getCurrentQuantity() + detailOperation.getAmount())  : (article.getCurrentQuantity() - detailOperation.getAmount());
             	article.setCurrentQuantity(newQuantityArticle);
             	articleRepository.save(article);
-            	logger.info("Stock de Articulo actualizado con exito: " + article.toString());
+            	logger.info("Stock de Articulo actualizado con exito: {}", article.toString());
             }
         }
     }
