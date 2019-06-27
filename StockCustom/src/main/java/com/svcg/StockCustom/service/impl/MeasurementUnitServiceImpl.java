@@ -100,8 +100,7 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					this.messages.get("MESSAGE_NOT_FOUND_ARTICULO"), null);
 		}
-
-		measurementUnit = saveMeasurementUnitObjet(previousMeasurementUnit);
+		measurementUnit = saveMeasurementUnitObjet(measurementUnit);
 		return measurementUnit;
 	}
 

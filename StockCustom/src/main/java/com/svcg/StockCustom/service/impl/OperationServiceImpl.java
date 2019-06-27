@@ -4,7 +4,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import com.svcg.StockCustom.entity.Box;
 import com.svcg.StockCustom.enums.OperationStatus;
+import com.svcg.StockCustom.repository.BoxRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
