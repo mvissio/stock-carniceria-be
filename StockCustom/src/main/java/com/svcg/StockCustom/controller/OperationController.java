@@ -125,7 +125,7 @@ public class OperationController {
 		
 		@GetMapping("/byDateAndPaymentMethod")
 		public Page<Operation> getOperationsByCreationDateAndPaymentMethod(@Valid @RequestParam Date creationDate,@Valid @RequestParam PaymentMethod paymentMethod, Pageable pageable)  {
-			return operationService.getOperationsByOperationTypeAndPaymentMethod(creationDate,paymentMethod,pageable);
+			return operationService.getOperationsByCreateDateAndPaymentMethod(creationDate,paymentMethod,pageable);
 		}
 		
 		@GetMapping("/byDateAndPaymentMethodAndOperationType")
