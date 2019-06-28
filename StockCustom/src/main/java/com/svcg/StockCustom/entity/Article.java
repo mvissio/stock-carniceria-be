@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.ColumnDefault;
@@ -22,23 +23,24 @@ public class Article {
 	@Column(name = "article_id")
 	private Long articleId;
 
+	@NotNull
 	@Column(name = "measurement_unit_id")
 	private Long measurementUnitId;
 	
+	@NotNull
 	@Column(name = "category_id")
 	private Long categoryId;
 
-
 	@NotEmpty
-	@Size(max = 100, message = "{validation.rol.username.size}")
+	@Size(max = 100)
 	@Column(name = "name", length = 100 ,nullable = false)
 	private String name;
 
-	@Size(max = 100, message = "{validation.rol.username.size}")
+	@Size(max = 100)
 	@Column(name = "brand", length = 100)
 	private String brand;
 
-	@Size(max = 255, message = "{validation.rol.username.size}")
+	@Size(max = 255)
 	@Column(name = "description", length = 255)
 	private String description;
 

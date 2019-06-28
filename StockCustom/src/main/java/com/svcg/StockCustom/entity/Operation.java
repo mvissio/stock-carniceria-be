@@ -14,86 +14,88 @@ import com.svcg.StockCustom.enums.PaymentMethod;
 @Table(name = "operation")
 public class Operation {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "operation_id")
-	private Long operationId;
-	
-	@Column(name = "client_id")
-	private Long clientId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "operation_id")
+    private Long operationId;
 
-	@Column(name = "provider_id")
-	private Long providerId;
+    @Column(name = "client_id")
+    private Long clientId;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "create_date", nullable = false)
-	private Date createDate;
+    @Column(name = "provider_id")
+    private Long providerId;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "create_date", nullable = false)
+    private Date createDate;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date_time", nullable = false)
     private Date createDateTime;
 
     @Temporal(TemporalType.DATE)
-	@Column(name = "disabled_date")
-	private Date disabledDate;
+    @Column(name = "disabled_date")
+    private Date disabledDate;
 
-	@Column(name = "disabled")
-	private boolean disabled;
+    @Column(name = "disabled")
+    private boolean disabled;
 
-	// es una compra, una venta , registro de desperdicioes
-	@Column(name = "operation_type")
-	private OperationType operationType;
+    // es una compra, una venta , registro de desperdicioes
+    @Column(name = "operation_type")
+    private OperationType operationType;
 
-	// para evaluar si se paga al contado o con tarjeta
-	@Column(name = "payment_method")
-	private PaymentMethod paymentMethod;
-	
-	// especificamos si se cancelo o se realizo
-	@Column(name = "operation_status")
-	private OperationStatus operationStatus;		
+    // para evaluar si se paga al contado o con tarjeta
+    @Column(name = "payment_method")
+    private PaymentMethod paymentMethod;
 
-	@Column(name = "total")
-	private double total;
+    // especificamos si se cancelo o se realizo
+    @Column(name = "operation_status")
+    private OperationStatus operationStatus;
 
-	@Column(name = "sub_total")
-	private double subTotal;
+    @Column(name = "box_id")
+    private Long boxId;
 
-	@Transient
-	private List<OperationDetail> operationDetails = new ArrayList<>();
+    @Column
+    private double total;
 
-	public Operation() {
-	}
+    @Column(name = "sub_total")
+    private double subTotal;
 
-	public Operation(Long operationId, Long clientId, Long providerId,
-			Date createDate, Date disabledDate, boolean disabled,
-			OperationType operationType, PaymentMethod paymentMethod,
-			OperationStatus operationStatus, double total, double subTotal,
-			List<OperationDetail> operationDetails) {
-		super();
-		this.operationId = operationId;
-		this.clientId = clientId;
-		this.providerId = providerId;
-		this.createDate = createDate;
-		this.disabledDate = disabledDate;
-		this.disabled = disabled;
-		this.operationType = operationType;
-		this.paymentMethod = paymentMethod;
-		this.operationStatus = operationStatus;
-		this.total = total;
-		this.subTotal = subTotal;
-		this.operationDetails = operationDetails;
-	}
+    @Column
+    private double discount;
+
+    @Transient
+    private List<OperationDetail> operationDetails = new ArrayList<>();
+
+    public Operation() {
+    }
+
+    public Operation(Long clientId, Long providerId,
+                     Date createDate,
+                     OperationType operationType, PaymentMethod paymentMethod,
+                     OperationStatus operationStatus, double total, double subTotal,
+                     Long boxId, List<OperationDetail> operationDetails) {
+        super();
+        this.clientId = clientId;
+        this.providerId = providerId;
+        this.createDate = createDate;
+        this.operationType = operationType;
+        this.paymentMethod = paymentMethod;
+        this.operationStatus = operationStatus;
+        this.total = total;
+        this.subTotal = subTotal;
+        this.operationDetails = operationDetails;
+        this.boxId = boxId;
+    }
 
 
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
     public Date getCreateDateTime() {
         return createDateTime;
@@ -104,100 +106,116 @@ public class Operation {
     }
 
     public Date getDisabledDate() {
-		return disabledDate;
-	}
+        return disabledDate;
+    }
 
-	public void setDisabledDate(Date disabledDate) {
-		this.disabledDate = disabledDate;
-	}
+    public void setDisabledDate(Date disabledDate) {
+        this.disabledDate = disabledDate;
+    }
 
-	public boolean isDisabled() {
-		return disabled;
-	}
+    public boolean isDisabled() {
+        return disabled;
+    }
 
-	public void setDisabled(boolean disabled) {
-		this.disabled = disabled;
-	}
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
 
-	public Long getOperationId() {
-		return operationId;
-	}
+    public Long getOperationId() {
+        return operationId;
+    }
 
-	public void setOperationId(Long operationId) {
-		this.operationId = operationId;
-	}
+    public void setOperationId(Long operationId) {
+        this.operationId = operationId;
+    }
 
-	public OperationType getOperationType() {
-		return operationType;
-	}
+    public OperationType getOperationType() {
+        return operationType;
+    }
 
-	public void setOperationType(OperationType operationType) {
-		this.operationType = operationType;
-	}
+    public void setOperationType(OperationType operationType) {
+        this.operationType = operationType;
+    }
 
-	public double getTotal() {
-		return total;
-	}
+    public double getTotal() {
+        return total;
+    }
 
-	public void setTotal(double total) {
-		this.total = total;
-	}
+    public void setTotal(double total) {
+        this.total = total;
+    }
 
-	public double getSubTotal() {
-		return subTotal;
-	}
+    public double getSubTotal() {
+        return subTotal;
+    }
 
-	public void setSubTotal(double subTotal) {
-		this.subTotal = subTotal;
-	}
+    public void setSubTotal(double subTotal) {
+        this.subTotal = subTotal;
+    }
 
-	public List<OperationDetail> getOperationDetails() {
-		return operationDetails;
-	}
+    public List<OperationDetail> getOperationDetails() {
+        return operationDetails;
+    }
 
-	public void setOperationDetails(List<OperationDetail> operationDetails) {
-		this.operationDetails = operationDetails;
-	}
+    public void setOperationDetails(List<OperationDetail> operationDetails) {
+        this.operationDetails = operationDetails;
+    }
 
-	public Long getClientId() {
-		return clientId;
-	}
+    public Long getClientId() {
+        return clientId;
+    }
 
-	public void setClientId(Long clientId) {
-		this.clientId = clientId;
-	}
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
+    }
 
-	public Long getProviderId() {
-		return providerId;
-	}
+    public Long getProviderId() {
+        return providerId;
+    }
 
-	public void setProviderId(Long providerId) {
-		this.providerId = providerId;
-	}
+    public void setProviderId(Long providerId) {
+        this.providerId = providerId;
+    }
 
-	public PaymentMethod getPaymentMethod() {
-		return paymentMethod;
-	}
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
 
-	public void setPaymentMethod(PaymentMethod paymentMethod) {
-		this.paymentMethod = paymentMethod;
-	}
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
 
-	public OperationStatus getOperationStatus() {
-		return operationStatus;
-	}
+    public OperationStatus getOperationStatus() {
+        return operationStatus;
+    }
 
-	public void setOperationStatus(OperationStatus operationStatus) {
-		this.operationStatus = operationStatus;
-	}
+    public void setOperationStatus(OperationStatus operationStatus) {
+        this.operationStatus = operationStatus;
+    }
 
-	@Override
-	public String toString() {
-		return "id: " + this.operationId + " operationType: " + operationType + " paymentMethod: " + paymentMethod + " operationStatus " + operationStatus; 
-	}
-	
-	
-	
-	
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
+    }
+
+    public Long getBoxId() {
+        return boxId;
+    }
+
+    public void setBoxId(Long boxId) {
+        this.boxId = boxId;
+    }
+
+    @Override
+    public String toString() {
+        return "Operation [operationId=" + operationId + ", clientId=" + clientId + ", providerId=" + providerId
+                + ", createDate=" + createDate + ", createDateTime=" + createDateTime + ", disabledDate=" + disabledDate
+                + ", disabled=" + disabled + ", operationType=" + operationType + ", paymentMethod=" + paymentMethod
+                + ", operationStatus=" + operationStatus + ", boxId=" + boxId + ", total=" + total + ", subTotal="
+                + subTotal + ", discount=" + discount + ", operationDetails=" + operationDetails + "]";
+    }
 
 }
