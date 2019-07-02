@@ -89,7 +89,18 @@ public class Constant {
 	public static final String MESSAGE_CANT_UPDATE_OPERATION = "message.operation.cantupdate";
 	public static final String MESSAGE_CANT_DELETE_OPERATION = "message.operation.cantDelete";
 	
+	//Rol
 	public static final String MESSAGE_NOT_FOUND_ROLE = "message.rol.notFounds";
 	public static final String MESSAGE_CANT_CREATE_ROL = "message.rol.cantCreate";
+	
+	//Box
+	public static final String MESSAGE_NOT_FOUND_BOXS = "message.box.notFounds";
+	public static final String MESSAGE_NOT_FOUND_BOXS_OPEN = "message.box.notFoundsOpen";
+	public static final String MESSAGE_NOT_FOUND_BOX = "message.box.notFound";
+	public static final String MESSAGE_CANT_CREATE_BOX = "message.box.cantCreate";
+	public static final String MESSAGE_CANT_UPDATE_BOX = "message.box.cantupdate";
+	public static final String MESSAGE_CANT_DELETE_BOX = "message.box.cantDelete";
+
 
 }
+

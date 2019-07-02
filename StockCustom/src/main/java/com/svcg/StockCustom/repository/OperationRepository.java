@@ -6,6 +6,7 @@ import java.util.Date;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+
 import com.svcg.StockCustom.entity.Operation;
 import com.svcg.StockCustom.enums.OperationType;
 import com.svcg.StockCustom.enums.PaymentMethod;
@@ -37,4 +38,6 @@ public interface OperationRepository extends
 	//Para busqueda de operaciones por tipo en un intervalo de tiempo dado 
 	Page<Operation> findByOperationTypeAndCreateDateBetween(OperationType operationType, Date fromDate, Date toDate, Pageable pageable);
 
+	//Para la busqueda de operaciones por operacion
+	Page<Operation> findAllByBoxId(Long boxId, Pageable pageable);
 }

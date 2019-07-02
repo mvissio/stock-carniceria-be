@@ -25,7 +25,7 @@ public class User {
     private String password;
 
     @Column(name = "enabled", nullable = false)
-    private boolean enabled;
+    private Boolean enabled;
 
     @Email
     @Column(name = "email", nullable = false)
@@ -38,7 +38,7 @@ public class User {
     public User() {
     }
 
-    public User(String username, String password, boolean enabled, String email) {
+    public User(String username, String password, Boolean enabled, String email) {
         super();
         this.username = username;
         this.password = password;
@@ -70,11 +70,11 @@ public class User {
         this.password = password;
     }
 
-    public boolean isEnabled() {
+    public Boolean isEnabled() {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 

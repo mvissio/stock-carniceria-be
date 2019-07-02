@@ -3,22 +3,22 @@ package com.svcg.StockCustom.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.svcg.StockCustom.entity.Category;
+import com.svcg.StockCustom.service.dto.CategoryDTO;
 
 public interface CategoryService {
 
-	Category saveCategory(Category category);
+	CategoryDTO saveCategory(CategoryDTO categoryDTO);
 
-	Page<Category> getCategories(Pageable pageable);
+	Page<CategoryDTO> getCategories(Pageable pageable);
 
-	Category getCategoryByName(String name);
+	CategoryDTO getCategoryByName(String name);
 
-	Category getCategoryById(Long id);
+	CategoryDTO getCategoryById(Long id);
 
-	Category updateCategory(Category category);
+	CategoryDTO updateCategory(CategoryDTO categoryDTO);
 	
-	Category deleteCategory(Long id);
+	CategoryDTO deleteCategory(Long id);
 	
-	Page<Category> findByOnlyEnabledCategory(Pageable pageable);
+	Page<CategoryDTO> findByOnlyEnabledCategory(Pageable pageable);
 
 }

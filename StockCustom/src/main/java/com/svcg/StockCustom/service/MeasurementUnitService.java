@@ -1,24 +1,24 @@
 package com.svcg.StockCustom.service;
 
+import com.svcg.StockCustom.service.dto.MeasurementUnitDTO;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.svcg.StockCustom.entity.MeasurementUnit;
-
 public interface MeasurementUnitService {
 
-	MeasurementUnit saveMeasurementUnit(MeasurementUnit measurementUnit);
+    MeasurementUnitDTO saveMeasurementUnit(MeasurementUnitDTO measurementUnitDTO);
 
-	Page<MeasurementUnit> getMeasurementUnits(Pageable pageable);
+    Page<MeasurementUnitDTO> getMeasurementUnits(Pageable pageable);
 
-	MeasurementUnit getMeasurementUnitByName(String name);
+    MeasurementUnitDTO getMeasurementUnitByName(String name);
 
-	MeasurementUnit getMeasurementUnitById(Long id);
+    MeasurementUnitDTO getMeasurementUnitById(Long id);
 
-	MeasurementUnit updateMeasurementUnit(MeasurementUnit measurementUnit);
-	
-	MeasurementUnit deleteMeasurementUnit(Long id);
-	
-	Page<MeasurementUnit> findByOnlyEnabledMeasurementUnit(Pageable pageable);
+    MeasurementUnitDTO updateMeasurementUnit(MeasurementUnitDTO measurementUnitDTO);
+    
+    MeasurementUnitDTO deleteMeasurementUnit(Long id);
+    
+    Page<MeasurementUnitDTO> findByOnlyEnabledMeasurementUnit(Pageable pageable);
 
 }

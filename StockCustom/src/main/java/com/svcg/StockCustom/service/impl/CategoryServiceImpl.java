@@ -17,6 +17,8 @@ import com.svcg.StockCustom.constant.Constant;
 import com.svcg.StockCustom.entity.Category;
 import com.svcg.StockCustom.repository.CategoryRepository;
 import com.svcg.StockCustom.service.CategoryService;
+import com.svcg.StockCustom.service.converter.CategoryConverter;
+import com.svcg.StockCustom.service.dto.CategoryDTO;
 
 @Service("categoryServiceImpl")
 public class CategoryServiceImpl implements CategoryService {
@@ -29,37 +31,40 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
 	@Qualifier("categoryRepository")
-	private CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
+    
+    @Autowired
+    private CategoryConverter categoryConverter;
 
     @Override
-    public Category saveCategory(Category category) {
-        if (category == null) {
+    public CategoryDTO saveCategory(CategoryDTO categoryDTO) {
+        if (categoryDTO == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get(Constant.MESSAGE_CANT_CREATE_CATEGORY));
         }
-        if (categoryNameExist(category.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_CATEGORY_EXISTS), category.getName()));
+        if (categoryNameExist(categoryDTO.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_CATEGORY_EXISTS), categoryDTO.getName()));
         }        
 
         /**
          * Guardo la categoria
          */
         
-        category.setCreateDate(new Date());
-        category.setDisabled(false);
-        category = saveObjectCategory(category, true);
-		logger.info("category was saved successfully {}", category);        
+        categoryDTO.setCreateDate(new Date());
+        categoryDTO.setDisabled(false);
+        categoryDTO = saveObjectCategory(categoryDTO, true);
+		logger.info("category was saved successfully {}", categoryDTO);        
 
-        return category;
+        return categoryDTO;
     }
 
     /**
      * Guardo la categoria
      */
 
-    private Category saveObjectCategory(Category category, Boolean isSave) {
+    private CategoryDTO saveObjectCategory(CategoryDTO categoryDTO, Boolean isSave) {
         try {
-            category = categoryRepository.save(category);
-            return category;
+            categoryDTO = this.categoryConverter.toDTO(this.categoryRepository.save(this.categoryConverter.toEntity(categoryDTO)));
+            return categoryDTO;
             
         } catch (Exception e) {
             logger.error(Constant.EXCEPTION, e);
@@ -73,69 +78,71 @@ public class CategoryServiceImpl implements CategoryService {
    
     
     @Override
-    public Category updateCategory(Category category) {
-        if (category == null) {
+    public CategoryDTO updateCategory(CategoryDTO categoryDTO) {
+        if (categoryDTO == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get(Constant.MESSAGE_CANT_CREATE_CATEGORY));
         }
-        Category previousCategory = categoryRepository.findByCategoryId(category.getCategoryId());
+        Category previousCategory = categoryRepository.findByCategoryId(categoryDTO.getCategoryId());
         if (previousCategory == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_CATEGORY));
         }
-        category = saveObjectCategory(category, false);
-        return category;
+        categoryDTO = saveObjectCategory(categoryDTO, false);
+        return categoryDTO;
     }
 
     @Override
-    public Page<Category> getCategories(Pageable pageable) {
+    public Page<CategoryDTO> getCategories(Pageable pageable) {
         Page<Category> categories = categoryRepository.findAll(pageable);
         if (categories.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_CATEGORIES));
         }
-        return categories;
+        return categories.map(this.categoryConverter::toDTO);
     }
     
     @Override
-	public Page<Category> findByOnlyEnabledCategory(Pageable pageable) {
+	public Page<CategoryDTO> findByOnlyEnabledCategory(Pageable pageable) {
 		Page<Category> categories = categoryRepository.findByDisabledIsFalse(pageable);
 		if (categories.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_CATEGORIES));
 		}
-		return categories;	
+		return categories.map(this.categoryConverter::toDTO);	
 	}
         
     
-    private boolean categoryNameExist(String name) {
+    private Boolean categoryNameExist(String name) {
         Category category = categoryRepository.findByName(name);
         return category != null;
     }
 
     
     @Override
-    public Category getCategoryByName(String name) {
+    public CategoryDTO getCategoryByName(String name) {
         Category category = categoryRepository.findByName(name);
         if(category == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_CATEGORY));
         }
 
-        return category;
+        return this.categoryConverter.toDTO(category);
     }
 
     @Override
-    public Category getCategoryById(Long id) {
+    public CategoryDTO getCategoryById(Long id) {
         Category category = categoryRepository.findByCategoryId(id);
         if(category == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_CATEGORY));
         }
 
-        return category;
+        return this.categoryConverter.toDTO(category);
     }
     
     @Override
-	public Category deleteCategory(Long id) {
-		Category category = categoryRepository.findByCategoryId(id);
-		category.setDisabled(true);
-		category.setDisabledDate(new Date());		
-		return categoryRepository.save(category);
+	public CategoryDTO deleteCategory(Long id) {
+		CategoryDTO categoryDTO = this.getCategoryById(id);
+		categoryDTO.setDisabled(true);
+        categoryDTO.setDisabledDate(new Date());
+        categoryDTO = saveObjectCategory(categoryDTO, false);
+        		
+		return categoryDTO;
 	}
     
     

@@ -11,28 +11,28 @@ import com.svcg.StockCustom.entity.User;
 import com.svcg.StockCustom.service.dto.UserDTO;
 
 @Component("userConverter")
-public class UserConverter {
+public class UserConverter implements EntityConverter <UserDTO, User>  {
 	
 	@Autowired
     private ModelMapper modelMapper;
 	
-	public UserDTO convertToDTO(User user) {
+	public UserDTO toDTO(User user) {
 		return modelMapper.map(user, UserDTO.class);
 	}
 	
-	public List<UserDTO> convertToListDTO(List<User> users) {
-		List<UserDTO> userDTOs = new ArrayList<>();
-		users.forEach(user -> userDTOs.add(modelMapper.map(user, UserDTO.class)));
-		return userDTOs;
+	public List<UserDTO> toDTO(List<User> users) {
+		List<UserDTO> usersDTO = new ArrayList<>();
+		users.forEach(user -> usersDTO.add(modelMapper.map(user, UserDTO.class)));
+		return usersDTO;
 	}
 	
-	public User convertToEntity(UserDTO userDTO) {
+	public User toEntity(UserDTO userDTO) {
 		return modelMapper.map(userDTO, User.class);
 	}
 	
-	public List<User> convertToListEntity(List<UserDTO> userDTOs) {
+	public List<User> toEntity(List<UserDTO> usersDTO) {
 		List<User> users = new ArrayList<>();
-		userDTOs.forEach(userModel -> users.add(modelMapper.map(userDTOs, User.class)));
+		usersDTO.forEach(userDTO -> users.add(modelMapper.map(userDTO, User.class)));
 		return users;
 	}
 

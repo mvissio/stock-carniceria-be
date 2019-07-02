@@ -14,7 +14,7 @@ public class DateUtils {
      * @param date2
      * @return
      */
-    public static boolean isSameDate(Date date1, Date date2) {
+    public static Boolean isSameDate(Date date1, Date date2) {
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
         cal1.setTime(date1);
@@ -30,7 +30,7 @@ public class DateUtils {
      * @param givenDate
      * @return
      */
-    public static boolean isInCurrentMonth(Date givenDate) {
+    public static Boolean isInCurrentMonth(Date givenDate) {
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
 

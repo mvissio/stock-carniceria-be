@@ -17,6 +17,8 @@ import com.svcg.StockCustom.component.Messages;
 import com.svcg.StockCustom.constant.Constant;
 import com.svcg.StockCustom.repository.ProviderRepository;
 import com.svcg.StockCustom.service.ProviderService;
+import com.svcg.StockCustom.service.converter.ProviderConverter;
+import com.svcg.StockCustom.service.dto.ProviderDTO;
 
 @Service("providerServiceImpl")
 public class ProviderServiceImpl implements ProviderService {
@@ -28,30 +30,32 @@ public class ProviderServiceImpl implements ProviderService {
 	@Autowired
 	Messages messages;
 
+	@Autowired
+    private ProviderConverter providerConverter;
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(ProviderServiceImpl.class);
 
 	@Override
-	public Provider saveProvider(
-			Provider provider) {
-		if (provider == null) {
+	public ProviderDTO saveProvider(ProviderDTO providerDTO) {
+		if (providerDTO == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get(Constant.MESSAGE_CANT_CREATE_PROVIDER));
 		}
-		if (providerNameExist(provider.getName())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_PROVIDER_EXISTS), provider.getName()));
+		if (providerNameExist(providerDTO.getName())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_PROVIDER_EXISTS), providerDTO.getName()));
 		}
-		if (emailExist(provider.getEmail())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_EMAIL_EXIST), provider.getEmail()));
+		if (emailExist(providerDTO.getEmail())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_EMAIL_EXIST), providerDTO.getEmail()));
 		}
 
 		/**
 		 * Guardo el provider
 		 */
-		provider.setCreateDate(new Date());
-		provider.setDisabled(false);
-		logger.info("provider was saved successfully {}", provider);
-		provider = saveProviderObject(provider, true);
-		return provider;
+		providerDTO.setCreateDate(new Date());
+		providerDTO.setDisabled(false);
+		logger.info("provider was saved successfully {}", providerDTO);
+		providerDTO = saveProviderObject(providerDTO, true);
+		return providerDTO;
 
 	}
 
@@ -59,9 +63,9 @@ public class ProviderServiceImpl implements ProviderService {
 	 * Guardo el usuario con sus roles
 	 */
 
-	private Provider saveProviderObject(Provider provider, Boolean isSave) {
+	private ProviderDTO saveProviderObject(ProviderDTO providerDTO, Boolean isSave) {
 		try {
-			provider = providerRepository.save(provider);
+			providerDTO = this.providerConverter.toDTO(providerRepository.save(this.providerConverter.toEntity(providerDTO)));
 			/**
 			 * Devuelvo el user creado con el rol seteado
 			 */
@@ -70,90 +74,89 @@ public class ProviderServiceImpl implements ProviderService {
             String message = (isSave) ? this.messages.get(Constant.MESSAGE_CANT_CREATE_PROVIDER) : this.messages.get(Constant.MESSAGE_CANT_UPDATE_PROVIDER);
 			throw new ResponseStatusException(HttpStatus.CONFLICT, message);
 		}
-		return provider;
+		return providerDTO;
 	}
 
 	@Override
-	public Provider updateProvider(
-			Provider provider) {
-		if (provider == null) {
+	public ProviderDTO updateProvider(ProviderDTO providerDTO) {
+		if (providerDTO == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get(Constant.MESSAGE_CANT_CREATE_PROVIDER));
 		}
 		Provider previousProvider = providerRepository
-				.findByName(provider.getName());
+				.findByName(providerDTO.getName());
 		if (previousProvider == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_PROVIDER));
 		}
-		if (!previousProvider.getEmail().equals(provider.getEmail())
-				&& emailExist(provider.getEmail())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_EMAIL_EXIST), provider.getEmail()));
+		if (!previousProvider.getEmail().equals(providerDTO.getEmail())
+				&& emailExist(providerDTO.getEmail())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_EMAIL_EXIST), providerDTO.getEmail()));
 		}
-		provider = saveProviderObject(provider, false);
-		return provider;
+		providerDTO = saveProviderObject(providerDTO, false);
+		return providerDTO;
 	}
 
 	@Override
-	public Page<Provider> getProviders(
-			Pageable pageable) {
+	public Page<ProviderDTO> getProviders(Pageable pageable) {
 		Page<Provider> providers = providerRepository
 				.findAll(pageable);
 		if (providers.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_PROVIDERS));
 		}
-		return providers;
+		return providers.map(this.providerConverter::toDTO);
 	}
 
-	private boolean emailExist(String email) {
+	private Boolean emailExist(String email) {
 		Provider provider = providerRepository
 				.findByEmail(email);
 		return provider != null;
 	}
 
-	private boolean providerNameExist(String name) {
+	private Boolean providerNameExist(String name) {
 		Provider provider = providerRepository
 				.findByName(name);
 		return provider != null;
 	}
 
 	@Override
-	public Provider getProviderByName(String name) {
+	public ProviderDTO getProviderByName(String name) {
 		Provider provider = providerRepository
 				.findByName(name);
 		if (provider == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_PROVIDER));
 		}
 
-		return provider;
+		return this.providerConverter.toDTO(provider);
 	}
 
 	@Override
-	public Provider getProviderById(Long id) {
+	public ProviderDTO getProviderById(Long id) {
 		Provider provider = providerRepository
 				.findByProviderId(id);
 		if (provider == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_PROVIDER));
 		}
 
-		return provider;
+		return this.providerConverter.toDTO(provider);
 	}
 	
 	@Override
-	public Provider deleteProvider(Long id) {
-		Provider provider = providerRepository.findByProviderId(id);
-		provider.setDisabled(true);
-		provider.setDisabledDate(new Date());		
-		return providerRepository.save(provider);
+	public ProviderDTO deleteProvider(Long id) {
+		ProviderDTO providerDTO = this.getProviderById(id);
+		providerDTO.setDisabled(true);
+		providerDTO.setDisabledDate(new Date());		
+		providerDTO = this.saveProviderObject(providerDTO, false);
+		return providerDTO;
 	}
 	
 	@Override
-	public Page<Provider> findByOnlyEnabledProvider(
+	public Page<ProviderDTO> findByOnlyEnabledProvider(
 			Pageable pageable) {
 		Page<Provider> providers = providerRepository
 				.findByDisabledIsFalse(pageable);
 		if (providers.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_PROVIDER));
 		}
-		return providers;
+		return providers.map(this.providerConverter::toDTO);
 	}
 
 }

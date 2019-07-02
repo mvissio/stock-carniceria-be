@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,8 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.svcg.StockCustom.constant.Constant;
-import com.svcg.StockCustom.entity.Article;
 import com.svcg.StockCustom.service.ArticleService;
+import com.svcg.StockCustom.service.dto.ArticleDTO;
 
 @RestController
 @RequestMapping(value = "/articles")
@@ -38,55 +40,56 @@ public class ArticleController {
             .getLogger(UserController.class);
 
     @GetMapping("")
-    public Page<Article> getArticles(Pageable pageable) {
-        return articleService.getArticles(pageable);
+    public ResponseEntity<Page<ArticleDTO>> getArticles(Pageable pageable) {
+        return ResponseEntity.ok(this.articleService.getArticles(pageable));
     }
     
     @GetMapping("/enabled")
-    public Page<Article> getEnabledArticles(Pageable pageable) {
-        return articleService.findByOnlyEnabledArticle(pageable);
+    public ResponseEntity<Page<ArticleDTO>> getEnabledArticles(Pageable pageable) {
+        return ResponseEntity.ok(this.articleService.findByOnlyEnabledArticle(pageable));
     }
 
     @PostMapping("")
-    public Article addArticle(@Valid @RequestBody Article article, BindingResult bindingResult) throws MethodArgumentNotValidException {
+    public ResponseEntity<ArticleDTO> addArticle(@Valid @RequestBody ArticleDTO articleDTO, BindingResult bindingResult) throws MethodArgumentNotValidException {
     	if (bindingResult.hasErrors()) {
 			bindingResult.getFieldErrors().stream().forEach(f -> logger.error(String.format(Constant.CONCAT2S, f.getField(), f.getDefaultMessage())));        	
-            throw new MethodArgumentNotValidException(MethodParameter.forExecutable(Article.class.getDeclaredConstructors()[1],0), bindingResult);
+            throw new MethodArgumentNotValidException(MethodParameter.forExecutable(ArticleDTO.class.getDeclaredConstructors()[1],0), bindingResult);
 		}
-        return articleService.saveArticle(article);
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.articleService.saveArticle(articleDTO));
 
     }
 
     @PutMapping("")
-    public Article updateArticle(@Valid @RequestBody Article article, BindingResult bindingResult) throws MethodArgumentNotValidException {
+    public ResponseEntity<ArticleDTO> updateArticle(@Valid @RequestBody ArticleDTO articleDTO, BindingResult bindingResult) throws MethodArgumentNotValidException {
     	if (bindingResult.hasErrors()) {
 			bindingResult.getFieldErrors().stream().forEach(f -> logger.error(String.format(Constant.CONCAT2S, f.getField(), f.getDefaultMessage())));        	
-            throw new MethodArgumentNotValidException(MethodParameter.forExecutable(Article.class.getDeclaredConstructors()[1],0), bindingResult);
+            throw new MethodArgumentNotValidException(MethodParameter.forExecutable(ArticleDTO.class.getDeclaredConstructors()[1],0), bindingResult);
 		}
-        return articleService.updateArticle(article);
+        return ResponseEntity.ok(this.articleService.updateArticle(articleDTO));
 
     }
 
     @GetMapping("/name/{name}")
-    public Article getArticleByNombre(@PathVariable("name")String name) {
-        return articleService.getArticleByName(name);
+    public ResponseEntity<ArticleDTO> getArticleByNombre(@PathVariable("name")String name) {
+        return ResponseEntity.ok(this.articleService.getArticleByName(name));
     }
     
     @GetMapping("/nameLike")
-    public List<Article> getArticleByNombreLike(String nameLike) {
-        return articleService.getArticleByNameLike(nameLike);
+    public ResponseEntity<List<ArticleDTO>> getArticleByNombreLike(String nameLike) {
+        return ResponseEntity.ok(this.articleService.getArticleByNameLike(nameLike));
     }
 
    
     
     @GetMapping("/id/{id}")
-    public Article getArticleById(@PathVariable("id")Long id) {
-        return articleService.getArticleById(id);
+    public ResponseEntity<ArticleDTO> getArticleById(@PathVariable("id")Long id) {
+        return ResponseEntity.ok(this.articleService.getArticleById(id));
     }
     
     @DeleteMapping("/id/{id}")
-    public Article deleteArticle(@PathVariable("id")Long id){
-    	return articleService.deleteArticle(id);
+    public ResponseEntity<Void> deleteArticle(@PathVariable("id")Long id){
+    	this.articleService.deleteArticle(id);
+    	return ResponseEntity.noContent().build();
     }
     
 

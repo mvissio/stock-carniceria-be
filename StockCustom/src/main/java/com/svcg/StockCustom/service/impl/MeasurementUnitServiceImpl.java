@@ -14,8 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
+import com.svcg.StockCustom.constant.Constant;
 import com.svcg.StockCustom.repository.MeasurementUnitRepository;
 import com.svcg.StockCustom.service.MeasurementUnitService;
+import com.svcg.StockCustom.service.converter.MeasurementUnitConverter;
+import com.svcg.StockCustom.service.dto.MeasurementUnitDTO;
 
 @Service("measurementUnitServiceImpl")
 public class MeasurementUnitServiceImpl implements MeasurementUnitService {
@@ -30,122 +33,113 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 	@Qualifier("measurementUnitRepository")
 	private MeasurementUnitRepository measurementUnitRepository;
 
+	@Autowired
+    private MeasurementUnitConverter measurementUnitConverter;
+
 	@Override
-	public MeasurementUnit saveMeasurementUnit(MeasurementUnit measurementUnit) {
+	public MeasurementUnitDTO saveMeasurementUnit(MeasurementUnitDTO measurementUnitDTO) {
 		/**
 		 * Save the measurementUnit
 		 */
 
-		if (measurementUnit == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					this.messages.get("MESSAGE_CANT_CREATE_ARTICULO"), null);
+		if (measurementUnitDTO == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get(Constant.MESSAGE_CANT_CREATE_MEASUREMENT_UNIT));
 		}
-		if (measurementUnitNameExist(measurementUnit.getName())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					this.messages.get("MESSAGE_ARTICULO_EXISTS")
-							+ measurementUnit.getName(), null);
+		if (measurementUnitNameExist(measurementUnitDTO.getName())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_ARTICLE_EXISTS), measurementUnitDTO.getName()));
 		}
-		measurementUnit.setCreateDate(new Date());
-		measurementUnit.setDisabled(false);
-		measurementUnit = saveMeasurementUnitObjet(measurementUnit);
-		logger.info("measurementUnit was saved successfully " + measurementUnit);
-		return measurementUnit;
+		measurementUnitDTO.setCreateDate(new Date());
+		measurementUnitDTO.setDisabled(false);
+		measurementUnitDTO = saveMeasurementUnitObjet(measurementUnitDTO, true);
+		logger.info("measurementUnit was saved successfully {}", measurementUnitDTO);
+		return measurementUnitDTO;
 
 	}
 
 	@Override
-	public Page<MeasurementUnit> getMeasurementUnits(Pageable pageable) {
-		Page<MeasurementUnit> measurementUnit = measurementUnitRepository
+	public Page<MeasurementUnitDTO> getMeasurementUnits(Pageable pageable) {
+		Page<MeasurementUnit> measurementUnits = this.measurementUnitRepository
 				.findAll(pageable);
-		if (measurementUnit.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_ARTICULOS"), null);
+		if (measurementUnits.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_MEASUREMENT_UNITS));
 		}
-		return measurementUnit;
+		return measurementUnits.map(this.measurementUnitConverter::toDTO);
 
 	}
 
 	@Override
-	public MeasurementUnit getMeasurementUnitByName(String name) {
-		MeasurementUnit measurementUnit = measurementUnitRepository
+	public MeasurementUnitDTO getMeasurementUnitByName(String name) {
+		MeasurementUnit measurementUnit = this.measurementUnitRepository
 				.findByName(name);
 		if (measurementUnit == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_USUARIO"), null);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_MEASUREMENT_UNIT));
 		}
 
-		return measurementUnit;
+		return this.measurementUnitConverter.toDTO(measurementUnit);
 	}
 
 	@Override
-	public MeasurementUnit getMeasurementUnitById(Long id) {
-		MeasurementUnit measurementUnit = measurementUnitRepository
+	public MeasurementUnitDTO getMeasurementUnitById(Long id) {
+		MeasurementUnit measurementUnit = this.measurementUnitRepository
 				.findByMeasurementUnitId(id);
 		if (measurementUnit == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_ARTICULO"), null);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_MEASUREMENT_UNIT));
 		}
-		return measurementUnit;
+		return this.measurementUnitConverter.toDTO(measurementUnit);
 	}
 
 	@Override
-	public MeasurementUnit updateMeasurementUnit(MeasurementUnit measurementUnit) {
-		if (measurementUnit == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					this.messages.get("MESSAGE_CANT_CREATE_ARTICULO"), null);
+	public MeasurementUnitDTO updateMeasurementUnit(MeasurementUnitDTO measurementUnitDTO) {
+		if (measurementUnitDTO == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get(Constant.MESSAGE_NOT_FOUND_MEASUREMENT_UNIT));
 		}
-		MeasurementUnit previousMeasurementUnit = measurementUnitRepository
-				.findByName(measurementUnit.getName());
+		MeasurementUnit previousMeasurementUnit = this.measurementUnitRepository
+				.findByName(measurementUnitDTO.getName());
 		if (previousMeasurementUnit == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_ARTICULO"), null);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_MEASUREMENT_UNIT));
 		}
-
-		measurementUnit = saveMeasurementUnitObjet(previousMeasurementUnit);
-		return measurementUnit;
+		measurementUnitDTO = saveMeasurementUnitObjet(measurementUnitDTO, false);
+		return measurementUnitDTO;
 	}
 
-	private boolean measurementUnitNameExist(String name) {
-		MeasurementUnit measurementUnit = measurementUnitRepository
+	private Boolean measurementUnitNameExist(String name) {
+		MeasurementUnit measurementUnit = this.measurementUnitRepository
 				.findByName(name);
 		return measurementUnit != null;
 	}
 
-	private MeasurementUnit saveMeasurementUnitObjet(
-			MeasurementUnit measurementUnit) {
+	private MeasurementUnitDTO saveMeasurementUnitObjet(MeasurementUnitDTO measurementUnitDTO, Boolean isSave) {
 		try {
-
-			MeasurementUnit measurementUnitCreated = measurementUnitRepository
-					.save(measurementUnit);
+			MeasurementUnitDTO measurementUnitCreated = this.measurementUnitConverter.toDTO(this.measurementUnitRepository.save(this.measurementUnitConverter.toEntity(measurementUnitDTO)));
 			return measurementUnitCreated;
 
 		} catch (Exception e) {
-			logger.error("Exception: {} ", e);
-			throw new ResponseStatusException(HttpStatus.CONFLICT,
-					this.messages.get("MESSAGE_CANT_CREATE_ARTICULO"), null);
+			logger.error(Constant.EXCEPTION, e);
+			String message = (isSave) ? this.messages.get(Constant.MESSAGE_CANT_CREATE_ARTICLE) : this.messages.get(Constant.MESSAGE_CANT_UPDATE_ARTICLE);
+
+			throw new ResponseStatusException(HttpStatus.CONFLICT, message);
 		}
 
 	}
 
 	@Override
-	public MeasurementUnit deleteMeasurementUnit(Long id) {
-		MeasurementUnit measurementUnit = measurementUnitRepository
+	public MeasurementUnitDTO deleteMeasurementUnit(Long id) {
+		MeasurementUnit measurementUnit = this.measurementUnitRepository
 				.findByMeasurementUnitId(id);
 		measurementUnit.setDisabled(true);
 		measurementUnit.setDisabledDate(new Date());
-		return measurementUnitRepository.save(measurementUnit);
+		return this.measurementUnitConverter.toDTO(this.measurementUnitRepository.save(measurementUnit));
 	}
 
 	@Override
-	public Page<MeasurementUnit> findByOnlyEnabledMeasurementUnit(
+	public Page<MeasurementUnitDTO> findByOnlyEnabledMeasurementUnit(
 			Pageable pageable) {
-		Page<MeasurementUnit> measurementUnits = measurementUnitRepository
+		Page<MeasurementUnit> measurementUnits = this.measurementUnitRepository
 				.findByDisabledIsFalse(pageable);
 		if (measurementUnits.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_MEASUREMENT_UNITS"), null);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_MEASUREMENT_UNITS));
 		}
-		return measurementUnits;
+		return measurementUnits.map(this.measurementUnitConverter::toDTO);
 	}
 
 }

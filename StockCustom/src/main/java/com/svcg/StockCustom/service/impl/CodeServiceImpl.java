@@ -14,7 +14,8 @@ public class CodeServiceImpl implements CodeService {
 		code.setMeasurementUnitId(7654389L);
 		code.setNameMeasurementUnit("Tartas");
 		code.setPrice(250.75);
-		code.setWeight(500);		
+		double weight = 500;
+		code.setWeight(weight);
 		return code;
 	}
 

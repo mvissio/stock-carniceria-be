@@ -25,11 +25,11 @@ public class OperationDetail {
 	
 	@NotNull
 	@Column(name = "price")
-	private double price;
+	private Double price;
 	
 	@NotNull
 	@Column(name = "amount")
-	private double amount;
+	private Double amount;
 	
 	
 	public OperationDetail() {
@@ -37,7 +37,7 @@ public class OperationDetail {
 
 
 	public OperationDetail(Long operationDetailId, Long operationId,
-			Long articleId, double price, double amount) {
+			Long articleId, Double price, Double amount) {
 		super();
 		this.operationDetailId = operationDetailId;
 		this.operationId = operationId;
@@ -77,22 +77,22 @@ public class OperationDetail {
 	}
 
 
-	public double getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
 
-	public void setPrice(double price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
 
-	public double getAmount() {
+	public Double getAmount() {
 		return amount;
 	}
 
 
-	public void setAmount(double amount) {
+	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
 

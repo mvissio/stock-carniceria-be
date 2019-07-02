@@ -3,28 +3,28 @@ package com.svcg.StockCustom.service;
 import java.util.Date;
 import java.util.List;
 
+import com.svcg.StockCustom.enums.OperationType;
+import com.svcg.StockCustom.enums.PaymentMethod;
+import com.svcg.StockCustom.service.dto.OperationDTO;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.svcg.StockCustom.entity.Operation;
-import com.svcg.StockCustom.enums.OperationType;
-import com.svcg.StockCustom.enums.PaymentMethod;
-
 public interface OperationService {
 
-	Operation saveOperation(Operation operation);
+	OperationDTO saveOperation(OperationDTO operationDTO);
 	
-	Operation getOperationById(Long id);
+	OperationDTO getOperationById(Long id);
 
 	List<OperationType> getOperationTypes();
 
 	List<PaymentMethod> getPaymentMethods();
 
-	Page<Operation> getOperationsByCreationDate(Date createDate, Pageable pageable);
+	Page<OperationDTO> getOperationsByCreationDate(Date createDate, Pageable pageable);
 	
-	Page<Operation> getOperationsByCreationDateAndOperationType(Date createDate, Pageable pageable);
+	Page<OperationDTO> getOperationsByCreationDateAndOperationType(Date createDate, Pageable pageable);
 
-    Operation cancelOperation(Long id);
+    OperationDTO cancelOperation(Long id);
 
-	Operation updateOperation(Operation operation);
+	OperationDTO updateOperation(OperationDTO operationDTO);
 }

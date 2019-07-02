@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.svcg.StockCustom.constant.Constant;
 import com.svcg.StockCustom.entity.Category;
 import com.svcg.StockCustom.service.CategoryService;
+import com.svcg.StockCustom.service.dto.CategoryDTO;
 
 
 @RestController
@@ -40,49 +43,50 @@ public class CategoryController {
             .getLogger(CategoryController.class);
 
     @GetMapping("")
-    public Page<Category> getCategories(Pageable pageable) {
-        return categoryService.getCategories(pageable);
+    public ResponseEntity<Page<CategoryDTO>> getCategories(Pageable pageable) {
+        return ResponseEntity.ok(categoryService.getCategories(pageable));
     }
     
     @GetMapping("/enabled")
-    public Page<Category> getEnabledCategories(Pageable pageable) {
-        return categoryService.findByOnlyEnabledCategory(pageable);
+    public ResponseEntity<Page<CategoryDTO>> getEnabledCategories(Pageable pageable) {
+        return ResponseEntity.ok(categoryService.findByOnlyEnabledCategory(pageable));
     }
 
     @PostMapping("")
-    public Category addCategory(@Valid @RequestBody Category provider, BindingResult bindingResult) throws MethodArgumentNotValidException {
+    public ResponseEntity<CategoryDTO> addCategory(@Valid @RequestBody CategoryDTO category, BindingResult bindingResult) throws MethodArgumentNotValidException {
     	if (bindingResult.hasErrors()) {
         	bindingResult.getFieldErrors().stream().forEach(f -> logger.error(String.format(Constant.CONCAT2S, f.getField(), f.getDefaultMessage())));        	
             throw new MethodArgumentNotValidException(MethodParameter.forExecutable(Category.class.getDeclaredConstructors()[1],0), bindingResult);
         }
-        return categoryService.saveCategory(provider);
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.categoryService.saveCategory(category));
 
     }
 
     @PutMapping("")
-    public Category updateCategory(@Valid @RequestBody Category category, BindingResult bindingResult) throws MethodArgumentNotValidException {
+    public ResponseEntity<CategoryDTO> updateCategory(@Valid @RequestBody CategoryDTO categoryDTO, BindingResult bindingResult) throws MethodArgumentNotValidException {
     	if (bindingResult.hasErrors()) {
         	bindingResult.getFieldErrors().stream().forEach(f -> logger.error(String.format(Constant.CONCAT2S, f.getField(), f.getDefaultMessage())));        	
             throw new MethodArgumentNotValidException(MethodParameter.forExecutable(Category.class.getDeclaredConstructors()[1],0), bindingResult);
         }
-        return categoryService.updateCategory(category);
+        return ResponseEntity.ok(this.categoryService.updateCategory(categoryDTO));
 
     }
 
     
     @GetMapping("/name/{name}")
-    public Category getCategoryByName(@PathVariable("name")String name) {
-        return categoryService.getCategoryByName(name);
+    public ResponseEntity<CategoryDTO> getCategoryByName(@PathVariable("name")String name) {
+        return ResponseEntity.ok(this.categoryService.getCategoryByName(name));
     }
 
     @GetMapping("/id/{id}")
-    public Category getCategoryById(@PathVariable("id")Long id) {
-        return categoryService.getCategoryById(id);
+    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable("id")Long id) {
+        return ResponseEntity.ok(this.categoryService.getCategoryById(id));
     }
     
     @DeleteMapping("/id/{id}")
-    public com.svcg.StockCustom.entity.Category deleteCategory(@PathVariable("id")Long id){
-    	return categoryService.deleteCategory(id);
+    public ResponseEntity<Void> deleteCategory(@PathVariable("id")Long id){
+        this.categoryService.deleteCategory(id);
+        return ResponseEntity.noContent().build();
     }
     
 }

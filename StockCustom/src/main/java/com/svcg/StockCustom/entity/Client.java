@@ -41,16 +41,15 @@ public class Client {
 	private Date disabledDate;
 
 	@Column(name = "disabled")
-	private boolean disabled;
+	private Boolean disabled;
 	
 	public Client() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Client(Long clientId, String name, String surname, String email,
 			String telephone, Date createDate, Date disabledDate,
-			boolean disabled) {
+			Boolean disabled) {
 		super();
 		this.clientId = clientId;
 		this.name = name;
@@ -118,11 +117,11 @@ public class Client {
 		this.disabledDate = disabledDate;
 	}
 
-	public boolean isDisabled() {
+	public Boolean isDisabled() {
 		return disabled;
 	}
 
-	public void setDisabled(boolean disabled) {
+	public void setDisabled(Boolean disabled) {
 		this.disabled = disabled;
 	}
 

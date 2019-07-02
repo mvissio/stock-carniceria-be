@@ -8,6 +8,7 @@ import com.svcg.StockCustom.exceptions.CustomRuntimeException;
 import com.svcg.StockCustom.repository.RolRepository;
 import com.svcg.StockCustom.repository.UserRepository;
 import com.svcg.StockCustom.service.UserService;
+import com.svcg.StockCustom.service.converter.RolConverter;
 import com.svcg.StockCustom.service.converter.UserConverter;
 import com.svcg.StockCustom.service.dto.UserDTO;
 
@@ -48,6 +49,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Autowired
     private UserConverter userConverter;
 
+    @Autowired
+    private RolConverter rolConverter;
+
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
@@ -87,9 +91,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         try {
         	Optional<Rol> rol = rolRepository.findRolByName(userDTO.getRol().getName());
         	if (rol.isPresent()) {
-        		userDTO.setRol(rol.get());        		
+        		userDTO.setRol(this.rolConverter.toDTO(rol.get()));        		
         	}
-        	newUserDTO = this.userConverter.convertToDTO(userRepository.save(this.userConverter.convertToEntity(userDTO)));
+        	newUserDTO = this.userConverter.toDTO(userRepository.save(this.userConverter.toEntity(userDTO)));
             /**
              * Devuelvo el user creado con el rol seteado
              */
@@ -122,7 +126,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         if (users.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,  this.messages.get(Constant.MESSAGE_USER_NOT_FOUND));
         }
-        return users.map(this.userConverter::convertToDTO);
+        return users.map(this.userConverter::toDTO);
     }
 
     private User buildUser(com.svcg.StockCustom.entity.User user, List<GrantedAuthority> authorities) {
@@ -136,12 +140,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return new ArrayList<>(authorities);
     }
 
-    private boolean emailExist(String email) {
+    private Boolean emailExist(String email) {
         com.svcg.StockCustom.entity.User user = userRepository.findByEmail(email);
         return user != null;
     }
 
-    private boolean userNameExist(String username) {
+    private Boolean userNameExist(String username) {
         com.svcg.StockCustom.entity.User user = userRepository.findByUsername(username);
         return user != null;
     }
@@ -159,7 +163,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_USER_NOT_FOUND));
         }
 
-        return this.userConverter.convertToDTO(user);
+        return this.userConverter.toDTO(user);
     }
 
     @Override
@@ -169,7 +173,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_USER_NOT_FOUND));
         }
 
-        return this.userConverter.convertToDTO(user);
+        return this.userConverter.toDTO(user);
     }
 
     public String obtenerToken(HttpServletRequest request) {
