@@ -4,7 +4,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import com.svcg.StockCustom.entity.Box;
 import com.svcg.StockCustom.enums.OperationStatus;
+import com.svcg.StockCustom.repository.BoxRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,16 +108,6 @@ public class OperationServiceImpl implements OperationService {
         return newOperation;
     }
 
-	@Override
-	public Page<Operation> getOperationsByCreationDate(Date createDate, Pageable pageable) {
-		Page<Operation> operations = operationRepository.findByCreateDate(createDate, pageable);
-		if (operations == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
-		}
-
-		return operations;
-	}
-
     @Override
 	public Operation getOperationById(Long id) {
 		Operation operation = operationRepository
@@ -173,10 +165,184 @@ public class OperationServiceImpl implements OperationService {
         }
     }
 
-	@Override
-	public Page<Operation> getOperationsByCreationDateAndOperationType(Date createDate, Pageable pageable) {
+  //*********************BUSQUEDA POR TIPO, PAYMENT METHOD***************************
+    
+    @Override
+	public Page<Operation> getOperationsByOperationType(OperationType operationType, Pageable pageable) {
+		Page<Operation> operations = operationRepository.findByOperationType(operationType, pageable);
+		if (operations == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+		}
+
+		return operations;
+	}
+    
+    @Override
+	public Page<Operation> getOperationsPaymentMethod(PaymentMethod paymentMethod, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+    
+    @Override
+	public Page<Operation> getOperationsByOperationTypeAndPaymentMethod(Date createDate, PaymentMethod paymentMethod,
+			Pageable pageable) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+  //*********************BUSQUEDA POR UNA SOLA FECHA CREATED DATE Y TIPO, PAYMENT METHOD***************************
+	
+    
+    @Override
+	public Page<Operation> getOperationsByCreateDate(Date createDate, Pageable pageable) {
+		Page<Operation> operations = operationRepository.findByCreateDate(createDate, pageable);
+		if (operations == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+		}
+
+		return operations;
+	}        
+    
+	@Override
+	public Page<Operation> getOperationsByCreateDateAndOperationType(Date createDate,OperationType operationType, Pageable pageable) {
+		Page<Operation> operations = operationRepository.findByCreateDateAndOperationType(createDate,operationType, pageable);
+		if (operations == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+		}
+
+		return operations;
+	}
+
+	
+	@Override
+	public Page<Operation> getOperationsByCreateDateAndPaymentMethod(Date createDate, PaymentMethod paymentMethod,
+			Pageable pageable) {
+		Page<Operation> operations = operationRepository.findByCreateDateAndPaymentMethod(createDate,paymentMethod, pageable);
+		if (operations == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+		}
+
+		return operations;
+	}
+	
+	// *********************BUSQUEDA POR PERIODOS CREATED DATE Y TIPO, PAYMENT
+		// METHOD***************************
+
+	
+
+	@Override
+	public Page<Operation> getOperationsByCreateDateBetween(Date fromDate, Date toDate, Pageable pageable) {
+		Page<Operation> operations = operationRepository.findByCreateDateBetween(fromDate, toDate, pageable);
+		if (operations == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+		}
+
+		return operations;
+	}
+
+	@Override
+	public Page<Operation> getOperationsByCreateDateBetweenAndByOperationType(OperationType operationType,
+			Date fromDate, Date toDate, Pageable pageable) {
+		Page<Operation> operations = operationRepository.findByOperationTypeAndCreateDateBetween(operationType,
+				fromDate, toDate, pageable);
+		if (operations == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+		}
+
+		return operations;
+	}
+
+	@Override
+	public Page<Operation> getOperationsByCreateDateBetweenAndByPaymentMethod(PaymentMethod paymentMethod,
+			Date fromDate, Date toDate, Pageable pageable) {
+		Page<Operation> operations = operationRepository.findByPaymentMethodAndCreateDateBetween(paymentMethod,
+				fromDate, toDate, pageable);
+		if (operations == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+		}
+
+		return operations;
+	}
+
+	// *********************BUSQUEDA POR CLIENTE Y
+		// PROVEEDORES***************************
+	
+	@Override
+	public Page<Operation> getOperationsByClientIdAndOperationType(Long clientId, OperationType operationType,
+			Pageable pageable) {
+		Page<Operation> operations = operationRepository.findByClientIdAndOperationType(clientId,operationType,
+				pageable);
+		if (operations == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+		}
+
+		return operations;
+	}
+
+	@Override
+	public Page<Operation> getOperationsByProviderIdAndOperationType(Long providerId, OperationType operationType,
+			Pageable pageable) {
+		Page<Operation> operations = operationRepository.findByClientIdAndOperationType(providerId, operationType,
+				pageable);
+		if (operations == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+		}
+
+		return operations;
+	}
+
+	@Override
+	public Page<Operation> getOperationsByClientIdAndPaymentMethod(Long clientId, PaymentMethod paymentMethod,
+			Pageable pageable) {
+		Page<Operation> operations = operationRepository.findByClientIdAndPaymentMethod(clientId, paymentMethod,
+				pageable);
+		if (operations == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+		}
+
+		return operations;
+	}
+
+	@Override
+	public Page<Operation> getOperationsByCreateDateAndPaymentMethodAndOperationType(Date createDate,
+			PaymentMethod paymentMethod, OperationType operationType, Pageable pageable) {
+		
+		Page<Operation> operations = operationRepository.findByCreateDateAndPaymentMethodAndOperationType(createDate,
+				paymentMethod, operationType, pageable);
+		if (operations == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+		}
+
+		return operations;
+
+		
+	}
+
+	@Override
+	public Page<Operation> getOperationsByPaymentMethodAndOperationTypeAndCreateDateBetween(PaymentMethod paymentMethod,
+			OperationType operationType, Date fromDate, Date toDate, Pageable pageable) {
+	
+		Page<Operation> operations = operationRepository.findByPaymentMethodAndOperationTypeAndCreateDateBetween(paymentMethod,
+				 operationType,  fromDate,  toDate, pageable);
+		if (operations == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+		}
+
+		return operations;
+		
+	}
+
+	
 }
