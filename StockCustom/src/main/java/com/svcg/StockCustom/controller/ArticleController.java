@@ -72,9 +72,9 @@ public class ArticleController {
         return articleService.getArticleByName(name);
     }
     
-    @GetMapping("/nameLike")
-    public List<Article> getArticleByNombreLike(String nameLike) {
-        return articleService.getArticleByNameLike(nameLike);
+    @GetMapping("/search")
+    public List<Article> getArticlesByNameOrBrandOrCodeLike(String search) {
+        return articleService.getArticlesByNameOrBrandOrCodeLike(search);
     }
 
    

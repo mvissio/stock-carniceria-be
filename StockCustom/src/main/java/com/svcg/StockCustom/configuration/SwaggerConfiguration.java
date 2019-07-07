@@ -33,7 +33,7 @@ public class SwaggerConfiguration {
                                 new Contact("SVCG", "", "darioegb@gmail.com"),
                                 null,
                                 null,
-                                Collections.EMPTY_LIST
+                                Collections.emptySet()
                         )
                 )
                 .securitySchemes(Arrays.asList(authorizationBearer()))

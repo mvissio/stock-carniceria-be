@@ -23,7 +23,7 @@ public interface ArticleRepository extends JpaRepository<Article,Serializable> {
     
     Page<Article> findByDisabledIsFalse(Pageable pageable);
 
-	List<Article> findByNameContaining(String nameLike);
+	List<Article> findByNameContainingOrBrandContaining(String name, String brand);
 	
 	
 }

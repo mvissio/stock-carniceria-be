@@ -1,6 +1,7 @@
 package com.svcg.StockCustom.service.impl;
 
 import com.svcg.StockCustom.component.Messages;
+import com.svcg.StockCustom.constant.Constant;
 import com.svcg.StockCustom.entity.Box;
 import com.svcg.StockCustom.entity.Operation;
 import com.svcg.StockCustom.repository.BoxRepository;
@@ -44,7 +45,7 @@ public class BoxServiceImpl implements BoxService {
     public Page<Box> getBoxs(Pageable pageable) {
         Page<Box> boxs = boxRepository.findAll(pageable);
         if (boxs.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_BOXS"), null);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_BOXS));
         }
         return boxs;
     }
@@ -53,7 +54,7 @@ public class BoxServiceImpl implements BoxService {
     public Box getBoxById(Long id) {
         Box box = boxRepository.findByBoxId(id);
         if (box == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_CAJAS"), null);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_BOX));
         }
         return box;
     }
@@ -67,7 +68,7 @@ public class BoxServiceImpl implements BoxService {
     public Page<Box> getBoxsOpen(Pageable pageable) {
         Page<Box> boxs = boxRepository.findByDateCloseIsNull(pageable);
         if (boxs.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get("MESSAGE_NOT_FOUND_BOXS_OPEN"), null);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_BOXS_OPEN));
         }
         return boxs;
     }
@@ -76,8 +77,7 @@ public class BoxServiceImpl implements BoxService {
     public Page<Operation> getAllOperationByBoxId(Long boxId, Pageable pageable) {
         Page<Operation> operations = operationRepository.findAllByBoxId(boxId, pageable);
         if (operations == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
         }
         return operations;
     }

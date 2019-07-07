@@ -22,6 +22,6 @@ public interface ArticleService {
     
     Page<Article> findByOnlyEnabledArticle(Pageable pageable);
 
-	List<Article> getArticleByNameLike(String nameLike);
+	List<Article> getArticlesByNameOrBrandOrCodeLike(String search);
 	
 }

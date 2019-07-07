@@ -3,13 +3,12 @@ package com.svcg.StockCustom.service;
 import java.util.Date;
 import java.util.List;
 
-import com.svcg.StockCustom.entity.Box;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 import com.svcg.StockCustom.entity.Operation;
 import com.svcg.StockCustom.enums.OperationType;
 import com.svcg.StockCustom.enums.PaymentMethod;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface OperationService {
 

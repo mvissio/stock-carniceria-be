@@ -90,9 +90,9 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 	
 	@Override
-	public List<Article> getArticleByNameLike(String nameLike) {
+	public List<Article> getArticlesByNameOrBrandOrCodeLike(String search) {
 		List<Article> articles = articleRepository
-				.findByNameContaining(nameLike);
+				.findByNameContainingOrBrandContaining(search, search);
 		if (articles == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLE));
 		}

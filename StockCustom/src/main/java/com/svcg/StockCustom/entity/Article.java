@@ -103,10 +103,6 @@ public class Article {
 		this.disabled = disabled;
 	}
 
-
-
-
-
 	public String getName() {
 		return name;
 	}
