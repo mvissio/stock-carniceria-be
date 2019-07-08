@@ -32,7 +32,7 @@ public class MeasurementUnit {
 	private Date disabledDate;
 
 	@Column(name = "disabled")
-	private boolean disabled;
+	private Boolean disabled;
 	
 	public MeasurementUnit() {
 	}
@@ -77,11 +77,11 @@ public class MeasurementUnit {
 		this.disabledDate = disabledDate;
 	}
 
-	public boolean isDisabled() {
+	public Boolean isDisabled() {
 		return disabled;
 	}
 
-	public void setDisabled(boolean disabled) {
+	public void setDisabled(Boolean disabled) {
 		this.disabled = disabled;
 	}
 

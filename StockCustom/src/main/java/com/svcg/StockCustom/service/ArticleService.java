@@ -1,27 +1,28 @@
 package com.svcg.StockCustom.service;
 
 import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.svcg.StockCustom.entity.Article;
+import com.svcg.StockCustom.service.dto.ArticleDTO;
 
 public interface ArticleService {
 
-	Article saveArticle(Article article);
+	ArticleDTO saveArticle(ArticleDTO articleDTO);
 
-    Page<Article> getArticles(Pageable pageable);
+    Page<ArticleDTO> getArticles(Pageable pageable);
     
-    Article getArticleByName(String name);
+    ArticleDTO getArticleByName(String name);
 
-    Article getArticleById(Long id);
+    ArticleDTO getArticleById(Long id);
 
-    Article updateArticle(Article article);
+    ArticleDTO updateArticle(ArticleDTO articleDTO);
     
-    Article deleteArticle(Long id);
+    ArticleDTO deleteArticle(Long id);
     
-    Page<Article> findByOnlyEnabledArticle(Pageable pageable);
+    Page<ArticleDTO> findByOnlyEnabledArticle(Pageable pageable);
 
-	List<Article> getArticlesByNameOrBrandOrCodeLike(String search);
+	List<ArticleDTO> getArticlesByNameOrBrandOrCodeLike(String search);
 	
 }

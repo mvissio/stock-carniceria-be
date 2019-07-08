@@ -1,59 +1,47 @@
-package com.svcg.StockCustom.entity;
+package com.svcg.StockCustom.service.dto;
 
 import java.util.Date;
+import java.util.Objects;
 
-import javax.persistence.*;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@Entity
-@Table(name = "clients")
-public class Client {
+public class ProviderDTO {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "client_id")
-	private Long clientId;
+	private Long providerId;
 
 	@NotEmpty
 	@Size(max = 45)
-	@Column(name = "name", nullable = false, length = 45)
 	private String name;
 
-	@NotEmpty
-	@Size(max = 45)
-	@Column(name = "surname", nullable = false, length = 45)
-	private String surname;
-
 	@Size(max = 60)
-	@Column(name = "email", length = 60)
 	private String email;
 
-	@Column(name = "telephone", nullable = false)
+	@NotNull
 	private String telephone;
 
+	@NotNull
 	@Temporal(TemporalType.DATE)
-	@Column(name = "create_date", nullable = false)
 	private Date createDate;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "disabled_date")
 	private Date disabledDate;
 
-	@Column(name = "disabled")
 	private Boolean disabled;
 	
-	public Client() {
+	public ProviderDTO() {
 		super();
 	}
 
-	public Client(Long clientId, String name, String surname, String email,
+	public ProviderDTO(Long providerId, String name, String email,
 			String telephone, Date createDate, Date disabledDate,
 			Boolean disabled) {
 		super();
-		this.clientId = clientId;
+		this.providerId = providerId;
 		this.name = name;
-		this.surname = surname;
 		this.email = email;
 		this.telephone = telephone;
 		this.createDate = createDate;
@@ -61,12 +49,12 @@ public class Client {
 		this.disabled = disabled;
 	}
 
-	public Long getClientId() {
-		return clientId;
+	public Long getProviderId() {
+		return providerId;
 	}
 
-	public void setClientId(Long clientId) {
-		this.clientId = clientId;
+	public void setProviderId(Long providerId) {
+		this.providerId = providerId;
 	}
 
 	public String getName() {
@@ -75,14 +63,6 @@ public class Client {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getSurname() {
-		return surname;
-	}
-
-	public void setSurname(String surname) {
-		this.surname = surname;
 	}
 
 	public String getEmail() {
@@ -125,5 +105,31 @@ public class Client {
 		this.disabled = disabled;
 	}
 
-	
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(getProviderId());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+		ProviderDTO providerDTO = (ProviderDTO) obj;
+		if (getProviderId() == null || providerDTO.getProviderId() != null) {
+			return false;
+		}
+		return Objects.equals(getProviderId(), providerDTO.getProviderId());
+	}
+
+	@Override
+	public String toString() {
+		return "ProviderDTO [createDate=" + createDate + ", disabled=" + disabled + ", disabledDate=" + disabledDate
+				+ ", email=" + email + ", name=" + name + ", providerId=" + providerId + ", telephone=" + telephone
+				+ "]";
+	}
+    
 }

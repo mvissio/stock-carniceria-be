@@ -4,24 +4,24 @@ package com.svcg.StockCustom.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.svcg.StockCustom.entity.Client;
+import com.svcg.StockCustom.service.dto.ClientDTO;
 
 
 
 public interface ClientService {
 
-    Client saveClient(Client client);
+    ClientDTO saveClient(ClientDTO clientDTO);
 
-    Page<Client> getClients(Pageable pageable);
+    Page<ClientDTO> getClients(Pageable pageable);
     
-    Client getClientByName(String name);
+    ClientDTO getClientByName(String name);
 
-    Client getClientById(Long id);
+    ClientDTO getClientById(Long id);
 
-    Client updateClient(Client client);
+    ClientDTO updateClient(ClientDTO clientDTO);
     
-    Client deleteClient(Long id);
+    ClientDTO deleteClient(Long id);
     
-    Page<Client> findByOnlyEnabledClient(Pageable pageable);
+    Page<ClientDTO> findByOnlyEnabledClient(Pageable pageable);
     
 }

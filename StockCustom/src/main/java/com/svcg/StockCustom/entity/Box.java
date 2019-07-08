@@ -31,11 +31,10 @@ public class Box {
     private Date dateClose;
 
     @Column(name = "open", nullable = false)
-    private boolean open;
+    private Boolean open;
 
-
-    @Column(name = "detail_close")
-    @Size( max = 255, message = "{validation.rol.name.size}")
+    @Size( max = 255)
+    @Column(name = "detail_close", length = 255)
     private String detailClose;
 
     @Transient
@@ -101,11 +100,11 @@ public class Box {
         this.operationList = operationList;
     }
 
-    public boolean isOpen() {
+    public Boolean isOpen() {
         return open;
     }
 
-    public void setOpen(boolean open) {
+    public void setOpen(Boolean open) {
         this.open = open;
     }
 }

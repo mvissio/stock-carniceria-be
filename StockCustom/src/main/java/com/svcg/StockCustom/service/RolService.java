@@ -1,9 +1,9 @@
 package com.svcg.StockCustom.service;
 
 
-import com.svcg.StockCustom.entity.Rol;
+import com.svcg.StockCustom.service.dto.RolDTO;
 
 public interface RolService {
 
-    Rol addRol(Rol rol);
+    RolDTO addRol(RolDTO rolDTO);
 }

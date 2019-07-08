@@ -1,53 +1,46 @@
-package com.svcg.StockCustom.entity;
+package com.svcg.StockCustom.service.dto;
 
 import java.util.Date;
+import java.util.Objects;
 
-import javax.persistence.*;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@Entity
-@Table(name = "clients")
-public class Client {
+public class ClientDTO {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "client_id")
 	private Long clientId;
 
 	@NotEmpty
 	@Size(max = 45)
-	@Column(name = "name", nullable = false, length = 45)
 	private String name;
 
 	@NotEmpty
 	@Size(max = 45)
-	@Column(name = "surname", nullable = false, length = 45)
 	private String surname;
 
 	@Size(max = 60)
-	@Column(name = "email", length = 60)
 	private String email;
 
-	@Column(name = "telephone", nullable = false)
+	@NotNull
 	private String telephone;
 
+	@NotNull
 	@Temporal(TemporalType.DATE)
-	@Column(name = "create_date", nullable = false)
 	private Date createDate;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "disabled_date")
 	private Date disabledDate;
 
-	@Column(name = "disabled")
 	private Boolean disabled;
 	
-	public Client() {
+	public ClientDTO() {
 		super();
 	}
 
-	public Client(Long clientId, String name, String surname, String email,
+	public ClientDTO(Long clientId, String name, String surname, String email,
 			String telephone, Date createDate, Date disabledDate,
 			Boolean disabled) {
 		super();
@@ -125,5 +118,31 @@ public class Client {
 		this.disabled = disabled;
 	}
 
-	
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(getClientId());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+		ClientDTO clientDTO = (ClientDTO) obj;
+		if (getClientId() == null || clientDTO.getClientId() != null) {
+			return false;
+		}
+		return Objects.equals(getClientId(), clientDTO.getClientId());
+	}
+
+	@Override
+	public String toString() {
+		return "ClientDTO [clientId=" + clientId + ", createDate=" + createDate + ", disabled=" + disabled
+				+ ", disabledDate=" + disabledDate + ", email=" + email + ", name=" + name + ", surname=" + surname
+				+ ", telephone=" + telephone + "]";
+	}
+    
 }

@@ -4,6 +4,17 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.svcg.StockCustom.component.Messages;
 import com.svcg.StockCustom.constant.Constant;
 import com.svcg.StockCustom.entity.Article;
@@ -16,17 +27,10 @@ import com.svcg.StockCustom.repository.ArticleRepository;
 import com.svcg.StockCustom.repository.OperationDetailRepository;
 import com.svcg.StockCustom.repository.OperationRepository;
 import com.svcg.StockCustom.service.OperationService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
+import com.svcg.StockCustom.service.converter.OperationConverter;
+import com.svcg.StockCustom.service.converter.OperationDetailConverter;
+import com.svcg.StockCustom.service.dto.OperationDTO;
+import com.svcg.StockCustom.service.dto.OperationDetailDTO;
 
 @Service("operationServiceImpl")
 public class OperationServiceImpl implements OperationService {
@@ -46,47 +50,53 @@ public class OperationServiceImpl implements OperationService {
 	@Autowired
 	Messages messages;
 
+	@Autowired
+	private OperationConverter operationConverter;
+	
+	@Autowired
+    private OperationDetailConverter operationDetailConverter;
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(UserServiceImpl.class);
 
 	@Override
 	@Transactional
-	public Operation saveOperation(Operation operation) {
+	public OperationDTO saveOperation(OperationDTO operationDTO) {
 		//como manejo el estado por ahora viene desde el front, el total , el subtotal ??
-		operation.setCreateDate(new Date());
-		operation.setCreateDateTime(new Date());
-		Operation newOperation = operationRepository.save(operation);
-		logger.info("Operacion guardada con exito: {}", newOperation.toString());
+		operationDTO.setCreateDate(new Date());
+		operationDTO.setCreateDateTime(new Date());
+		OperationDTO newOperationDTO = this.operationConverter.toDTO(this.operationRepository.save(this.operationConverter.toEntity(operationDTO)));
+		logger.info("Operacion guardada con exito: {}", newOperationDTO.toString());
 		
-		if (newOperation != null) {
-			List<OperationDetail> operationDetails = operation
+		if (newOperationDTO != null) {
+			List<OperationDetailDTO> operationDetailsDTO = operationDTO
 					.getOperationDetails();
 
 			// que sucede en el caso que se estan registrando despertidisios ??
 			// aplica ??
-			if (!operationDetails.isEmpty()) {
-				this.updateArticles(operationDetails, newOperation);
+			if (!operationDetailsDTO.isEmpty()) {
+				this.updateArticles(this.operationDetailConverter.toEntity(operationDetailsDTO), this.operationConverter.toEntity(newOperationDTO));
 			}
 
 		}
-		return newOperation;
+		return newOperationDTO;
 
 	}
 
     @Override
     @Transactional
-    public Operation updateOperation(Operation operation) {
-	    Operation oldOperation = operationRepository.findByOperationId(operation.getOperationId());
+    public OperationDTO updateOperation(OperationDTO operationDTO) {
+	    Operation oldOperation = this.operationRepository.findByOperationId(operationDTO.getOperationId());
         Operation newOperation = new Operation();
         newOperation.setCreateDate(new Date());
         newOperation.setCreateDateTime(new Date());
-        newOperation.setOperationStatus(operation.getOperationStatus());
-        newOperation.setDisabled(operation.isDisabled());
-        newOperation.setOperationDetails(operation.getOperationDetails());
-        newOperation.setOperationType(operation.getOperationType());
-        newOperation.setPaymentMethod(operation.getPaymentMethod());
-        newOperation.setSubTotal(operation.getSubTotal());
-        newOperation.setTotal(operation.getTotal());
+        newOperation.setOperationStatus(operationDTO.getOperationStatus());
+        newOperation.setDisabled(operationDTO.getDisabled());
+        newOperation.setOperationDetails(this.operationDetailConverter.toEntity(operationDTO.getOperationDetails()));
+        newOperation.setOperationType(operationDTO.getOperationType());
+        newOperation.setPaymentMethod(operationDTO.getPaymentMethod());
+        newOperation.setSubTotal(operationDTO.getSubTotal());
+        newOperation.setTotal(operationDTO.getTotal());
 
         List<OperationDetail> operationDetails = newOperation
                 .getOperationDetails();
@@ -99,16 +109,16 @@ public class OperationServiceImpl implements OperationService {
                 logger.info("Stock de Articulo restaurado con exito: {}", article);
             }
         });
-        newOperation = operationRepository.save(newOperation);
+        newOperation = this.operationRepository.save(newOperation);
         this.updateArticles(operationDetails, newOperation);
         this.disabledOperation(oldOperation);
-        operationRepository.save(oldOperation);
-        return newOperation;
+        this.operationRepository.save(oldOperation);
+        return this.operationConverter.toDTO(newOperation);
     }
 
     @Override
-	public Operation getOperationById(Long id) {
-		Operation operation = operationRepository
+	public OperationDTO getOperationById(Long id) {
+		Operation operation = this.operationRepository
 				.findByOperationId(id);
 		if (operation == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
@@ -116,7 +126,7 @@ public class OperationServiceImpl implements OperationService {
         List<OperationDetail> detailOperationList = operationDetailRepository.findByOperationId(id);
         operation.setOperationDetails(detailOperationList);
 
-		return operation;
+		return this.operationConverter.toDTO(operation);
 	}
 
 	@Override
@@ -130,11 +140,11 @@ public class OperationServiceImpl implements OperationService {
 	}
 
     @Override
-    public Operation cancelOperation(Long id) {
-        Operation operation = operationRepository.findByOperationId(id);
+    public OperationDTO cancelOperation(Long id) {
+        Operation operation = this.operationRepository.findByOperationId(id);
         this.disabledOperation(operation);
         this.updateArticles(operation.getOperationDetails(), operation);
-        return operationRepository.save(operation);
+        return this.operationConverter.toDTO(this.operationRepository.save(operation));
     }
 
     private void disabledOperation(Operation operation) {
@@ -155,7 +165,7 @@ public class OperationServiceImpl implements OperationService {
                     .findByArticleId(detailOperation.getArticleId());
             //TODO: solo si la categoria no es carne(categoria carne es la con id 1) se debe sacar cuando este la funcionalidad de la balanza electronica 
             if(article.getCategoryId() != 1) {
-            	double newQuantityArticle = (newOperation.isDisabled())? (article.getCurrentQuantity() + detailOperation.getAmount())  : (article.getCurrentQuantity() - detailOperation.getAmount());
+            	Double newQuantityArticle = (newOperation.isDisabled())? (article.getCurrentQuantity() + detailOperation.getAmount())  : (article.getCurrentQuantity() - detailOperation.getAmount());
             	article.setCurrentQuantity(newQuantityArticle);
             	articleRepository.save(article);
             	logger.info("Stock de Articulo actualizado con exito: {}", article.toString());
@@ -164,67 +174,65 @@ public class OperationServiceImpl implements OperationService {
     }
 
   //*********************BUSQUEDA POR TIPO, PAYMENT METHOD***************************
-    
-    @Override
-	public Page<Operation> getOperationsByOperationType(OperationType operationType, Pageable pageable) {
-		Page<Operation> operations = operationRepository.findByOperationType(operationType, pageable);
+
+  @Override
+	public Page<OperationDTO> getOperationsByCreateDate(Date createDate, Pageable pageable) {
+		Page<Operation> operations = this.operationRepository.findByCreateDate(createDate, pageable);
 		if (operations == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
 		}
 
-		return operations;
+		return operations.map(this.operationConverter::toDTO);
 	}
     
     @Override
-	public Page<Operation> getOperationsPaymentMethod(PaymentMethod paymentMethod, Pageable pageable) {
+	public Page<OperationDTO> getOperationsByOperationType(OperationType operationType, Pageable pageable) {
+		Page<Operation> operations = operationRepository.findByOperationType(operationType, pageable);
+		if (operations == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
+		}
+
+		return operations.map(this.operationConverter::toDTO);
+	}
+    
+    @Override
+	public Page<OperationDTO> getOperationsPaymentMethod(PaymentMethod paymentMethod, Pageable pageable) {
 		// TODO Auto-generated method stub
 		return null;
 	}
     
     @Override
-	public Page<Operation> getOperationsByOperationTypeAndPaymentMethod(Date createDate, PaymentMethod paymentMethod,
+	public Page<OperationDTO> getOperationsByOperationTypeAndPaymentMethod(Date createDate, PaymentMethod paymentMethod,
 			Pageable pageable) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-  //*********************BUSQUEDA POR UNA SOLA FECHA CREATED DATE Y TIPO, PAYMENT METHOD***************************
-	
-    
-    @Override
-	public Page<Operation> getOperationsByCreateDate(Date createDate, Pageable pageable) {
-		Page<Operation> operations = operationRepository.findByCreateDate(createDate, pageable);
-		if (operations == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
-		}
-
-		return operations;
-	}        
+  //*********************BUSQUEDA POR UNA SOLA FECHA CREATED DATE Y TIPO, PAYMENT METHOD***************************    
     
 	@Override
-	public Page<Operation> getOperationsByCreateDateAndOperationType(Date createDate,OperationType operationType, Pageable pageable) {
+	public Page<OperationDTO> getOperationsByCreateDateAndOperationType(Date createDate,OperationType operationType, Pageable pageable) {
 		Page<Operation> operations = operationRepository.findByCreateDateAndOperationType(createDate,operationType, pageable);
 		if (operations == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+					this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
 		}
 
-		return operations;
+		return operations.map(this.operationConverter::toDTO);
 	}
 
 	
 	@Override
-	public Page<Operation> getOperationsByCreateDateAndPaymentMethod(Date createDate, PaymentMethod paymentMethod,
+	public Page<OperationDTO> getOperationsByCreateDateAndPaymentMethod(Date createDate, PaymentMethod paymentMethod,
 			Pageable pageable) {
 		Page<Operation> operations = operationRepository.findByCreateDateAndPaymentMethod(createDate,paymentMethod, pageable);
 		if (operations == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+					this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
 		}
 
-		return operations;
+		return operations.map(this.operationConverter::toDTO);
 	}
 	
 	// *********************BUSQUEDA POR PERIODOS CREATED DATE Y TIPO, PAYMENT
@@ -233,112 +241,112 @@ public class OperationServiceImpl implements OperationService {
 	
 
 	@Override
-	public Page<Operation> getOperationsByCreateDateBetween(Date fromDate, Date toDate, Pageable pageable) {
+	public Page<OperationDTO> getOperationsByCreateDateBetween(Date fromDate, Date toDate, Pageable pageable) {
 		Page<Operation> operations = operationRepository.findByCreateDateBetween(fromDate, toDate, pageable);
 		if (operations == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+					this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
 		}
 
-		return operations;
+		return operations.map(this.operationConverter::toDTO);
 	}
 
 	@Override
-	public Page<Operation> getOperationsByCreateDateBetweenAndByOperationType(OperationType operationType,
+	public Page<OperationDTO> getOperationsByCreateDateBetweenAndByOperationType(OperationType operationType,
 			Date fromDate, Date toDate, Pageable pageable) {
 		Page<Operation> operations = operationRepository.findByOperationTypeAndCreateDateBetween(operationType,
 				fromDate, toDate, pageable);
 		if (operations == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+					this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
 		}
 
-		return operations;
+		return operations.map(this.operationConverter::toDTO);
 	}
 
 	@Override
-	public Page<Operation> getOperationsByCreateDateBetweenAndByPaymentMethod(PaymentMethod paymentMethod,
+	public Page<OperationDTO> getOperationsByCreateDateBetweenAndByPaymentMethod(PaymentMethod paymentMethod,
 			Date fromDate, Date toDate, Pageable pageable) {
 		Page<Operation> operations = operationRepository.findByPaymentMethodAndCreateDateBetween(paymentMethod,
 				fromDate, toDate, pageable);
 		if (operations == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+					this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
 		}
 
-		return operations;
+		return operations.map(this.operationConverter::toDTO);
 	}
 
 	// *********************BUSQUEDA POR CLIENTE Y
 		// PROVEEDORES***************************
 	
 	@Override
-	public Page<Operation> getOperationsByClientIdAndOperationType(Long clientId, OperationType operationType,
+	public Page<OperationDTO> getOperationsByClientIdAndOperationType(Long clientId, OperationType operationType,
 			Pageable pageable) {
 		Page<Operation> operations = operationRepository.findByClientIdAndOperationType(clientId,operationType,
 				pageable);
 		if (operations == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+					this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
 		}
 
-		return operations;
+		return operations.map(this.operationConverter::toDTO);
 	}
 
 	@Override
-	public Page<Operation> getOperationsByProviderIdAndOperationType(Long providerId, OperationType operationType,
+	public Page<OperationDTO> getOperationsByProviderIdAndOperationType(Long providerId, OperationType operationType,
 			Pageable pageable) {
 		Page<Operation> operations = operationRepository.findByClientIdAndOperationType(providerId, operationType,
 				pageable);
 		if (operations == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+					this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
 		}
 
-		return operations;
+		return operations.map(this.operationConverter::toDTO);
 	}
 
 	@Override
-	public Page<Operation> getOperationsByClientIdAndPaymentMethod(Long clientId, PaymentMethod paymentMethod,
+	public Page<OperationDTO> getOperationsByClientIdAndPaymentMethod(Long clientId, PaymentMethod paymentMethod,
 			Pageable pageable) {
 		Page<Operation> operations = operationRepository.findByClientIdAndPaymentMethod(clientId, paymentMethod,
 				pageable);
 		if (operations == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+					this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
 		}
 
-		return operations;
+		return operations.map(this.operationConverter::toDTO);
 	}
 
 	@Override
-	public Page<Operation> getOperationsByCreateDateAndPaymentMethodAndOperationType(Date createDate,
+	public Page<OperationDTO> getOperationsByCreateDateAndPaymentMethodAndOperationType(Date createDate,
 			PaymentMethod paymentMethod, OperationType operationType, Pageable pageable) {
 		
 		Page<Operation> operations = operationRepository.findByCreateDateAndPaymentMethodAndOperationType(createDate,
 				paymentMethod, operationType, pageable);
 		if (operations == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+					this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
 		}
 
-		return operations;
+		return operations.map(this.operationConverter::toDTO);
 
 		
 	}
 
 	@Override
-	public Page<Operation> getOperationsByPaymentMethodAndOperationTypeAndCreateDateBetween(PaymentMethod paymentMethod,
+	public Page<OperationDTO> getOperationsByPaymentMethodAndOperationTypeAndCreateDateBetween(PaymentMethod paymentMethod,
 			OperationType operationType, Date fromDate, Date toDate, Pageable pageable) {
 	
 		Page<Operation> operations = operationRepository.findByPaymentMethodAndOperationTypeAndCreateDateBetween(paymentMethod,
 				 operationType,  fromDate,  toDate, pageable);
 		if (operations == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					this.messages.get("MESSAGE_NOT_FOUND_OPERATION"), null);
+					this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
 		}
 
-		return operations;
+		return operations.map(this.operationConverter::toDTO);
 		
 	}
 

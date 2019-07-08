@@ -7,8 +7,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import com.svcg.StockCustom.entity.Rol;
-
 public class UserDTO {
 	private Long userId;
 
@@ -20,13 +18,13 @@ public class UserDTO {
     @Size(max = 60)
     private String password;
 
-    private boolean enabled;
+    private Boolean enabled;
 
     @Email
     @NotBlank
     private String email;
 
-    private Rol rol;
+    private RolDTO rolDTO;
     
 	public UserDTO() {
 		super();
@@ -65,11 +63,11 @@ public class UserDTO {
 		this.password = password;
 	}
 
-	public boolean isEnabled() {
+	public Boolean isEnabled() {
 		return enabled;
 	}
 
-	public void setEnabled(boolean enabled) {
+	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
 	}
 
@@ -81,12 +79,12 @@ public class UserDTO {
 		this.email = email;
 	}
 
-	public Rol getRol() {
-		return rol;
+	public RolDTO getRol() {
+		return rolDTO;
 	}
 
-	public void setRol(Rol rol) {
-		this.rol = rol;
+	public void setRol(RolDTO rolDTO) {
+		this.rolDTO = rolDTO;
 	}
 
 	@Override
@@ -112,7 +110,7 @@ public class UserDTO {
 	@Override
 	public String toString() {
 		return "UserDTO [userId=" + userId + ", username=" + username + ", password=" + password + ", enabled="
-				+ enabled + ", email=" + email + ", rol=" + rol + "]";
+				+ enabled + ", email=" + email + ", rol=" + rolDTO + "]";
 	}
     
     

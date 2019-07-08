@@ -17,6 +17,8 @@ import com.svcg.StockCustom.component.Messages;
 import com.svcg.StockCustom.constant.Constant;
 import com.svcg.StockCustom.repository.ClientRepository;
 import com.svcg.StockCustom.service.ClientService;
+import com.svcg.StockCustom.service.converter.ClientConverter;
+import com.svcg.StockCustom.service.dto.ClientDTO;
 
 @Service("clientServiceImpl")
 public class ClientServiceImpl implements ClientService {
@@ -28,37 +30,40 @@ public class ClientServiceImpl implements ClientService {
     @Autowired
     Messages messages;
 
+    @Autowired
+    private ClientConverter clientConverter;
+
     private static final Logger logger = LoggerFactory
             .getLogger(ClientServiceImpl.class);
 
     
     @Override
-    public Client saveClient(Client client) {
-        if (client == null) {
+    public ClientDTO saveClient(ClientDTO clientDTO) {
+        if (clientDTO == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get(Constant.MESSAGE_CANT_CREATE_CLIENT));
         }
-        if (clientNameExist(client.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_CLIENT_EXISTS), client.getName()));
+        if (clientNameExist(clientDTO.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_CLIENT_EXISTS), clientDTO.getName()));
         }
-        if (emailExist(client.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_EMAIL_EXIST), client.getEmail()));
+        if (emailExist(clientDTO.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_EMAIL_EXIST), clientDTO.getEmail()));
         }
         
 
         /**
          * Save the client 
          */
-        client.setCreateDate(new Date());
-        client.setDisabled(false);
-        logger.info("client was saved successfully {}", client);
-        client = saveObjectClient(client, true);  
-        return client;
+        clientDTO.setCreateDate(new Date());
+        clientDTO.setDisabled(false);
+        logger.info("client was saved successfully {}", clientDTO);
+        clientDTO = saveObjectClient(clientDTO, true);  
+        return clientDTO;
     }
 
 
-    private Client saveObjectClient(Client client, Boolean isSave) {
+    private ClientDTO saveObjectClient(ClientDTO clientDTO, Boolean isSave) {
         try {
-            client = clientRepository.save(client);
+            clientDTO = this.clientConverter.toDTO(this.clientRepository.save(this.clientConverter.toEntity(clientDTO)));
             /**
              * Devuelvo el cliente creado 
              */
@@ -67,83 +72,85 @@ public class ClientServiceImpl implements ClientService {
             String message = (isSave) ? this.messages.get(Constant.MESSAGE_CANT_CREATE_CLIENT) : this.messages.get(Constant.MESSAGE_CANT_UPDATE_CLIENT);
             throw new ResponseStatusException(HttpStatus.CONFLICT, message);
         }
-        return client;
+        return clientDTO;
     }
 
    
     
     @Override
-    public Client updateClient(Client client) {
-        if (client == null) {
+    public ClientDTO updateClient(ClientDTO clientDTO) {
+        if (clientDTO == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get(Constant.MESSAGE_CANT_CREATE_CLIENT));
         }
-        Client previousClient = clientRepository.findByName(client.getName());
+        Client previousClient = this.clientRepository.findByName(clientDTO.getName());
         if (previousClient == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_CLIENT));
         }
-        if (!previousClient.getEmail().equals(client.getEmail()) && emailExist(client.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_EMAIL_EXIST), client.getEmail()));
+        if (!previousClient.getEmail().equals(clientDTO.getEmail()) && emailExist(clientDTO.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_EMAIL_EXIST), clientDTO.getEmail()));
         }
-        client = saveObjectClient(client, false);
-        return client;
+        clientDTO = saveObjectClient(clientDTO, false);
+        return clientDTO;
     }
 
     @Override
-    public Page<Client> getClients(Pageable pageable) {
-        Page<Client> clients = clientRepository.findAll(pageable);
+    public Page<ClientDTO> getClients(Pageable pageable) {
+        Page<Client> clients = this.clientRepository.findAll(pageable);
         if (clients.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_CLIENTS));
         }
-        return clients;
+        return clients.map(this.clientConverter::toDTO);
     }
     
     
-    private boolean emailExist(String email) {
-        Client client = clientRepository.findByEmail(email);
+    private Boolean emailExist(String email) {
+        Client client = this.clientRepository.findByEmail(email);
         return client != null;
     }
 
-    private boolean clientNameExist(String name) {
-        Client client = clientRepository.findByName(name);
+    private Boolean clientNameExist(String name) {
+        Client client = this.clientRepository.findByName(name);
         return client != null;
     }
 
     
     @Override
-    public Client getClientByName(String name) {
-        Client client = clientRepository.findByName(name);
+    public ClientDTO getClientByName(String name) {
+        Client client = this.clientRepository.findByName(name);
         if(client == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_CLIENT));
         }
 
-        return client;
+        return this.clientConverter.toDTO(client);
     }
 
     @Override
-    public Client getClientById(Long id) {
-        Client client = clientRepository.findByClientId(id);
+    public ClientDTO getClientById(Long id) {
+        Client client = this.clientRepository.findByClientId(id);
         if(client == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_CLIENT));
         }
 
-        return client;
+        return this.clientConverter.toDTO(client);
     }
     
     @Override
-	public Client deleteClient(Long id) {
-		Client client = clientRepository.findByClientId(id);
-		client.setDisabled(true);
-		client.setDisabledDate(new Date());		
-		return clientRepository.save(client);
+	public ClientDTO deleteClient(Long id) {
+		ClientDTO clientDTO = this.getClientById(id);
+		clientDTO.setDisabled(true);
+		clientDTO.setDisabledDate(new Date());		
+        clientDTO = this.saveObjectClient(clientDTO, false);
+        
+        return clientDTO;
 	}
     
     @Override
-	public Page<Client> findByOnlyEnabledClient(Pageable pageable) {
-		Page<Client> clients = clientRepository.findByDisabledIsFalse(pageable);
+	public Page<ClientDTO> findByOnlyEnabledClient(Pageable pageable) {
+		Page<Client> clients = this.clientRepository.findByDisabledIsFalse(pageable);
 		if (clients.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_CLIENT));
 		}
-		return clients;	
+		return clients.map(this.clientConverter::toDTO);	
 	}
 
     }

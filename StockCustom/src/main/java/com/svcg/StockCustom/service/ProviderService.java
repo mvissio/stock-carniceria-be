@@ -1,28 +1,27 @@
 package com.svcg.StockCustom.service;
 
+import com.svcg.StockCustom.service.dto.ProviderDTO;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import com.svcg.StockCustom.entity.Provider;
 
 
 
 public interface ProviderService {
 
-    Provider saveProvider(Provider provider);
+    ProviderDTO saveProvider(ProviderDTO provider);
 
-    Page<Provider> getProviders(Pageable pageable);
+    Page<ProviderDTO> getProviders(Pageable pageable);
     
-    Provider getProviderByName(String name);
+    ProviderDTO getProviderByName(String name);
 
-    Provider getProviderById(Long id);
+    ProviderDTO getProviderById(Long id);
 
-    Provider updateProvider(Provider provider);
+    ProviderDTO updateProvider(ProviderDTO provider);
     
-    Provider deleteProvider(Long id);
+    ProviderDTO deleteProvider(Long id);
     
-    Page<Provider> findByOnlyEnabledProvider(Pageable pageable);
+    Page<ProviderDTO> findByOnlyEnabledProvider(Pageable pageable);
 
     
 }

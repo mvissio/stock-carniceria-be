@@ -34,7 +34,7 @@ public class Category {
 	private Date disabledDate;
 
 	@Column(name = "disabled")
-	private boolean disabled;
+	private Boolean disabled;
 
 	public Category() {
 	}
@@ -79,11 +79,11 @@ public class Category {
 		this.disabledDate = disabledDate;
 	}
 
-	public boolean isDisabled() {
+	public Boolean isDisabled() {
 		return disabled;
 	}
 
-	public void setDisabled(boolean disabled) {
+	public void setDisabled(Boolean disabled) {
 		this.disabled = disabled;
 	}
 	

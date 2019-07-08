@@ -15,19 +15,18 @@ public class Code {
 	// datos del codigo barra o qr
 	private Long measurementUnitId;
 	private String nameMeasurementUnit;
-	private double price;
-	private double weight;
+	private Double price;
+	private Double weight;
 
 	// fecha de creación del codigo
 	private Date createDate;
 
 	public Code() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Code(String barcode, String qrcode, Long measurementUnitId,
-			String nameMeasurementUnit, double price, double weight, Date createDate) {
+			String nameMeasurementUnit, Double price, Double weight, Date createDate) {
 		super();
 		this.barcode = barcode;
 		this.qrcode = qrcode;
@@ -70,19 +69,19 @@ public class Code {
 		this.nameMeasurementUnit = nameMeasurementUnit;
 	}
 
-	public double getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
-	public double getWeight() {
+	public Double getWeight() {
 		return weight;
 	}
 
-	public void setWeight(double weight) {
+	public void setWeight(Double weight) {
 		this.weight = weight;
 	}
 

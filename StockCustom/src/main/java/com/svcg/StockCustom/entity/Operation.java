@@ -38,7 +38,7 @@ public class Operation {
     private Date disabledDate;
 
     @Column(name = "disabled")
-    private boolean disabled;
+    private Boolean disabled;
 
     // es una compra, una venta , registro de desperdicioes
     @Column(name = "operation_type")
@@ -56,13 +56,13 @@ public class Operation {
     private Long boxId;
 
     @Column
-    private double total;
+    private Double total;
 
     @Column(name = "sub_total")
-    private double subTotal;
+    private Double subTotal;
 
     @Column
-    private double discount;
+    private Double discount;
 
     @Transient
     private List<OperationDetail> operationDetails = new ArrayList<>();
@@ -73,7 +73,7 @@ public class Operation {
     public Operation(Long clientId, Long providerId,
                      Date createDate,
                      OperationType operationType, PaymentMethod paymentMethod,
-                     OperationStatus operationStatus, double total, double subTotal,
+                     OperationStatus operationStatus, Double total, Double subTotal,
                      Long boxId, List<OperationDetail> operationDetails) {
         super();
         this.clientId = clientId;
@@ -113,11 +113,11 @@ public class Operation {
         this.disabledDate = disabledDate;
     }
 
-    public boolean isDisabled() {
+    public Boolean isDisabled() {
         return disabled;
     }
 
-    public void setDisabled(boolean disabled) {
+    public void setDisabled(Boolean disabled) {
         this.disabled = disabled;
     }
 
@@ -137,19 +137,19 @@ public class Operation {
         this.operationType = operationType;
     }
 
-    public double getTotal() {
+    public Double getTotal() {
         return total;
     }
 
-    public void setTotal(double total) {
+    public void setTotal(Double total) {
         this.total = total;
     }
 
-    public double getSubTotal() {
+    public Double getSubTotal() {
         return subTotal;
     }
 
-    public void setSubTotal(double subTotal) {
+    public void setSubTotal(Double subTotal) {
         this.subTotal = subTotal;
     }
 
@@ -193,11 +193,11 @@ public class Operation {
         this.operationStatus = operationStatus;
     }
 
-    public double getDiscount() {
+    public Double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(double discount) {
+    public void setDiscount(Double discount) {
         this.discount = discount;
     }
 

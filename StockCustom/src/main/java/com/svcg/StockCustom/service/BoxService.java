@@ -1,30 +1,33 @@
 package com.svcg.StockCustom.service;
 
-import com.svcg.StockCustom.entity.Box;
-import com.svcg.StockCustom.entity.Operation;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
+
+import com.svcg.StockCustom.service.dto.BoxDTO;
+import com.svcg.StockCustom.service.dto.OperationDTO;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 
 public interface BoxService {
-    Box saveBox(Box box);
+    BoxDTO saveBox(@Valid BoxDTO boxDTO);
 
-    Page<Box> getBoxs(Pageable pageable);
+    Page<BoxDTO> getBoxs(Pageable pageable);
 
-    Page<Box> getBoxsOpen(Pageable pageable);
+    Page<BoxDTO> getBoxsOpen(Pageable pageable);
 
-    Box getBoxById(Long id);
+    BoxDTO getBoxById(Long id);
 
-    Box getBoxDateOpen(Date date);
+    BoxDTO getBoxDateOpen(Date date);
 
-    Box getBoxDateClose(Date date);
+    BoxDTO getBoxDateClose(Date date);
 
-    Box updateBox(Box box);
+    BoxDTO updateBox(@Valid BoxDTO boxDTO);
 
-    List<Box> existOpenBox();
+    List<BoxDTO> existOpenBox();
 
-    Page<Operation> getAllOperationByBoxId(Long box, Pageable pageable);
+    Page<OperationDTO> getAllOperationByBoxId(Long id, Pageable pageable);
 }

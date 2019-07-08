@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.svcg.StockCustom.constant.Constant;
-import com.svcg.StockCustom.entity.User;
 import com.svcg.StockCustom.enums.RolName;
 import com.svcg.StockCustom.service.UserService;
 import com.svcg.StockCustom.service.dto.UserDTO;
@@ -52,7 +51,7 @@ public class UserController {
     public ResponseEntity<UserDTO> addUser(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult) throws MethodArgumentNotValidException {
         if (bindingResult.hasErrors()) {
         	bindingResult.getFieldErrors().stream().forEach(f -> logger.error(String.format(Constant.CONCAT2S, f.getField(), f.getDefaultMessage())));        	
-            throw new MethodArgumentNotValidException(MethodParameter.forExecutable(User.class.getDeclaredConstructors()[1],0), bindingResult);
+            throw new MethodArgumentNotValidException(MethodParameter.forExecutable(UserDTO.class.getDeclaredConstructors()[1],0), bindingResult);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveUser(userDTO));
     }
@@ -61,7 +60,7 @@ public class UserController {
     public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult) throws MethodArgumentNotValidException {
         if (bindingResult.hasErrors()) {
         	bindingResult.getFieldErrors().stream().forEach(f -> logger.error(String.format(Constant.CONCAT2S, f.getField(), f.getDefaultMessage())));        	
-            throw new MethodArgumentNotValidException(MethodParameter.forExecutable(User.class.getDeclaredConstructors()[1],0), bindingResult);
+            throw new MethodArgumentNotValidException(MethodParameter.forExecutable(UserDTO.class.getDeclaredConstructors()[1],0), bindingResult);
         }
         return ResponseEntity.ok(this.userService.updateUser(userDTO));
     }

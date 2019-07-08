@@ -104,9 +104,6 @@ public class MailAdapterImpl implements MailAdapter {
 				"            .footer {\n" +
 				"                font-size: 0.6em;\n" +
 				"            }\n" +
-				"            .footer img {\n" +
-				"                height: 35px;\n" +
-				"            }\n" +
 				"        }\n" +
 				"    </style>\n" +
 				"    <title>EMAIL</title>\n" +
@@ -121,8 +118,6 @@ public class MailAdapterImpl implements MailAdapter {
 				"        \n" +
 				"    </div>\n" +
 				"    <div class=\"footer\">\n" +
-				"        <div class=footer-img>\n" +
-				"        </div>\n" +
 				"        <div  class=\"footer-content\">\n" +
 				"                Almirante Brown y El Callao\n" + 
 				"General San Martín, Mendoza, Argentina<br> (5570)\n" +

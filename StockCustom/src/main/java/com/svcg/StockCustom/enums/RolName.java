@@ -12,8 +12,8 @@ public enum RolName {
         this.name = name;
     }
 
-    public static boolean existsRol(String rolStatus) {
-        boolean existRol = false;
+    public static Boolean existsRol(String rolStatus) {
+        Boolean existRol = false;
         for (RolName rolName : RolName.values()) {
             if (rolName.name.equals(rolStatus)) {
                 existRol = true;

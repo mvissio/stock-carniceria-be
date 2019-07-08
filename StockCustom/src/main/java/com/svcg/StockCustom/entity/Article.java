@@ -54,7 +54,7 @@ public class Article {
 	//caso de la carne va a poner por ejemplo 1,5 kg ???
 	
 	@Column(name = "current_quantity")
-	private double currentQuantity;
+	private Double currentQuantity;
 
 	/*
 	 * este es el precio que tiene el producto al momento de ser vendido se
@@ -65,7 +65,7 @@ public class Article {
 	 */
 
 	@Column(name = "current_price", nullable = false)
-	private double currentPrice;
+	private Double currentPrice;
 
 	@Column(name = "create_date", nullable = false)
 	private Date createDate;
@@ -74,7 +74,7 @@ public class Article {
 	private Date disabledDate;
 
 	@Column(name = "disabled")
-	private boolean disabled;
+	private Boolean disabled;
 	
 	
 
@@ -87,7 +87,7 @@ public class Article {
 			@NotEmpty @Size(max = 100, message = "{validation.rol.username.size}") String name,
 			@Size(max = 100, message = "{validation.rol.username.size}") String brand,
 			@Size(max = 255, message = "{validation.rol.username.size}") String description, Date expirationDate,
-			double currentQuantity, double currentPrice, Date createDate, Date disabledDate, boolean disabled) {
+			Double currentQuantity, Double currentPrice, Date createDate, Date disabledDate, Boolean disabled) {
 		super();
 		this.articleId = articleId;
 		this.measurementUnitId = measurementUnitId;
@@ -151,11 +151,11 @@ public class Article {
 		this.expirationDate = expirationDate;
 	}
 
-	public boolean isDisabled() {
+	public Boolean isDisabled() {
 		return disabled;
 	}
 
-	public void setDisabled(boolean disabled) {
+	public void setDisabled(Boolean disabled) {
 		this.disabled = disabled;
 	}
 
@@ -175,19 +175,19 @@ public class Article {
 		this.measurementUnitId = measurementUnitId;
 	}
 		
-	public double getCurrentQuantity() {
+	public Double getCurrentQuantity() {
 		return currentQuantity;
 	}
 
-	public void setCurrentQuantity(double currentQuantity) {
+	public void setCurrentQuantity(Double currentQuantity) {
 		this.currentQuantity = currentQuantity;
 	}
 
-	public double getCurrentPrice() {
+	public Double getCurrentPrice() {
 		return currentPrice;
 	}
 
-	public void setCurrentPrice(double currentPrice) {
+	public void setCurrentPrice(Double currentPrice) {
 		this.currentPrice = currentPrice;
 	}
 	

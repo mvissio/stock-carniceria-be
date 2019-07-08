@@ -76,8 +76,7 @@ public interface OperationRepository extends
 	
 	//Para busqueda de operaciones de pago en efectivo o con tc por cliente 
 	Page<Operation> findByClientIdAndPaymentMethod(Long clientId,PaymentMethod paymentMethod, Pageable pageable);
-	
-	
+
 	//Para la busqueda de operaciones por operacion
 	Page<Operation> findAllByBoxId(Long boxId, Pageable pageable);
 }
