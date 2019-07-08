@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
 
         try {
             userRepository.save(user);
-            responseMessage = this.messages.get("MESSAGE_MAIL_RESTORE");
+            responseMessage = this.messages.get(Constant.MESSAGE_MAIL_RESTORE);
         } catch (Exception e) {
             logger.error(Constant.EXCEPTION, e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, this.messages.get(Constant.MESSAGE_CANT_RESET_PASS));
@@ -66,7 +66,7 @@ public class AuthServiceImpl implements AuthService {
     private void sendNewPass(String pass, String email) throws IOException {
 
         try {
-            mailAdapterImpl.sendMailHTML(email, "Password Restablecido", "Nuevo Password : " + pass);
+            mailAdapterImpl.sendMailHTML(email, Constant.MESSAGE_MAIL_RESTORE_TITLE, Constant.MESSAGE_MAIL_RESTORE_BODY + pass);
         }catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, this.messages.get(Constant.MESSAGE_CANT_SEND_MAIL_NEW_PASS));
         }

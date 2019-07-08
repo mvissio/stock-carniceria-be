@@ -34,6 +34,11 @@ public class Constant {
     public static final String MESSAGE_EMAIL_NOT_EXISTS = "message.auth.emailExist";
     public static final String MESSAGE_CANT_RESET_PASS = "message.auth.password.cantReset";
     public static final String MESSAGE_CANT_SEND_MAIL_NEW_PASS = "message.auth.password.cantSendMail";
+    public static final String MESSAGE_MAIL_RESTORE = "message.auth.password.restore";
+    	//mail
+    public static final String MESSAGE_MAIL_RESTORE_TITLE = "Contraseña Restablecida";
+    public static final String MESSAGE_MAIL_RESTORE_BODY = "Nueva contraseña: ";
+
     
     //User
     public static final String MESSAGE_USER_EXIST = "message.user.name.userExist";

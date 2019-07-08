@@ -124,8 +124,9 @@ public class MailAdapterImpl implements MailAdapter {
 				"        <div class=footer-img>\n" +
 				"        </div>\n" +
 				"        <div  class=\"footer-content\">\n" +
-				"                Dirección local<br> (5570)\n" +
-				"                MENDOZA. ARGENTINA<br> <span class=\"glyphicon glyphicon-phone-alt\"></span> +54 261 449 2098<br>\n" +
+				"                Almirante Brown y El Callao\n" + 
+				"General San Martín, Mendoza, Argentina<br> (5570)\n" +
+				"                MENDOZA. ARGENTINA<br> <span class=\"glyphicon glyphicon-phone-alt\"></span> +54 0263 433-9891<br>\n" +
 				"                <a href=\"mailto:"+ email +"\" target=\"_blank\">"+ email +"</a>\n" +
 				"        </div>\n" +
 				"    </div>\n" +
