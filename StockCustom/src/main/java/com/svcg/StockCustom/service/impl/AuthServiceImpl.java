@@ -35,9 +35,8 @@ public class AuthServiceImpl implements AuthService {
             .getLogger(AuthServiceImpl.class);
 
     @Override
-    public String resetPasswordByEmail(String email) throws IOException {
+    public void resetPasswordByEmail(String email) throws IOException {
         User user = userRepository.findByEmail(email);
-        String responseMessage;
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_EMAIL_NOT_EXISTS));
         }
@@ -48,12 +47,10 @@ public class AuthServiceImpl implements AuthService {
 
         try {
             userRepository.save(user);
-            responseMessage = this.messages.get(Constant.MESSAGE_MAIL_RESTORE);
         } catch (Exception e) {
             logger.error(Constant.EXCEPTION, e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, this.messages.get(Constant.MESSAGE_CANT_RESET_PASS));
         }
-        return responseMessage;
     }
 
     private String newPass() {

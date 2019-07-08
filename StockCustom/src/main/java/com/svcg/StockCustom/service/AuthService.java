@@ -4,5 +4,5 @@ import java.io.IOException;
 
 public interface AuthService {
 
-    String resetPasswordByEmail(String email) throws IOException;
+    void resetPasswordByEmail(String email) throws IOException;
 }
