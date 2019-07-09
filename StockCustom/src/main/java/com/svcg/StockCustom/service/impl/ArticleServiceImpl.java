@@ -47,7 +47,6 @@ public class ArticleServiceImpl implements ArticleService {
 		}
 		articleDTO.setCreateDate(new Date());
 		articleDTO.setDisabled(false);
-		articleDTO.setExpirationDate(null);
 		articleDTO = saveArticleObjet(articleDTO, true);
 		logger.info("article was saved successfully {}", articleDTO);
 		return articleDTO;

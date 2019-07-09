@@ -25,7 +25,7 @@ public class ArticleDTO {
 
 	@Size(max = 255)
 	private String description;
-	
+		
 	private Date expirationDate;
 	
 	private Double currentQuantity;
