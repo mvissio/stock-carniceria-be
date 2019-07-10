@@ -74,7 +74,7 @@ public class ArticleController {
         return ResponseEntity.ok(this.articleService.getArticleByName(name));
     }
     
-    @GetMapping("/nameLike")
+    @GetMapping("/search")
     public ResponseEntity<List<ArticleDTO>> getArticlesByNameOrBrandOrCodeLike(String search) {
         return ResponseEntity.ok(this.articleService.getArticlesByNameOrBrandOrCodeLike(search));
     }
