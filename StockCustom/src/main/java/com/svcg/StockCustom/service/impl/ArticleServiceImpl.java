@@ -47,9 +47,15 @@ public class ArticleServiceImpl implements ArticleService {
 		}
 		articleDTO.setCreateDate(new Date());
 		articleDTO.setDisabled(false);
-		articleDTO = saveArticleObjet(articleDTO, true);
-		logger.info("article was saved successfully {}", articleDTO);
-		return articleDTO;
+
+		if(articleDTO.getExpirationDate() != null){
+			articleDTO.setExpirationDate(articleDTO.getExpirationDate());
+		} else {
+			articleDTO.setExpirationDate(null);
+		}
+		ArticleDTO newArticleDTO = saveArticleObjet(articleDTO, true);
+		logger.info("article was saved successfully {}", newArticleDTO);
+		return newArticleDTO;
 
 	}
 
@@ -119,10 +125,7 @@ public class ArticleServiceImpl implements ArticleService {
 		if (previousArticle == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLE));
 		}
-
-		articleDTO = saveArticleObjet(articleDTO, false);
-		return articleDTO;
-
+		return saveArticleObjet(articleDTO, false);
 	}
 
 	private ArticleDTO saveArticleObjet(ArticleDTO articleDTO, Boolean isSave) {
@@ -131,7 +134,7 @@ public class ArticleServiceImpl implements ArticleService {
 
 		} catch (Exception e) {
 			logger.error(Constant.EXCEPTION, e);
-            String message = (isSave) ? this.messages.get(Constant.MESSAGE_CANT_CREATE_ARTICLE) : this.messages.get(Constant.MESSAGE_CANT_UPDATE_ARTICLE);
+            String message = isSave ? this.messages.get(Constant.MESSAGE_CANT_CREATE_ARTICLE) : this.messages.get(Constant.MESSAGE_CANT_UPDATE_ARTICLE);
 			throw new ResponseStatusException(HttpStatus.CONFLICT, message);
 		}
 	}
