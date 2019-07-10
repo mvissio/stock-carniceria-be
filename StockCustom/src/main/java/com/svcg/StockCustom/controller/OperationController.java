@@ -113,18 +113,18 @@ public class OperationController {
 	    }
 					
 		@GetMapping("/byDateAndOperationType")
-		public ResponseEntity<Page<OperationDTO>> getOperationsByCreationDateAndOperationType(@Valid @RequestParam Date creationDate,@Valid @RequestParam OperationType operationType, Pageable pageable)  {
-			return ResponseEntity.ok(operationService.getOperationsByCreateDateAndOperationType(creationDate,operationType,pageable));
+		public ResponseEntity<Page<OperationDTO>> getOperationsByCreationDateAndOperationType(@Valid @RequestParam Date createDate,@Valid @RequestParam OperationType operationType, Pageable pageable)  {
+			return ResponseEntity.ok(operationService.getOperationsByCreateDateAndOperationType(createDate,operationType,pageable));
 		}
 		
 		@GetMapping("/byDateAndPaymentMethod")
-		public ResponseEntity<Page<OperationDTO>> getOperationsByCreationDateAndPaymentMethod(@Valid @RequestParam Date creationDate,@Valid @RequestParam PaymentMethod paymentMethod, Pageable pageable)  {
-			return ResponseEntity.ok(operationService.getOperationsByCreateDateAndPaymentMethod(creationDate,paymentMethod,pageable));
+		public ResponseEntity<Page<OperationDTO>> getOperationsByCreationDateAndPaymentMethod(@Valid @RequestParam Date createDate,@Valid @RequestParam PaymentMethod paymentMethod, Pageable pageable)  {
+			return ResponseEntity.ok(operationService.getOperationsByCreateDateAndPaymentMethod(createDate,paymentMethod,pageable));
 		}
 		
 		@GetMapping("/byDateAndPaymentMethodAndOperationType")
-		public ResponseEntity<Page<OperationDTO>> getOperationsByCreationDateAndPaymentMethodOperationType(@Valid @RequestParam Date creationDate,@Valid @RequestParam PaymentMethod paymentMethod,@Valid @RequestParam OperationType operationType, Pageable pageable)  {
-			return ResponseEntity.ok(operationService.getOperationsByCreateDateAndPaymentMethodAndOperationType(creationDate, paymentMethod, operationType, pageable));
+		public ResponseEntity<Page<OperationDTO>> getOperationsByCreationDateAndPaymentMethodOperationType(@Valid @RequestParam Date createDate,@Valid @RequestParam PaymentMethod paymentMethod,@Valid @RequestParam OperationType operationType, Pageable pageable)  {
+			return ResponseEntity.ok(operationService.getOperationsByCreateDateAndPaymentMethodAndOperationType(createDate, paymentMethod, operationType, pageable));
 		}
 		
 		
