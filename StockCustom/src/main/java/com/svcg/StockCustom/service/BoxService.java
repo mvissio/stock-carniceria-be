@@ -21,6 +21,8 @@ public interface BoxService {
 
     BoxDTO getBoxById(Long id);
 
+    BoxDTO closeBox(Long id);
+
     BoxDTO getBoxDateOpen(Date date);
 
     BoxDTO getBoxDateClose(Date date);

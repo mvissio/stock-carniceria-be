@@ -135,4 +135,12 @@ public class BoxServiceImpl implements BoxService {
     public BoxDTO getBoxDateClose(Date date) {
         return null;
     }
+
+    @Override
+    public BoxDTO closeBox(Long id) {
+        BoxDTO box = getBoxById(id);
+
+
+        return null;
+    }
 }
