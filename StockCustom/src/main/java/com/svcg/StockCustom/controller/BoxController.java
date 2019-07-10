@@ -65,4 +65,13 @@ public class BoxController {
         return ResponseEntity.ok(boxService.getAllOperationByBoxId(boxId, pageable));
     }
 
+    @PostMapping("/closeBox")
+    public ResponseEntity<BoxDTO> closeBox(@Valid @RequestBody BoxDTO boxDTO, BindingResult bindingResult) throws MethodArgumentNotValidException {
+        if (bindingResult.hasErrors()) {
+            logger.error(String.valueOf(bindingResult.getAllErrors()));
+            throw new MethodArgumentNotValidException(null, bindingResult);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(boxService.closeBox(boxDTO.getBoxId()));
+    }
+
 }

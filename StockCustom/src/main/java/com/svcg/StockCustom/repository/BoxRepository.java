@@ -18,6 +18,8 @@ public interface BoxRepository extends JpaRepository<Box, Serializable> {
 
     Box findByBoxId(Long boxId);
 
+    Box findFirstByOpenTrueOrderByDateOpenDesc();
+
     List<Box> findByDateCloseIsNullOrOpenIsTrue();
 
     Page<Box> findByDateCloseIsNull(Pageable pageable);
