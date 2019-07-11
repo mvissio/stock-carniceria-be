@@ -69,8 +69,8 @@ public class ArticleController {
 
     }
 
-    @GetMapping("/name/{name}")
-    public ResponseEntity<ArticleDTO> getArticleByNombre(@PathVariable("name")String name) {
+    @GetMapping("/name")
+    public ResponseEntity<List<ArticleDTO>> getArticleByNombre(String name) {
         return ResponseEntity.ok(this.articleService.getArticleByName(name));
     }
     

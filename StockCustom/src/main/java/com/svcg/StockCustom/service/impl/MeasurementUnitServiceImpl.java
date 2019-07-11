@@ -1,6 +1,8 @@
 package com.svcg.StockCustom.service.impl;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.svcg.StockCustom.entity.MeasurementUnit;
 import org.slf4j.Logger;
@@ -68,14 +70,14 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 	}
 
 	@Override
-	public MeasurementUnitDTO getMeasurementUnitByName(String name) {
-		MeasurementUnit measurementUnit = this.measurementUnitRepository
-				.findByName(name);
-		if (measurementUnit == null) {
+	public List<MeasurementUnitDTO> getMeasurementUnitByName(String name) {
+		List<MeasurementUnit> measurementUnits = this.measurementUnitRepository
+				.findByNameContaining(name);
+		if (measurementUnits == null|| measurementUnits.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_MEASUREMENT_UNIT));
 		}
 
-		return this.measurementUnitConverter.toDTO(measurementUnit);
+		return measurementUnits.stream().map(this.measurementUnitConverter::toDTO).collect(Collectors.toList());
 	}
 
 	@Override

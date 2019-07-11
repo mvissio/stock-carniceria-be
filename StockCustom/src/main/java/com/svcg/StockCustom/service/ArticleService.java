@@ -12,8 +12,8 @@ public interface ArticleService {
 	ArticleDTO saveArticle(ArticleDTO articleDTO);
 
     Page<ArticleDTO> getArticles(Pageable pageable);
-    
-    ArticleDTO getArticleByName(String name);
+
+    List<ArticleDTO> getArticleByName(String name);
 
     ArticleDTO getArticleById(Long id);
 

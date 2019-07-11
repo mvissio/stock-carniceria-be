@@ -5,13 +5,15 @@ import com.svcg.StockCustom.service.dto.MeasurementUnitDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface MeasurementUnitService {
 
     MeasurementUnitDTO saveMeasurementUnit(MeasurementUnitDTO measurementUnitDTO);
 
     Page<MeasurementUnitDTO> getMeasurementUnits(Pageable pageable);
 
-    MeasurementUnitDTO getMeasurementUnitByName(String name);
+    List<MeasurementUnitDTO> getMeasurementUnitByName(String name);
 
     MeasurementUnitDTO getMeasurementUnitById(Long id);
 

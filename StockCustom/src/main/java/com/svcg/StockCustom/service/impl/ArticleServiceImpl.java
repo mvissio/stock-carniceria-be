@@ -2,6 +2,7 @@ package com.svcg.StockCustom.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,15 +83,15 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 	
 	@Override
-	public ArticleDTO getArticleByName(String name) {
+	public List<ArticleDTO> getArticleByName(String name) {
 
-		Article article = this.articleRepository
-				.findByName(name);
-		if (article == null) {
+		List<Article> articles= this.articleRepository
+				.findByNameContaining(name);
+		if (articles == null|| articles.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLE));
 		}
 
-		return this.articleConverter.toDTO(article);
+		return articles.stream().map(this.articleConverter::toDTO).collect(Collectors.toList());
 
 	}
 	

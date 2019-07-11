@@ -17,6 +17,8 @@ public interface ArticleRepository extends JpaRepository<Article,Serializable> {
 
     Article findByName(String name);
 
+    List<Article> findByNameContaining(String name);
+
     Article findByArticleId(Long articleId);    
     
     Optional<List<Article>> findByMeasurementUnitIdIn(List<MeasurementUnit> unidadesMedida);
@@ -24,8 +26,4 @@ public interface ArticleRepository extends JpaRepository<Article,Serializable> {
     Page<Article> findByDisabledIsFalse(Pageable pageable);
 
 	List<Article> findByNameContainingOrBrandContaining(String name, String brand);
-
-	List<Article> findByNameContainingIgnoreCaseOrBrandContainingIgnoreCase(String name, String brand);
-
-	
 }
