@@ -63,7 +63,7 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 		Page<MeasurementUnit> measurementUnits = this.measurementUnitRepository
 				.findAll(pageable);
 		if (measurementUnits.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_MEASUREMENT_UNITS));
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT, this.messages.get(Constant.MESSAGE_NOT_FOUND_MEASUREMENT_UNITS));
 		}
 		return measurementUnits.map(this.measurementUnitConverter::toDTO);
 
