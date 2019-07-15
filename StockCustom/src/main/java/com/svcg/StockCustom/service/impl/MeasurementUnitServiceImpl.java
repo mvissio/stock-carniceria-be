@@ -1,10 +1,8 @@
 package com.svcg.StockCustom.service.impl;
 
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
-import com.svcg.StockCustom.entity.MeasurementUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.svcg.StockCustom.component.Messages;
 import com.svcg.StockCustom.constant.Constant;
+import com.svcg.StockCustom.entity.MeasurementUnit;
 import com.svcg.StockCustom.repository.MeasurementUnitRepository;
 import com.svcg.StockCustom.service.MeasurementUnitService;
 import com.svcg.StockCustom.service.converter.MeasurementUnitConverter;
@@ -70,24 +69,24 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 	}
 
 	@Override
-	public List<MeasurementUnitDTO> getMeasurementUnitByName(String name) {
-		List<MeasurementUnit> measurementUnits = this.measurementUnitRepository
-				.findByNameContaining(name);
-		if (measurementUnits == null|| measurementUnits.isEmpty()) {
+	public Page<MeasurementUnitDTO> getMeasurementUnitByName(String name, Pageable pageable) {
+		Optional<Page<MeasurementUnit>> measurementUnits = this.measurementUnitRepository
+				.findByNameContaining(name, pageable);
+		if (!measurementUnits.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_MEASUREMENT_UNIT));
 		}
 
-		return measurementUnits.stream().map(this.measurementUnitConverter::toDTO).collect(Collectors.toList());
+		return measurementUnits.get().map(this.measurementUnitConverter::toDTO);
 	}
 
 	@Override
 	public MeasurementUnitDTO getMeasurementUnitById(Long id) {
-		MeasurementUnit measurementUnit = this.measurementUnitRepository
+		Optional<MeasurementUnit> measurementUnit = this.measurementUnitRepository
 				.findByMeasurementUnitId(id);
-		if (measurementUnit == null) {
+		if (!measurementUnit.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_MEASUREMENT_UNIT));
 		}
-		return this.measurementUnitConverter.toDTO(measurementUnit);
+		return this.measurementUnitConverter.toDTO(measurementUnit.get());
 	}
 
 	@Override
@@ -95,9 +94,9 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 		if (measurementUnitDTO == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get(Constant.MESSAGE_NOT_FOUND_MEASUREMENT_UNIT));
 		}
-		MeasurementUnit previousMeasurementUnit = this.measurementUnitRepository
+		Optional<MeasurementUnit> previousMeasurementUnit = this.measurementUnitRepository
 				.findByName(measurementUnitDTO.getName());
-		if (previousMeasurementUnit == null) {
+		if (!previousMeasurementUnit.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_MEASUREMENT_UNIT));
 		}
 		measurementUnitDTO = saveMeasurementUnitObjet(measurementUnitDTO, false);
@@ -105,15 +104,14 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 	}
 
 	private Boolean measurementUnitNameExist(String name) {
-		MeasurementUnit measurementUnit = this.measurementUnitRepository
+		Optional<MeasurementUnit> measurementUnit = this.measurementUnitRepository
 				.findByName(name);
-		return measurementUnit != null;
+		return measurementUnit.isPresent();
 	}
 
 	private MeasurementUnitDTO saveMeasurementUnitObjet(MeasurementUnitDTO measurementUnitDTO, Boolean isSave) {
 		try {
-			MeasurementUnitDTO measurementUnitCreated = this.measurementUnitConverter.toDTO(this.measurementUnitRepository.save(this.measurementUnitConverter.toEntity(measurementUnitDTO)));
-			return measurementUnitCreated;
+			return this.measurementUnitConverter.toDTO(this.measurementUnitRepository.save(this.measurementUnitConverter.toEntity(measurementUnitDTO)));
 
 		} catch (Exception e) {
 			logger.error(Constant.EXCEPTION, e);
@@ -126,22 +124,25 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 
 	@Override
 	public MeasurementUnitDTO deleteMeasurementUnit(Long id) {
-		MeasurementUnit measurementUnit = this.measurementUnitRepository
+		Optional<MeasurementUnit> measurementUnit = this.measurementUnitRepository
 				.findByMeasurementUnitId(id);
-		measurementUnit.setDisabled(true);
-		measurementUnit.setDisabledDate(new Date());
-		return this.measurementUnitConverter.toDTO(this.measurementUnitRepository.save(measurementUnit));
+		if (!measurementUnit.isPresent()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_MEASUREMENT_UNIT));
+		}
+		measurementUnit.get().setDisabled(true);
+		measurementUnit.get().setDisabledDate(new Date());
+		return this.measurementUnitConverter.toDTO(this.measurementUnitRepository.save(measurementUnit.get()));
 	}
 
 	@Override
 	public Page<MeasurementUnitDTO> findByOnlyEnabledMeasurementUnit(
 			Pageable pageable) {
-		Page<MeasurementUnit> measurementUnits = this.measurementUnitRepository
+		Optional<Page<MeasurementUnit>> measurementUnits = this.measurementUnitRepository
 				.findByDisabledIsFalse(pageable);
-		if (measurementUnits.isEmpty()) {
+		if (!measurementUnits.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_MEASUREMENT_UNITS));
 		}
-		return measurementUnits.map(this.measurementUnitConverter::toDTO);
+		return measurementUnits.get().map(this.measurementUnitConverter::toDTO);
 	}
 
 }

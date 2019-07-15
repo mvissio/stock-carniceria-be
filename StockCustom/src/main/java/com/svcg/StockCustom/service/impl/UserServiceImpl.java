@@ -56,9 +56,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        com.svcg.StockCustom.entity.User user = userRepository.findByUsername(username);
-        List<GrantedAuthority> authorities = buildAuthorities(user);
-        return buildUser(user, authorities);
+        Optional<com.svcg.StockCustom.entity.User> user = userRepository.findByUsername(username);
+        if (!user.isPresent()) {
+        	throw new ResponseStatusException(HttpStatus.NOT_FOUND,  this.messages.get(Constant.MESSAGE_USER_NOT_FOUND));
+        }
+        List<GrantedAuthority> authorities = buildAuthorities(user.get());
+        return buildUser(user.get(), authorities);
     }
 
 
@@ -110,11 +113,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         if (userDTO == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get(Constant.MESSAGE_CANT_UPDATE_USER));
         }
-        com.svcg.StockCustom.entity.User previousUser = userRepository.findByUsername(userDTO.getUsername());
-        if (previousUser == null) {
+        Optional<com.svcg.StockCustom.entity.User> previousUser = userRepository.findByUsername(userDTO.getUsername());
+        if (!previousUser.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_USER_NOT_FOUND));
         }
-        if (!previousUser.getEmail().equals(userDTO.getEmail()) && emailExist(userDTO.getEmail())) {
+        if (!previousUser.get().getEmail().equals(userDTO.getEmail()) && emailExist(userDTO.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(Constant.CONCAT2S, this.messages.get(Constant.MESSAGE_EMAIL_EXIST), userDTO.getEmail()));
         }
         return saveUserAndRol(userDTO, false);
@@ -141,13 +144,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     private Boolean emailExist(String email) {
-        com.svcg.StockCustom.entity.User user = userRepository.findByEmail(email);
-        return user != null;
+        Optional<com.svcg.StockCustom.entity.User> user = userRepository.findByEmail(email);
+        return user.isPresent();
     }
 
     private Boolean userNameExist(String username) {
-        com.svcg.StockCustom.entity.User user = userRepository.findByUsername(username);
-        return user != null;
+        Optional<com.svcg.StockCustom.entity.User> user = userRepository.findByUsername(username);
+        return user.isPresent();
     }
 
 
@@ -157,23 +160,33 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public UserDTO getUserByUsername(String username) {
-        com.svcg.StockCustom.entity.User user = userRepository.findByUsername(username);
-        if(user == null) {
+    public Page<UserDTO> getUserByUsername(String username, Pageable pageable) {
+    	Optional<Page<com.svcg.StockCustom.entity.User>> users = userRepository.findByUsernameContaining(username, pageable);
+        if(!users.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_USER_NOT_FOUND));
         }
 
-        return this.userConverter.toDTO(user);
+        return users.get().map(this.userConverter::toDTO);
+    }
+    
+    @Override
+    public UserDTO getUserByUsername(String username) {
+    	Optional<com.svcg.StockCustom.entity.User> user = userRepository.findByUsername(username);
+        if(!user.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_USER_NOT_FOUND));
+        }
+
+        return this.userConverter.toDTO(user.get());
     }
 
     @Override
     public UserDTO getUserById(Long id) {
-        com.svcg.StockCustom.entity.User user = userRepository.findByUserId(id);
-        if(user == null) {
+        Optional<com.svcg.StockCustom.entity.User> user = userRepository.findByUserId(id);
+        if(!user.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_USER_NOT_FOUND));
         }
 
-        return this.userConverter.toDTO(user);
+        return this.userConverter.toDTO(user.get());
     }
 
     public String obtenerToken(HttpServletRequest request) {

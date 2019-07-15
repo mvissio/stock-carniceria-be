@@ -15,15 +15,15 @@ import org.springframework.data.domain.Pageable;
 @Repository("articleRepository")
 public interface ArticleRepository extends JpaRepository<Article,Serializable> {
 
-    Article findByName(String name);
+    Optional<Article> findByName(String name);
 
-    List<Article> findByNameContaining(String name);
+    Optional<Page<Article>>findByNameContaining(String name, Pageable pageable);
 
-    Article findByArticleId(Long articleId);    
+    Optional<Article> findByArticleId(Long articleId);    
     
     Optional<List<Article>> findByMeasurementUnitIdIn(List<MeasurementUnit> unidadesMedida);
     
-    Page<Article> findByDisabledIsFalse(Pageable pageable);
+    Optional<Page<Article>> findByDisabledIsFalse(Pageable pageable);
 
-	List<Article> findByNameContainingOrBrandContaining(String name, String brand);
+	Optional<List<Article>> findByNameContainingOrBrandContaining(String name, String brand);
 }

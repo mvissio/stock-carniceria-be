@@ -24,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service("boxServiceImpl")
 public class BoxServiceImpl implements BoxService {
@@ -93,11 +94,11 @@ public class BoxServiceImpl implements BoxService {
 
     @Override
     public Page<OperationDTO> getAllOperationByBoxId(Long boxId, Pageable pageable) {
-        Page<Operation> operations = operationRepository.findAllByBoxId(boxId, pageable);
-        if (operations == null) {
+        Optional<Page<Operation>> operations = operationRepository.findAllByBoxId(boxId, pageable);
+        if (!operations.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
         }
-        return operations.map(this.operationConverter::toDTO);
+        return operations.get().map(this.operationConverter::toDTO);
     }
 
     @Override

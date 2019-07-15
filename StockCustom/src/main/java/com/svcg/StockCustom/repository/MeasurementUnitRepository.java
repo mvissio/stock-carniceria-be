@@ -1,7 +1,7 @@
 package com.svcg.StockCustom.repository;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,13 +13,13 @@ import com.svcg.StockCustom.entity.MeasurementUnit;
 @Repository("measurementUnitRepository")
 public interface MeasurementUnitRepository extends JpaRepository<MeasurementUnit, Serializable> {
 
-	 MeasurementUnit findByName(String name);
+	 Optional<MeasurementUnit> findByName(String name);
 
-	List<MeasurementUnit> findByNameContaining(String name);
+	Optional<Page<MeasurementUnit>> findByNameContaining(String name, Pageable pageable);
 
-	MeasurementUnit findByMeasurementUnitId(Long measurementUnitId );
+	Optional<MeasurementUnit> findByMeasurementUnitId(Long measurementUnitId);
 	 
-	 Page<MeasurementUnit> findByDisabledIsFalse(Pageable pageable);
+	Optional<Page<MeasurementUnit>> findByDisabledIsFalse(Pageable pageable);
 	 
 	
 }

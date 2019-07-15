@@ -1,11 +1,9 @@
 package com.svcg.StockCustom.service;
 
-import com.svcg.StockCustom.service.dto.MeasurementUnitDTO;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
+import com.svcg.StockCustom.service.dto.MeasurementUnitDTO;
 
 public interface MeasurementUnitService {
 
@@ -13,7 +11,7 @@ public interface MeasurementUnitService {
 
     Page<MeasurementUnitDTO> getMeasurementUnits(Pageable pageable);
 
-    List<MeasurementUnitDTO> getMeasurementUnitByName(String name);
+    Page<MeasurementUnitDTO> getMeasurementUnitByName(String name, Pageable pageable);
 
     MeasurementUnitDTO getMeasurementUnitById(Long id);
 

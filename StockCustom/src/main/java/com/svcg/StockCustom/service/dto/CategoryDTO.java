@@ -16,7 +16,6 @@ public class CategoryDTO {
 	@Size(max = 100)
 	private String name;
 	
-	@NotEmpty
 	@Size(max = 255)
 	private String description;
 
@@ -32,9 +31,8 @@ public class CategoryDTO {
 		super();
 	}
 
-	public CategoryDTO(Long categoryId, @NotEmpty @Size(max = 100) String name,
-			@NotEmpty @Size(max = 255) String description, Date createDate, Date disabledDate, Boolean disabled) {
-		this.categoryId = categoryId;
+	public CategoryDTO(@NotEmpty @Size(max = 100) String name, 
+			@Size(max = 255) String description, Date createDate, Date disabledDate, Boolean disabled) {
 		this.name = name;
 		this.description = description;
 		this.createDate = createDate;

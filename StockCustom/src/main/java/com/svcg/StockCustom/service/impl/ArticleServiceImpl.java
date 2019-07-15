@@ -2,7 +2,7 @@ package com.svcg.StockCustom.service.impl;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,45 +75,45 @@ public class ArticleServiceImpl implements ArticleService {
 	
 	@Override
 	public Page<ArticleDTO> findByOnlyEnabledArticle(Pageable pageable) {
-		Page<Article> articles = this.articleRepository.findByDisabledIsFalse(pageable);
-		if (articles.isEmpty()) {
+		Optional<Page<Article>> articles = this.articleRepository.findByDisabledIsFalse(pageable);
+		if (!articles.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLES));
 		}
-		return articles.map(this.articleConverter::toDTO);	
+		return articles.get().map(this.articleConverter::toDTO);	
 	}
 	
 	@Override
-	public List<ArticleDTO> getArticleByName(String name) {
+	public Page<ArticleDTO> getArticleByName(String name, Pageable pageable) {
 
-		List<Article> articles= this.articleRepository
-				.findByNameContaining(name);
-		if (articles == null|| articles.isEmpty()) {
+		Optional<Page<Article>> articles= this.articleRepository
+				.findByNameContaining(name, pageable);
+		if (!articles.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLE));
 		}
 
-		return articles.stream().map(this.articleConverter::toDTO).collect(Collectors.toList());
+		return articles.get().map(this.articleConverter::toDTO);
 
 	}
 	
 	@Override
 	public List<ArticleDTO> getArticlesByNameOrBrandOrCodeLike(String search) {
-		List<Article> articles = this.articleRepository
+		Optional<List<Article>> articles = this.articleRepository
 				.findByNameContainingOrBrandContaining(search, search);
-		if (articles == null) {
+		if (!articles.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLE));
 		}
 
-		return this.articleConverter.toDTO(articles);
+		return this.articleConverter.toDTO(articles.get());
 	}
 	
 	@Override
 	public ArticleDTO getArticleById(Long id) {
-		Article article = this.articleRepository.findByArticleId(id);
-		if (article == null) {
+		Optional<Article> article = this.articleRepository.findByArticleId(id);
+		if (article.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLE));
 		}
 
-		return this.articleConverter.toDTO(article);
+		return this.articleConverter.toDTO(article.get());
 	}
 
 	@Override
@@ -122,8 +122,8 @@ public class ArticleServiceImpl implements ArticleService {
 		if (articleDTO == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get(Constant.MESSAGE_CANT_UPDATE_ARTICLE));
 		}
-		Article previousArticle = this.articleRepository.findByArticleId(articleDTO.getArticleId());
-		if (previousArticle == null) {
+		Optional<Article> previousArticle = this.articleRepository.findByArticleId(articleDTO.getArticleId());
+		if (!previousArticle.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLE));
 		}
 		return saveArticleObjet(articleDTO, false);
@@ -141,17 +141,20 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 		
 	private Boolean articleNameExist(String name) {
-		Article article = this.articleRepository
+		Optional<Article> article = this.articleRepository
 				.findByName(name);
-		return article != null;
+		return article.isPresent();
 	}
 
 	@Override
 	public ArticleDTO deleteArticle(Long id) {
-		Article article = this.articleRepository.findByArticleId(id);
-		article.setDisabled(true);
-		article.setDisabledDate(new Date());		
-		return this.articleConverter.toDTO(this.articleRepository.save(article));
+		Optional<Article> article = this.articleRepository.findByArticleId(id);
+		if (!article.isPresent()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLE));
+		}
+		article.get().setDisabled(true);
+		article.get().setDisabledDate(new Date());		
+		return this.articleConverter.toDTO(this.articleRepository.save(article.get()));
 	}
 
 }

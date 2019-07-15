@@ -11,6 +11,8 @@ public interface CategoryService {
 
 	Page<CategoryDTO> getCategories(Pageable pageable);
 
+	Page<CategoryDTO> getCategoryByName(String name, Pageable pageable);
+	
 	CategoryDTO getCategoryByName(String name);
 
 	CategoryDTO getCategoryById(Long id);

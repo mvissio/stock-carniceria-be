@@ -70,8 +70,8 @@ public class ArticleController {
     }
 
     @GetMapping("/name")
-    public ResponseEntity<List<ArticleDTO>> getArticleByNombre(String name) {
-        return ResponseEntity.ok(this.articleService.getArticleByName(name));
+    public ResponseEntity<Page<ArticleDTO>> getArticleByNombre(String name, Pageable pageable) {
+        return ResponseEntity.ok(this.articleService.getArticleByName(name, pageable));
     }
     
     @GetMapping("/search")

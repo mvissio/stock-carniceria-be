@@ -20,8 +20,10 @@ public interface UserService {
     Page<UserDTO> getUsers(Pageable pageable);
 
     List<RolName> getRolesUsers();
-
+    
     UserDTO getUserByUsername(String username);
+    
+    Page<UserDTO> getUserByUsername(String username, Pageable pageable);
 
     UserDTO setDisabledByUsername(String username);
 

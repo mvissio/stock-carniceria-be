@@ -27,8 +27,6 @@ import com.svcg.StockCustom.entity.MeasurementUnit;
 import com.svcg.StockCustom.service.MeasurementUnitService;
 import com.svcg.StockCustom.service.dto.MeasurementUnitDTO;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(value = "/measurementUnits")
 public class MeasurementUnitController {
@@ -75,9 +73,8 @@ public class MeasurementUnitController {
     }
 
     @GetMapping("/name")
-    public ResponseEntity<List<MeasurementUnitDTO>> getMeasurementUnitByNombre(String name) {
-        logger.info(String.format(Constant.CONCAT, name));
-        return ResponseEntity.ok(this.measurementUnitService.getMeasurementUnitByName(name));
+    public ResponseEntity<Page<MeasurementUnitDTO>> getMeasurementUnitByNombre(String name, Pageable pageable) {
+        return ResponseEntity.ok(this.measurementUnitService.getMeasurementUnitByName(name, pageable));
     }
 
     @GetMapping("/id/{id}")

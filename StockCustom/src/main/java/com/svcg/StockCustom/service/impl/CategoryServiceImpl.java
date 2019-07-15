@@ -1,6 +1,7 @@
 package com.svcg.StockCustom.service.impl;
 
 import java.util.Date;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,19 +111,29 @@ public class CategoryServiceImpl implements CategoryService {
         
     
     private Boolean categoryNameExist(String name) {
-        Category category = categoryRepository.findByName(name);
-        return category != null;
+        Optional<Category> category = categoryRepository.findByName(name);
+        return category.isPresent();
     }
 
     
     @Override
-    public CategoryDTO getCategoryByName(String name) {
-        Category category = categoryRepository.findByName(name);
-        if(category == null) {
+    public Page<CategoryDTO> getCategoryByName(String name, Pageable pageable) {
+        Optional<Page<Category>> categories = categoryRepository.findByNameContaining(name, pageable);
+        if(!categories.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_CATEGORY));
         }
 
-        return this.categoryConverter.toDTO(category);
+        return categories.get().map(this.categoryConverter::toDTO);
+    }
+    
+    @Override
+    public CategoryDTO getCategoryByName(String name) {
+        Optional<Category> category = categoryRepository.findByName(name);
+        if(!category.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_CATEGORY));
+        }
+
+        return this.categoryConverter.toDTO(category.get());
     }
 
     @Override

@@ -13,7 +13,7 @@ public interface ArticleService {
 
     Page<ArticleDTO> getArticles(Pageable pageable);
 
-    List<ArticleDTO> getArticleByName(String name);
+    Page<ArticleDTO> getArticleByName(String name, Pageable pageable);
 
     ArticleDTO getArticleById(Long id);
 

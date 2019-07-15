@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service("authServiceImpl")
 public class AuthServiceImpl implements AuthService {
@@ -36,17 +37,17 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void resetPasswordByEmail(String email) throws IOException {
-        User user = userRepository.findByEmail(email);
-        if (user == null) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (!user.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_EMAIL_NOT_EXISTS));
         }
         String pass = newPass();
         BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
-        user.setPassword(pe.encode(pass));
-        sendNewPass(pass, user.getEmail());
+        user.get().setPassword(pe.encode(pass));
+        sendNewPass(pass, user.get().getEmail());
 
         try {
-            userRepository.save(user);
+            userRepository.save(user.get());
         } catch (Exception e) {
             logger.error(Constant.EXCEPTION, e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, this.messages.get(Constant.MESSAGE_CANT_RESET_PASS));

@@ -78,9 +78,9 @@ public class UserController {
     }
 
     @GetMapping("/username")
-    public ResponseEntity<UserDTO> getUserByUsername(String username) {
-    	UserDTO userDTO = this.userService.getUserByUsername(username);
-        return ResponseEntity.ok(userDTO);
+    public ResponseEntity<Page<UserDTO>> getUserByUsername(String username, Pageable pageable) {
+    	Page<UserDTO> userDTOs = this.userService.getUserByUsername(username, pageable);
+        return ResponseEntity.ok(userDTOs);
     }
 
     @GetMapping("id")

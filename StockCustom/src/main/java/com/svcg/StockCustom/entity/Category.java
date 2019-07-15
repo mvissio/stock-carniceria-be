@@ -20,7 +20,6 @@ public class Category {
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
 	
-	@NotEmpty
 	@Size(max = 255)
 	@Column(name = "description", length = 255)
 	private String description;

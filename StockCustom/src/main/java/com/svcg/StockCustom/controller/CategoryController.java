@@ -73,9 +73,9 @@ public class CategoryController {
     }
 
     
-    @GetMapping("/name/{name}")
-    public ResponseEntity<CategoryDTO> getCategoryByName(@PathVariable("name")String name) {
-        return ResponseEntity.ok(this.categoryService.getCategoryByName(name));
+    @GetMapping("/name")
+    public ResponseEntity<Page<CategoryDTO>> getCategoryByName(String name, Pageable pageable) {
+        return ResponseEntity.ok(this.categoryService.getCategoryByName(name, pageable));
     }
 
     @GetMapping("/id/{id}")

@@ -3,6 +3,7 @@ package com.svcg.StockCustom.service.impl;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import com.svcg.StockCustom.entity.Box;
 import com.svcg.StockCustom.repository.BoxRepository;
@@ -96,7 +97,7 @@ public class OperationServiceImpl implements OperationService {
     @Override
     @Transactional
     public OperationDTO updateOperation(OperationDTO operationDTO) {
-        Operation oldOperation = this.operationRepository.findByOperationId(operationDTO.getOperationId());
+        Optional<Operation> oldOperation = this.operationRepository.findByOperationId(operationDTO.getOperationId());
         Operation newOperation = new Operation();
         newOperation.setCreateDate(new Date());
         newOperation.setCreateDateTime(new Date());
@@ -110,34 +111,34 @@ public class OperationServiceImpl implements OperationService {
 
         List<OperationDetail> operationDetails = newOperation
                 .getOperationDetails();
-        oldOperation.getOperationDetails().forEach(opd -> {
-            Article article = articleRepository
+        oldOperation.get().getOperationDetails().forEach(opd -> {
+            Optional<Article> article = articleRepository
                     .findByArticleId(opd.getArticleId());
-            if (opd.getArticleId().equals(opd.getArticleId())) {
-                article.setCurrentQuantity(article.getCurrentQuantity() + opd.getAmount());
-                articleRepository.save(article);
+            if (article.isPresent() && opd.getArticleId().equals(opd.getArticleId())) {
+                article.get().setCurrentQuantity(article.get().getCurrentQuantity() + opd.getAmount());
+                articleRepository.save(article.get());
                 logger.info("Stock de Articulo restaurado con exito: {}", article);
             }
         });
         newOperation = this.operationRepository.save(newOperation);
         this.updateArticles(operationDetails, newOperation);
-        this.disabledOperation(oldOperation);
-        updateArticles(oldOperation.getOperationDetails(), oldOperation);
-        this.operationRepository.save(oldOperation);
+        this.disabledOperation(oldOperation.get());
+        updateArticles(oldOperation.get().getOperationDetails(), oldOperation.get());
+        this.operationRepository.save(oldOperation.get());
         return this.operationConverter.toDTO(newOperation);
     }
 
     @Override
     public OperationDTO getOperationById(Long id) {
-        Operation operation = this.operationRepository
+        Optional<Operation> operation = this.operationRepository
                 .findByOperationId(id);
-        if (operation == null) {
+        if (!operation.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
         }
         List<OperationDetail> detailOperationList = operationDetailRepository.findByOperationId(id);
-        operation.setOperationDetails(detailOperationList);
+        operation.get().setOperationDetails(detailOperationList);
 
-        return this.operationConverter.toDTO(operation);
+        return this.operationConverter.toDTO(operation.get());
     }
 
     @Override
@@ -152,10 +153,10 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     public OperationDTO cancelOperation(Long id) {
-        Operation operation = this.operationRepository.findByOperationId(id);
-        this.disabledOperation(operation);
-        this.updateArticles(operation.getOperationDetails(), operation);
-        return this.operationConverter.toDTO(this.operationRepository.save(operation));
+        Optional<Operation> operation = this.operationRepository.findByOperationId(id);
+        this.disabledOperation(operation.get());
+        this.updateArticles(operation.get().getOperationDetails(), operation.get());
+        return this.operationConverter.toDTO(this.operationRepository.save(operation.get()));
     }
 
     private void disabledOperation(Operation operation) {
@@ -173,28 +174,28 @@ public class OperationServiceImpl implements OperationService {
             operationDetailRepository.save(detailOperation);
 
             // actualizo el stock del producto
-            Article article = articleRepository
+            Optional<Article> article = articleRepository
                     .findByArticleId(detailOperation.getArticleId());
             //TODO: solo si la categoria no es carne(categoria carne es la con id 1) se debe sacar cuando este la funcionalidad de la balanza electronica 
-            if (article.getCategoryId() != 1) {
+            if (article.isPresent() && article.get().getCategoryId() != 1) {
                 Double newQuantityArticle;
                 switch (newOperation.getOperationType()) {
                     case BUY:
                         newQuantityArticle = (newOperation.isDisabled())
-                                ? (article.getCurrentQuantity() - detailOperation.getAmount())
-                                : (article.getCurrentQuantity() + detailOperation.getAmount());
+                                ? (article.get().getCurrentQuantity() - detailOperation.getAmount())
+                                : (article.get().getCurrentQuantity() + detailOperation.getAmount());
                         break;
                     case SALE:
                         newQuantityArticle = (newOperation.isDisabled())
-                                ? (article.getCurrentQuantity() + detailOperation.getAmount())
-                                : (article.getCurrentQuantity() - detailOperation.getAmount());
+                                ? (article.get().getCurrentQuantity() + detailOperation.getAmount())
+                                : (article.get().getCurrentQuantity() - detailOperation.getAmount());
                         break;
                     default:
                         newQuantityArticle = (double) 0;
                 }
-                article.setCurrentQuantity(newQuantityArticle);
-                articleRepository.save(article);
-                logger.info("Stock de Articulo actualizado con exito: {}", article.toString());
+                article.get().setCurrentQuantity(newQuantityArticle);
+                articleRepository.save(article.get());
+                logger.info("Stock de Articulo actualizado con exito: {}", article.get().toString());
             }
         }
     }
@@ -203,23 +204,23 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     public Page<OperationDTO> getOperationsByCreateDate(Date createDate, Pageable pageable) {
-        Page<Operation> operations = this.operationRepository.findByCreateDate(createDate, pageable);
-        if (operations == null) {
+        Optional<Page<Operation>> operations = this.operationRepository.findByCreateDate(createDate, pageable);
+        if (!operations.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
         }
 
-        return operations.map(this.operationConverter::toDTO);
+        return operations.get().map(this.operationConverter::toDTO);
     }
 
     @Override
     public Page<OperationDTO> getOperationsByOperationType(OperationType operationType, Pageable pageable) {
-        Page<Operation> operations = operationRepository.findByOperationType(operationType, pageable);
-        if (operations == null) {
+        Optional<Page<Operation>> operations = operationRepository.findByOperationType(operationType, pageable);
+        if (!operations.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
         }
 
-        return operations.map(this.operationConverter::toDTO);
+        return operations.get().map(this.operationConverter::toDTO);
     }
 
     @Override
@@ -239,26 +240,26 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     public Page<OperationDTO> getOperationsByCreateDateAndOperationType(Date createDate, OperationType operationType, Pageable pageable) {
-        Page<Operation> operations = operationRepository.findByCreateDateAndOperationType(createDate, operationType, pageable);
-        if (operations == null) {
+        Optional<Page<Operation>> operations = operationRepository.findByCreateDateAndOperationType(createDate, operationType, pageable);
+        if (operations.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
         }
 
-        return operations.map(this.operationConverter::toDTO);
+        return operations.get().map(this.operationConverter::toDTO);
     }
 
 
     @Override
     public Page<OperationDTO> getOperationsByCreateDateAndPaymentMethod(Date createDate, PaymentMethod paymentMethod,
                                                                         Pageable pageable) {
-        Page<Operation> operations = operationRepository.findByCreateDateAndPaymentMethod(createDate, paymentMethod, pageable);
-        if (operations == null) {
+        Optional<Page<Operation>> operations = operationRepository.findByCreateDateAndPaymentMethod(createDate, paymentMethod, pageable);
+        if (!operations.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
         }
 
-        return operations.map(this.operationConverter::toDTO);
+        return operations.get().map(this.operationConverter::toDTO);
     }
 
     // *********************BUSQUEDA POR PERIODOS CREATED DATE Y TIPO, PAYMENT
@@ -267,39 +268,39 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     public Page<OperationDTO> getOperationsByCreateDateBetween(Date fromDate, Date toDate, Pageable pageable) {
-        Page<Operation> operations = operationRepository.findByCreateDateBetween(fromDate, toDate, pageable);
-        if (operations == null) {
+        Optional<Page<Operation>> operations = operationRepository.findByCreateDateBetween(fromDate, toDate, pageable);
+        if (!operations.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
         }
 
-        return operations.map(this.operationConverter::toDTO);
+        return operations.get().map(this.operationConverter::toDTO);
     }
 
     @Override
     public Page<OperationDTO> getOperationsByCreateDateBetweenAndByOperationType(OperationType operationType,
                                                                                  Date fromDate, Date toDate, Pageable pageable) {
-        Page<Operation> operations = operationRepository.findByOperationTypeAndCreateDateBetween(operationType,
+        Optional<Page<Operation>> operations = operationRepository.findByOperationTypeAndCreateDateBetween(operationType,
                 fromDate, toDate, pageable);
-        if (operations == null) {
+        if (!operations.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
         }
 
-        return operations.map(this.operationConverter::toDTO);
+        return operations.get().map(this.operationConverter::toDTO);
     }
 
     @Override
     public Page<OperationDTO> getOperationsByCreateDateBetweenAndByPaymentMethod(PaymentMethod paymentMethod,
                                                                                  Date fromDate, Date toDate, Pageable pageable) {
-        Page<Operation> operations = operationRepository.findByPaymentMethodAndCreateDateBetween(paymentMethod,
+        Optional<Page<Operation>> operations = operationRepository.findByPaymentMethodAndCreateDateBetween(paymentMethod,
                 fromDate, toDate, pageable);
-        if (operations == null) {
+        if (!operations.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
         }
 
-        return operations.map(this.operationConverter::toDTO);
+        return operations.get().map(this.operationConverter::toDTO);
     }
 
     // *********************BUSQUEDA POR CLIENTE Y
@@ -308,54 +309,54 @@ public class OperationServiceImpl implements OperationService {
     @Override
     public Page<OperationDTO> getOperationsByClientIdAndOperationType(Long clientId, OperationType operationType,
                                                                       Pageable pageable) {
-        Page<Operation> operations = operationRepository.findByClientIdAndOperationType(clientId, operationType,
+        Optional<Page<Operation>> operations = operationRepository.findByClientIdAndOperationType(clientId, operationType,
                 pageable);
-        if (operations == null) {
+        if (!operations.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
         }
 
-        return operations.map(this.operationConverter::toDTO);
+        return operations.get().map(this.operationConverter::toDTO);
     }
 
     @Override
     public Page<OperationDTO> getOperationsByProviderIdAndOperationType(Long providerId, OperationType operationType,
                                                                         Pageable pageable) {
-        Page<Operation> operations = operationRepository.findByClientIdAndOperationType(providerId, operationType,
+        Optional<Page<Operation>> operations = operationRepository.findByClientIdAndOperationType(providerId, operationType,
                 pageable);
-        if (operations == null) {
+        if (!operations.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
         }
 
-        return operations.map(this.operationConverter::toDTO);
+        return operations.get().map(this.operationConverter::toDTO);
     }
 
     @Override
     public Page<OperationDTO> getOperationsByClientIdAndPaymentMethod(Long clientId, PaymentMethod paymentMethod,
                                                                       Pageable pageable) {
-        Page<Operation> operations = operationRepository.findByClientIdAndPaymentMethod(clientId, paymentMethod,
+        Optional<Page<Operation>> operations = operationRepository.findByClientIdAndPaymentMethod(clientId, paymentMethod,
                 pageable);
-        if (operations == null) {
+        if (!operations.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
         }
 
-        return operations.map(this.operationConverter::toDTO);
+        return operations.get().map(this.operationConverter::toDTO);
     }
 
     @Override
     public Page<OperationDTO> getOperationsByCreateDateAndPaymentMethodAndOperationType(Date createDate,
                                                                                         PaymentMethod paymentMethod, OperationType operationType, Pageable pageable) {
 
-        Page<Operation> operations = operationRepository.findByCreateDateAndPaymentMethodAndOperationType(createDate,
+        Optional<Page<Operation>> operations = operationRepository.findByCreateDateAndPaymentMethodAndOperationType(createDate,
                 paymentMethod, operationType, pageable);
-        if (operations == null) {
+        if (!operations.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
         }
 
-        return operations.map(this.operationConverter::toDTO);
+        return operations.get().map(this.operationConverter::toDTO);
 
 
     }
@@ -364,14 +365,14 @@ public class OperationServiceImpl implements OperationService {
     public Page<OperationDTO> getOperationsByPaymentMethodAndOperationTypeAndCreateDateBetween(PaymentMethod paymentMethod,
                                                                                                OperationType operationType, Date fromDate, Date toDate, Pageable pageable) {
 
-        Page<Operation> operations = operationRepository.findByPaymentMethodAndOperationTypeAndCreateDateBetween(paymentMethod,
+        Optional<Page<Operation>> operations = operationRepository.findByPaymentMethodAndOperationTypeAndCreateDateBetween(paymentMethod,
                 operationType, fromDate, toDate, pageable);
-        if (operations == null) {
+        if (!operations.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
         }
 
-        return operations.map(this.operationConverter::toDTO);
+        return operations.get().map(this.operationConverter::toDTO);
 
     }
 
