@@ -20,7 +20,7 @@ public class MeasurementUnit {
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
 
-	@Column(name = "symbol", nullable = false, length = 2)
+	@Column(name = "symbol", nullable = false, length = 5)
 	private String symbol;
 
 	@Temporal(TemporalType.DATE)

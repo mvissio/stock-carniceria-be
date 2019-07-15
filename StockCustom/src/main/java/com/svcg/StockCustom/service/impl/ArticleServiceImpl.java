@@ -67,7 +67,7 @@ public class ArticleServiceImpl implements ArticleService {
 		Page<Article> articles = this.articleRepository
 				.findAll(pageable);
 		if (articles.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLES));
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLES));
 		}
 		return articles.map(this.articleConverter::toDTO);
 

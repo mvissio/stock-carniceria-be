@@ -95,7 +95,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Page<CategoryDTO> getCategories(Pageable pageable) {
         Page<Category> categories = categoryRepository.findAll(pageable);
         if (categories.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_CATEGORIES));
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, this.messages.get(Constant.MESSAGE_NOT_FOUND_CATEGORIES));
         }
         return categories.map(this.categoryConverter::toDTO);
     }
