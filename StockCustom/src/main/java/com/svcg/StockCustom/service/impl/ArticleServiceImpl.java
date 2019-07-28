@@ -109,7 +109,7 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public ArticleDTO getArticleById(Long id) {
 		Optional<Article> article = this.articleRepository.findByArticleId(id);
-		if (article.isPresent()) {
+		if (!article.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLE));
 		}
 
