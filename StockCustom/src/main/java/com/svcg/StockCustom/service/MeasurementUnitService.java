@@ -17,8 +17,11 @@ public interface MeasurementUnitService {
 
     MeasurementUnitDTO updateMeasurementUnit(MeasurementUnitDTO measurementUnitDTO);
     
+    MeasurementUnitDTO enabledMeasurementUnit(Boolean disabled, Long id);
+
     MeasurementUnitDTO deleteMeasurementUnit(Long id);
     
     Page<MeasurementUnitDTO> findByOnlyEnabledMeasurementUnit(Pageable pageable);
+
 
 }

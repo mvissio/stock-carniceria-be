@@ -19,10 +19,13 @@ public interface ArticleService {
 
     ArticleDTO updateArticle(ArticleDTO articleDTO);
     
+    ArticleDTO enabledArticle(Boolean disabled, Long id);
+
     ArticleDTO deleteArticle(Long id);
-    
+
     Page<ArticleDTO> findByOnlyEnabledArticle(Pageable pageable);
 
 	List<ArticleDTO> getArticlesByNameOrBrandOrCodeLike(String search);
+
 	
 }

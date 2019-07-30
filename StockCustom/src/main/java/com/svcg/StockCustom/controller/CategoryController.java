@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -71,7 +72,12 @@ public class CategoryController {
         return ResponseEntity.ok(this.categoryService.updateCategory(categoryDTO));
 
     }
+    
+    @PatchMapping("/id/{id}")
+    public ResponseEntity<CategoryDTO> enabledCategory(Boolean disabled, @PathVariable("id")Long id) {
+        return ResponseEntity.ok(this.categoryService.enabledCategory(disabled, id));
 
+    }
     
     @GetMapping("/name")
     public ResponseEntity<Page<CategoryDTO>> getCategoryByName(String name, Pageable pageable) {

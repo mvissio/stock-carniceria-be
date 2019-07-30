@@ -147,6 +147,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
     
     @Override
+	public CategoryDTO enabledCategory(Boolean disabled, Long id) {
+    	CategoryDTO categoryDTO = this.getCategoryById(id);
+    	categoryDTO.setDisabled(disabled);
+		return this.categoryConverter.toDTO(this.categoryRepository.save(this.categoryConverter.toEntity(categoryDTO)));
+	}
+    
+    @Override
 	public CategoryDTO deleteCategory(Long id) {
 		CategoryDTO categoryDTO = this.getCategoryById(id);
 		categoryDTO.setDisabled(true);

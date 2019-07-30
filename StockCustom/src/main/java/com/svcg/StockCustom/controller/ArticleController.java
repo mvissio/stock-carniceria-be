@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -68,6 +69,12 @@ public class ArticleController {
         return ResponseEntity.ok(this.articleService.updateArticle(articleDTO));
 
     }
+    
+    @PatchMapping("/id/{id}")
+    public ResponseEntity<ArticleDTO> enabledArticle(Boolean disabled, @PathVariable("id")Long id) {
+        return ResponseEntity.ok(this.articleService.enabledArticle(disabled, id));
+
+    }
 
     @GetMapping("/name")
     public ResponseEntity<Page<ArticleDTO>> getArticleByNombre(String name, Pageable pageable) {
@@ -85,7 +92,7 @@ public class ArticleController {
     }
     
     @DeleteMapping("/id/{id}")
-    public ResponseEntity<Void> deleteArticle(@PathVariable("id")Long id){
+    public ResponseEntity<Void> deleteArticle(@PathVariable("id")Long id) {
     	this.articleService.deleteArticle(id);
     	return ResponseEntity.noContent().build();
     }

@@ -123,6 +123,13 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 	}
 
 	@Override
+	public MeasurementUnitDTO enabledMeasurementUnit(Boolean disabled, Long id) {
+		MeasurementUnitDTO measurementUnitDTO = this.getMeasurementUnitById(id);
+		measurementUnitDTO.setDisabled(disabled);
+		return this.measurementUnitConverter.toDTO(this.measurementUnitRepository.save(this.measurementUnitConverter.toEntity(measurementUnitDTO)));
+	}
+	
+	@Override
 	public MeasurementUnitDTO deleteMeasurementUnit(Long id) {
 		Optional<MeasurementUnit> measurementUnit = this.measurementUnitRepository
 				.findByMeasurementUnitId(id);
@@ -144,5 +151,6 @@ public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 		}
 		return measurementUnits.get().map(this.measurementUnitConverter::toDTO);
 	}
+
 
 }

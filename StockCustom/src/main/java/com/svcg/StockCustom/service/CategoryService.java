@@ -19,8 +19,11 @@ public interface CategoryService {
 
 	CategoryDTO updateCategory(CategoryDTO categoryDTO);
 	
+	CategoryDTO enabledCategory(Boolean disabled, Long id);
+
 	CategoryDTO deleteCategory(Long id);
 	
 	Page<CategoryDTO> findByOnlyEnabledCategory(Pageable pageable);
+
 
 }

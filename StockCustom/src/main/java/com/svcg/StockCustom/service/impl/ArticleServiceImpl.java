@@ -147,6 +147,13 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	@Override
+	public ArticleDTO enabledArticle(Boolean disabled, Long id) {
+		ArticleDTO articleDTO = this.getArticleById(id);
+		articleDTO.setDisabled(disabled);
+		return this.articleConverter.toDTO(this.articleRepository.save(this.articleConverter.toEntity(articleDTO)));
+	}
+
+	@Override
 	public ArticleDTO deleteArticle(Long id) {
 		Optional<Article> article = this.articleRepository.findByArticleId(id);
 		if (!article.isPresent()) {
@@ -156,5 +163,6 @@ public class ArticleServiceImpl implements ArticleService {
 		article.get().setDisabledDate(new Date());		
 		return this.articleConverter.toDTO(this.articleRepository.save(article.get()));
 	}
+	
 
 }
