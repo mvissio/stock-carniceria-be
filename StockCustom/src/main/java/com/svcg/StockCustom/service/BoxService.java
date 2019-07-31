@@ -32,4 +32,5 @@ public interface BoxService {
     List<BoxDTO> existOpenBox();
 
     Page<OperationDTO> getAllOperationByBoxId(Long id, Pageable pageable);
+    List<OperationDTO> getAllOperationByBoxId(Long id);
 }

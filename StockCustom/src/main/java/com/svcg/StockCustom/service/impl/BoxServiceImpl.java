@@ -4,6 +4,7 @@ import com.svcg.StockCustom.component.Messages;
 import com.svcg.StockCustom.constant.Constant;
 import com.svcg.StockCustom.entity.Box;
 import com.svcg.StockCustom.entity.Operation;
+import com.svcg.StockCustom.enums.OperationType;
 import com.svcg.StockCustom.repository.BoxRepository;
 import com.svcg.StockCustom.repository.OperationRepository;
 import com.svcg.StockCustom.service.BoxService;
@@ -25,6 +26,10 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.svcg.StockCustom.enums.OperationType.BUY;
+import static com.svcg.StockCustom.enums.OperationType.SALE;
 
 @Service("boxServiceImpl")
 public class BoxServiceImpl implements BoxService {
@@ -36,7 +41,7 @@ public class BoxServiceImpl implements BoxService {
     @Autowired
     @Qualifier("operationRepository")
     private OperationRepository operationRepository;
-    
+
     @Autowired
     Messages messages;
 
@@ -50,9 +55,9 @@ public class BoxServiceImpl implements BoxService {
 
     @Override
     public BoxDTO saveBox(BoxDTO boxDTO) {
-    	BoxDTO newBox;
+        BoxDTO newBox;
         try {
-            newBox  = saveBoxObjet(boxDTO, true);
+            newBox = saveBoxObjet(boxDTO, true);
         } catch (Exception e) {
             logger.error(Constant.EXCEPTION, e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, this.messages.get(Constant.MESSAGE_CANT_CREATE_BOX));
@@ -102,30 +107,39 @@ public class BoxServiceImpl implements BoxService {
     }
 
     @Override
-    public BoxDTO updateBox(BoxDTO boxDTO) {
-        
-        if (boxDTO == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get(Constant.MESSAGE_CANT_UPDATE_BOX));
-		}
-		Box previousBox = boxRepository.findByBoxId(boxDTO.getBoxId());
-		if (previousBox == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_BOX));
-		}
+    public List<OperationDTO> getAllOperationByBoxId(Long boxId) {
+        List<Operation> operations = operationRepository.findAllByBoxId(boxId);
+        if (operations.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_OPERATION));
+        }
+        return operations.stream().map(this.operationConverter::toDTO).collect(Collectors.toList());
+    }
 
-		boxDTO = saveBoxObjet(boxDTO, false);
-		return boxDTO;
+    @Override
+    public BoxDTO updateBox(BoxDTO boxDTO) {
+
+        if (boxDTO == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.messages.get(Constant.MESSAGE_CANT_UPDATE_BOX));
+        }
+        Box previousBox = boxRepository.findByBoxId(boxDTO.getBoxId());
+        if (previousBox == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_BOX));
+        }
+
+        boxDTO = saveBoxObjet(boxDTO, false);
+        return boxDTO;
     }
 
     private BoxDTO saveBoxObjet(BoxDTO boxDTO, Boolean isSave) {
-		try {
-			return  this.boxConverter.toDTO(boxRepository.save(this.boxConverter.toEntity(boxDTO)));
+        try {
+            return this.boxConverter.toDTO(boxRepository.save(this.boxConverter.toEntity(boxDTO)));
 
-		} catch (Exception e) {
-			logger.error(Constant.EXCEPTION, e);
+        } catch (Exception e) {
+            logger.error(Constant.EXCEPTION, e);
             String message = (isSave) ? this.messages.get(Constant.MESSAGE_CANT_CREATE_BOX) : this.messages.get(Constant.MESSAGE_CANT_UPDATE_BOX);
-			throw new ResponseStatusException(HttpStatus.CONFLICT, message);
-		}
-	}
+            throw new ResponseStatusException(HttpStatus.CONFLICT, message);
+        }
+    }
 
     @Override
     public BoxDTO getBoxDateOpen(Date date) {
@@ -140,8 +154,18 @@ public class BoxServiceImpl implements BoxService {
     @Override
     public BoxDTO closeBox(Long id) {
         BoxDTO box = getBoxById(id);
-
-
-        return null;
+        box.setOpen(false);
+        List<Operation> operationList = operationRepository.findAllByBoxId(box.getBoxId());
+        Double operationBuy = operationList.stream()
+                .filter(operation -> operation.getOperationType().nameOperation().equals(BUY.nameOperation())
+                        && !operation.isDisabled())
+                .map(Operation::getTotal).mapToDouble(Double::doubleValue).sum();
+        Double operationSale = operationList.stream()
+                .filter(operation -> operation.getOperationType().nameOperation().equals(SALE.nameOperation())
+                        && !operation.isDisabled())
+                .map(Operation::getTotal).mapToDouble(Double::doubleValue).sum();
+        box.setCashClose(box.getCashOpen() + (operationSale - operationBuy));
+        box.setDateClose(new Date());
+        return saveBoxObjet(box, true);
     }
 }

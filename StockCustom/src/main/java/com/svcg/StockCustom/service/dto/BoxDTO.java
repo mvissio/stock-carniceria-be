@@ -20,7 +20,7 @@ public class BoxDTO {
     @Temporal(TemporalType.DATE)
     private Date dateOpen;
 
-    private String cashClose;
+    private Double cashClose;
 
     @Temporal(TemporalType.DATE)
     private Date dateClose;
@@ -36,7 +36,7 @@ public class BoxDTO {
 		super();
 	}
 
-	public BoxDTO(Long boxId, Double cashOpen, Date dateOpen, String cashClose, Date dateClose, Boolean open,
+	public BoxDTO(Long boxId, Double cashOpen, Date dateOpen, Double cashClose, Date dateClose, Boolean open,
 			@Size(max = 255) String detailClose, List<Operation> operationList) {
 		super();
 		this.boxId = boxId;
@@ -73,11 +73,11 @@ public class BoxDTO {
 		this.dateOpen = dateOpen;
 	}
 
-	public String getCashClose() {
+	public Double getCashClose() {
 		return cashClose;
 	}
 
-	public void setCashClose(String cashClose) {
+	public void setCashClose(Double cashClose) {
 		this.cashClose = cashClose;
 	}
 

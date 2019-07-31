@@ -2,6 +2,7 @@ package com.svcg.StockCustom.repository;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -78,6 +79,9 @@ public interface OperationRepository extends
     //Para busqueda de operaciones de pago en efectivo o con tc por cliente 
     Optional<Page<Operation>> findByClientIdAndPaymentMethod(Long clientId,PaymentMethod paymentMethod, Pageable pageable);
 
-    //Para la busqueda de operaciones por operacion
+    //Para la busqueda de operaciones por operacion con paginacion
     Optional<Page<Operation>> findAllByBoxId(Long boxId, Pageable pageable);
+
+    //Para la busqueda de operaciones por operacion
+    List<Operation> findAllByBoxId(Long boxId);
 }

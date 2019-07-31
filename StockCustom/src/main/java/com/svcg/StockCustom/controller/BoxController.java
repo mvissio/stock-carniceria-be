@@ -60,9 +60,13 @@ public class BoxController {
         return ResponseEntity.ok(boxService.existOpenBox());
     }
 
-    @GetMapping("/operationsBox")
-    public ResponseEntity<Page<OperationDTO>> getOperations(Long boxId, Pageable pageable) {
+    @GetMapping("/operationsBoxPage")
+    public ResponseEntity<Page<OperationDTO>> getOperationsPage(Long boxId, Pageable pageable) {
         return ResponseEntity.ok(boxService.getAllOperationByBoxId(boxId, pageable));
+    }
+    @GetMapping("/operationsBox")
+    public ResponseEntity<List<OperationDTO>> getOperations(Long boxId) {
+        return ResponseEntity.ok(boxService.getAllOperationByBoxId(boxId));
     }
 
     @PostMapping("/closeBox")
