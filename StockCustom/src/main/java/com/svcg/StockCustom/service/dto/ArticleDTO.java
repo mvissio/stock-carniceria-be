@@ -24,9 +24,7 @@ public class ArticleDTO {
 	private String brand;
 
 	@Size(max = 255)
-	private String description;
-		
-	private Date expirationDate;
+	private String description;		
 	
 	private Double currentQuantity;
 
@@ -52,7 +50,7 @@ public class ArticleDTO {
 		this.currentQuantity = currentQuantity;
 		this.currentPrice = currentPrice;
 		this.createDate = createDate;
-	}
+		}
 
 	public Long getArticleId() {
 		return articleId;
@@ -102,14 +100,7 @@ public class ArticleDTO {
 		this.description = description;
 	}
 
-	public Date getExpirationDate() {
-		return expirationDate;
-	}
-
-	public void setExpirationDate(Date expirationDate) {
-		this.expirationDate = expirationDate;
-	}
-
+	
 	public Double getCurrentQuantity() {
 		return currentQuantity;
 	}
@@ -174,7 +165,7 @@ public class ArticleDTO {
 	public String toString() {
 		return "ArticleDTO [articleId=" + articleId + ", measurementUnitId=" + measurementUnitId + ", categoryId="
 				+ categoryId + ", name=" + name + ", brand=" + brand + ", description=" + description
-				+ ", expirationDate=" + expirationDate + ", currentQuantity=" + currentQuantity + ", currentPrice="
+				+ ", currentQuantity=" + currentQuantity + ", currentPrice="
 				+ currentPrice + ", createDate=" + createDate + ", disabledDate=" + disabledDate + ", disabled="
 				+ disabled + "]";
 	}

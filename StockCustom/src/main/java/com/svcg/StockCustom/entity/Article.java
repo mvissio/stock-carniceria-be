@@ -43,13 +43,7 @@ public class Article {
 	@Size(max = 255)
 	@Column(name = "description", length = 255)
 	private String description;
-
-	//vencimiento, a futuro podemos hacer un informe de vencimientos futuros
 	
-	@ColumnDefault("null")
-	@Column(name = "expiration_date",nullable = true)
-	private Date expirationDate;
-
 	//el stock actual del producto. deberia ser nullable = false ??
 	//caso de la carne va a poner por ejemplo 1,5 kg ???
 	
@@ -86,7 +80,7 @@ public class Article {
 	public Article(Long articleId, Long measurementUnitId, Long categoryId,
 			@NotEmpty @Size(max = 100, message = "{validation.rol.username.size}") String name,
 			@Size(max = 100, message = "{validation.rol.username.size}") String brand,
-			@Size(max = 255, message = "{validation.rol.username.size}") String description, Date expirationDate,
+			@Size(max = 255, message = "{validation.rol.username.size}") String description, 
 			Double currentQuantity, Double currentPrice, Date createDate, Date disabledDate, Boolean disabled) {
 		super();
 		this.articleId = articleId;
@@ -95,7 +89,6 @@ public class Article {
 		this.name = name;
 		this.brand = brand;
 		this.description = description;
-		this.expirationDate = expirationDate;
 		this.currentQuantity = currentQuantity;
 		this.currentPrice = currentPrice;
 		this.createDate = createDate;
@@ -142,15 +135,7 @@ public class Article {
 	public void setDisabledDate(Date disabledDate) {
 		this.disabledDate = disabledDate;
 	}
-
-	public Date getExpirationDate() {
-		return expirationDate;
-	}
-
-	public void setExpirationDate(Date expirationDate) {
-		this.expirationDate = expirationDate;
-	}
-
+	
 	public Boolean isDisabled() {
 		return disabled;
 	}
