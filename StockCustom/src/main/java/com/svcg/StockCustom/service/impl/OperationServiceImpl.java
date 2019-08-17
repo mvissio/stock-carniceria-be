@@ -97,10 +97,16 @@ public class OperationServiceImpl implements OperationService {
     @Override
     @Transactional
     public OperationDTO updateOperation(OperationDTO operationDTO) {
+    	Box boxActive = boxRepository.findFirstByOpenTrueOrderByDateOpenDesc();
+
+        if (boxActive == null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, this.messages.get(Constant.MESSAGE_NOT_FOUND_BOXS_OPEN));
+        }
         Optional<Operation> oldOperation = this.operationRepository.findByOperationId(operationDTO.getOperationId());
         Operation newOperation = new Operation();
         newOperation.setCreateDate(new Date());
         newOperation.setCreateDateTime(new Date());
+        newOperation.setBoxId(boxActive.getBoxId());
         newOperation.setOperationStatus(operationDTO.getOperationStatus());
         newOperation.setDisabled(operationDTO.getDisabled());
         newOperation.setOperationDetails(this.operationDetailConverter.toEntity(operationDTO.getOperationDetails()));
