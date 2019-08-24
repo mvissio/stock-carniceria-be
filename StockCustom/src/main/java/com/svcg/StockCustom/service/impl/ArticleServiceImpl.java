@@ -93,7 +93,7 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public List<ArticleDTO> getArticlesByNameOrBrandOrCodeLike(String search) {
 		Optional<List<Article>> articles = this.articleRepository
-				.findByNameContainingOrBrandContaining(search, search);
+				.findByNameContainingOrBrandContainingOrCodeContaining(search, search,search);
 		if (!articles.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLE));
 		}

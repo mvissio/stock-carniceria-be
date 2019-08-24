@@ -25,5 +25,5 @@ public interface ArticleRepository extends JpaRepository<Article,Serializable> {
     
     Optional<Page<Article>> findByDisabledIsFalse(Pageable pageable);
 
-	Optional<List<Article>> findByNameContainingOrBrandContaining(String name, String brand);
+	Optional<List<Article>> findByNameContainingOrBrandContainingOrCodeContaining(String name, String brand, String code);
 }
