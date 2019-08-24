@@ -26,14 +26,14 @@ public class Article {
 	@NotNull
 	@Column(name = "measurement_unit_id")
 	private Long measurementUnitId;
-	
+
 	@NotNull
 	@Column(name = "category_id")
 	private Long categoryId;
 
 	@NotEmpty
 	@Size(max = 100)
-	@Column(name = "name", length = 100 ,nullable = false)
+	@Column(name = "name", length = 100, nullable = false)
 	private String name;
 
 	@Size(max = 100)
@@ -43,19 +43,18 @@ public class Article {
 	@Size(max = 255)
 	@Column(name = "description", length = 255)
 	private String description;
-	
-	//el stock actual del producto. deberia ser nullable = false ??
-	//caso de la carne va a poner por ejemplo 1,5 kg ???
-	
+
+	// el stock actual del producto. deberia ser nullable = false ??
+	// caso de la carne va a poner por ejemplo 1,5 kg ???
+
 	@Column(name = "current_quantity")
 	private Double currentQuantity;
 
 	/*
 	 * este es el precio que tiene el producto al momento de ser vendido se
 	 * diferencia del precio en el detalle operacion que nos sirve para dejar un
-	 * registro a que precio se vendio en el momento de la compra si se
-	 * actualiza el precio en el articulo, no se actualiza en el detalle de la
-	 * operacion
+	 * registro a que precio se vendio en el momento de la compra si se actualiza el
+	 * precio en el articulo, no se actualiza en el detalle de la operacion
 	 */
 
 	@Column(name = "current_price", nullable = false)
@@ -69,19 +68,21 @@ public class Article {
 
 	@Column(name = "disabled")
 	private Boolean disabled;
-	
-	
+
+	// pude ser nulo, si carga un articulo en un momento que no le funcione el
+	// lector o no genero el código
+	@Column(name = "code")
+	private String code;
 
 	public Article() {
-		
+
 	}
-	
 
 	public Article(Long articleId, Long measurementUnitId, Long categoryId,
 			@NotEmpty @Size(max = 100, message = "{validation.rol.username.size}") String name,
 			@Size(max = 100, message = "{validation.rol.username.size}") String brand,
-			@Size(max = 255, message = "{validation.rol.username.size}") String description, 
-			Double currentQuantity, Double currentPrice, Date createDate, Date disabledDate, Boolean disabled) {
+			@Size(max = 255, message = "{validation.rol.username.size}") String description, Double currentQuantity,
+			Double currentPrice, Date createDate, Date disabledDate, Boolean disabled, String code) {
 		super();
 		this.articleId = articleId;
 		this.measurementUnitId = measurementUnitId;
@@ -94,6 +95,7 @@ public class Article {
 		this.createDate = createDate;
 		this.disabledDate = disabledDate;
 		this.disabled = disabled;
+		this.code = code;
 	}
 
 	public String getName() {
@@ -135,7 +137,7 @@ public class Article {
 	public void setDisabledDate(Date disabledDate) {
 		this.disabledDate = disabledDate;
 	}
-	
+
 	public Boolean isDisabled() {
 		return disabled;
 	}
@@ -159,7 +161,7 @@ public class Article {
 	public void setMeasurementUnitId(Long measurementUnitId) {
 		this.measurementUnitId = measurementUnitId;
 	}
-		
+
 	public Double getCurrentQuantity() {
 		return currentQuantity;
 	}
@@ -175,24 +177,30 @@ public class Article {
 	public void setCurrentPrice(Double currentPrice) {
 		this.currentPrice = currentPrice;
 	}
-	
-	
 
 	public Long getCategoryId() {
 		return categoryId;
 	}
 
-
 	public void setCategoryId(Long categoryId) {
 		this.categoryId = categoryId;
 	}
 
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public Boolean getDisabled() {
+		return disabled;
+	}
 
 	@Override
 	public String toString() {
-		return "id: " + articleId + " name: " + name + " brand: " + brand + " current quantity: " +  currentQuantity;
-				}
-	
-	
+		return "id: " + articleId + " name: " + name + " brand: " + brand + " current quantity: " + currentQuantity;
+	}
 
 }

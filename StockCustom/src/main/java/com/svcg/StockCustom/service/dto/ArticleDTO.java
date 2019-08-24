@@ -36,12 +36,14 @@ public class ArticleDTO {
 
 	private Boolean disabled;
 	
+	private String code;
+	
 	public ArticleDTO() {
 		super();
 	}
 
 	public ArticleDTO(@NotNull Long measurementUnitId, @NotNull Long categoryId, @NotEmpty @Size(max = 100) String name,
-			@Size(max = 100) String brand, Double currentQuantity, Double currentPrice, Date createDate) {
+			@Size(max = 100) String brand, Double currentQuantity, Double currentPrice, Date createDate, String code) {
 		super();
 		this.measurementUnitId = measurementUnitId;
 		this.categoryId = categoryId;
@@ -50,6 +52,7 @@ public class ArticleDTO {
 		this.currentQuantity = currentQuantity;
 		this.currentPrice = currentPrice;
 		this.createDate = createDate;
+		this.code = code;
 		}
 
 	public Long getArticleId() {
@@ -140,6 +143,15 @@ public class ArticleDTO {
 	public void setDisabled(Boolean disabled) {
 		this.disabled = disabled;
 	}
+		
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
 
 	@Override
 	public int hashCode() {
@@ -167,7 +179,7 @@ public class ArticleDTO {
 				+ categoryId + ", name=" + name + ", brand=" + brand + ", description=" + description
 				+ ", currentQuantity=" + currentQuantity + ", currentPrice="
 				+ currentPrice + ", createDate=" + createDate + ", disabledDate=" + disabledDate + ", disabled="
-				+ disabled + "]";
+				+ disabled + ", code=" + code + "]";
 	}
     
 }
