@@ -182,8 +182,7 @@ public class OperationServiceImpl implements OperationService {
             // actualizo el stock del producto
             Optional<Article> article = articleRepository
                     .findByArticleId(detailOperation.getArticleId());
-            //TODO: solo si la categoria no es carne(categoria carne es la con id 1) se debe sacar cuando este la funcionalidad de la balanza electronica 
-            if (article.isPresent() && article.get().getCategoryId() != 1) {
+            if (article.isPresent()) {
                 Double newQuantityArticle;
                 switch (newOperation.getOperationType()) {
                     case BUY:
