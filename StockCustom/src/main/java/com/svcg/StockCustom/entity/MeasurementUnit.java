@@ -20,6 +20,7 @@ public class MeasurementUnit {
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
 
+	@Size(max = 5)
 	@Column(name = "symbol", nullable = false, length = 5)
 	private String symbol;
 

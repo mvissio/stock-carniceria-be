@@ -29,7 +29,7 @@ public class MeasurementUnitDTO {
 		super();
 	}
 
-	public MeasurementUnitDTO(Long measurementUnitId, @NotEmpty @Size(max = 100) String name, String symbol,
+	public MeasurementUnitDTO(Long measurementUnitId, @NotEmpty @Size(max = 100) String name, @Size(max = 5) String symbol,
 			Date createDate, Date disabledDate, Boolean disabled) {
 		this.measurementUnitId = measurementUnitId;
 		this.name = name;
