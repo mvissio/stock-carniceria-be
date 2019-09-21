@@ -394,21 +394,25 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	public MonthlyOperationsReportDTO getMonthlyOperationsReport(int month, int year) {
-		
-		//obtengo cantidad de días maximos para el mes indicado
+
+		// obtengo cantidad de días maximos para el mes indicado
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.YEAR, year);
-		calendar.set(Calendar.MONTH, month);
+		calendar.set(Calendar.MONTH - 1, month);
 		int numDays = calendar.getActualMaximum(Calendar.DATE);
 
-		Date fromDate  = new GregorianCalendar(year, month , 1).getTime();
-		Date toDate = new GregorianCalendar(year, month - 1, numDays ).getTime();
+		Date fromDate = new GregorianCalendar(year, month - 1, 1).getTime();
+		Date toDate = new GregorianCalendar(year, month - 1, numDays).getTime();
 
 		MonthlyOperationsReportDTO monthlyOperationsReportDTO = new MonthlyOperationsReportDTO();
-		Double totalSale = operationRepository.sumTotalOperation(fromDate, toDate, OperationType.SALE);
-		Double totalBuy = operationRepository.sumTotalOperation(fromDate, toDate, OperationType.BUY);
-		monthlyOperationsReportDTO.setTotalBuy(totalBuy);
-		monthlyOperationsReportDTO.setTotalSale(totalSale);
+		Optional<Double> totalSale = operationRepository.sumTotalOperation(fromDate, toDate, OperationType.SALE);
+		Optional<Double> totalBuy = operationRepository.sumTotalOperation(fromDate, toDate, OperationType.BUY);
+		if (totalBuy.isPresent()) {
+			monthlyOperationsReportDTO.setTotalBuy(totalBuy.get());
+		}
+		if (totalSale.isPresent()) {
+			monthlyOperationsReportDTO.setTotalSale(totalSale.get());
+		}
 		return monthlyOperationsReportDTO;
 	}
 

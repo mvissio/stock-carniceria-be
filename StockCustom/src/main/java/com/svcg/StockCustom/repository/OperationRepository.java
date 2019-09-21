@@ -89,7 +89,7 @@ public interface OperationRepository extends
         
     //Query para informe mensual
     @Query("SELECT SUM(o.total) FROM Operation o where o.createDate BETWEEN :fromDate AND :toDate AND o.operationType = :operationType")
-    double sumTotalOperation(Date fromDate,Date toDate, OperationType operationType);
+    Optional<Double> sumTotalOperation(Date fromDate,Date toDate, OperationType operationType);
     
        
     
