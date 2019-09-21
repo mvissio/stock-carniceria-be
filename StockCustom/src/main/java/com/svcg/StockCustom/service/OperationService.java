@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.svcg.StockCustom.enums.OperationType;
 import com.svcg.StockCustom.enums.PaymentMethod;
+import com.svcg.StockCustom.service.dto.MonthlyOperationsReportDTO;
 import com.svcg.StockCustom.service.dto.OperationDTO;
 
 import org.springframework.data.domain.Page;
@@ -78,4 +79,7 @@ public interface OperationService {
 	// Para busqueda de operaciones de pago en efectivo o con tc por cliente
 	Page<OperationDTO> getOperationsByClientIdAndPaymentMethod(Long clientId, PaymentMethod paymentMethod, Pageable pageable);
 
+	//**OBTENGO EL TOTAL MENSUAL DE OPERACIONES POR MES **/
+	MonthlyOperationsReportDTO getMonthlyOperationsReport(int month, int year);
+	
 }

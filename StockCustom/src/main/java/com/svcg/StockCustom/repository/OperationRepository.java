@@ -8,6 +8,8 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.svcg.StockCustom.entity.Operation;
 import com.svcg.StockCustom.enums.OperationType;
@@ -84,4 +86,12 @@ public interface OperationRepository extends
 
     //Para la busqueda de operaciones por operacion
     List<Operation> findAllByBoxId(Long boxId);
+        
+    //Query para informe mensual
+    @Query("SELECT SUM(o.total) FROM Operation o where o.createDate BETWEEN :fromDate AND :toDate AND o.operationType = :operationType")
+    double sumTotalOperation(Date fromDate,Date toDate, OperationType operationType);
+    
+       
+    
+    
 }
