@@ -4,13 +4,9 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import com.svcg.StockCustom.entity.Box;
-import com.svcg.StockCustom.repository.BoxRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +21,14 @@ import org.springframework.web.server.ResponseStatusException;
 import com.svcg.StockCustom.component.Messages;
 import com.svcg.StockCustom.constant.Constant;
 import com.svcg.StockCustom.entity.Article;
+import com.svcg.StockCustom.entity.Box;
 import com.svcg.StockCustom.entity.Operation;
 import com.svcg.StockCustom.entity.OperationDetail;
 import com.svcg.StockCustom.enums.OperationStatus;
 import com.svcg.StockCustom.enums.OperationType;
 import com.svcg.StockCustom.enums.PaymentMethod;
 import com.svcg.StockCustom.repository.ArticleRepository;
+import com.svcg.StockCustom.repository.BoxRepository;
 import com.svcg.StockCustom.repository.OperationDetailRepository;
 import com.svcg.StockCustom.repository.OperationRepository;
 import com.svcg.StockCustom.service.OperationService;
@@ -405,14 +403,28 @@ public class OperationServiceImpl implements OperationService {
 		Date toDate = new GregorianCalendar(year, month, numDays).getTime();
 
 		MonthlyOperationsReportDTO monthlyOperationsReportDTO = new MonthlyOperationsReportDTO();
-		Optional<Double> totalSale = operationRepository.sumTotalOperation(fromDate, toDate, OperationType.SALE);
-		Optional<Double> totalBuy = operationRepository.sumTotalOperation(fromDate, toDate, OperationType.BUY);
-		if (totalBuy.isPresent()) {
-			monthlyOperationsReportDTO.setTotalBuy(totalBuy.get());
+		Optional<Double> totalMoneySale = operationRepository.sumTotalMonayOperation(fromDate, toDate, OperationType.SALE);
+		Optional<Double> totalMonayBuy = operationRepository.sumTotalMonayOperation(fromDate, toDate, OperationType.BUY);
+		
+		Optional<Integer> totalCountSale = operationRepository.countTotalMonayOperation(fromDate, toDate, OperationType.SALE);
+		Optional<Integer> totalCountBuy = operationRepository.countTotalMonayOperation(fromDate, toDate, OperationType.BUY);
+		
+		
+		if (totalMonayBuy.isPresent()) {
+			monthlyOperationsReportDTO.setTotalMoneyBuy(totalMonayBuy.get());
 		}
-		if (totalSale.isPresent()) {
-			monthlyOperationsReportDTO.setTotalSale(totalSale.get());
+		if (totalMoneySale.isPresent()) {
+			monthlyOperationsReportDTO.setTotalMoneySale(totalMoneySale.get());
 		}
+		
+		if (totalCountSale.isPresent()) {
+			monthlyOperationsReportDTO.setTotalCountSale(totalCountSale.get());
+		}
+		if (totalCountBuy.isPresent()) {
+			monthlyOperationsReportDTO.setTotalCountBuy(totalCountBuy.get());
+		}
+		
+		
 		return monthlyOperationsReportDTO;
 	}
 

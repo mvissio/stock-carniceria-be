@@ -88,9 +88,12 @@ public interface OperationRepository extends
     List<Operation> findAllByBoxId(Long boxId);
         
     //Query para informe mensual
-    @Query("SELECT SUM(o.total) FROM Operation o where o.createDate BETWEEN :fromDate AND :toDate AND o.operationType = :operationType")
-    Optional<Double> sumTotalOperation(Date fromDate,Date toDate, OperationType operationType);
+    @Query("SELECT SUM(o.total) FROM Operation o where o.createDate BETWEEN :fromDate AND :toDate AND o.operationType = :operationType AND o.disabled <> 1")
+    Optional<Double> sumTotalMonayOperation(Date fromDate,Date toDate, OperationType operationType);
     
+  //Query para informe mensual
+    @Query("SELECT COUNT(o) FROM Operation o where o.createDate BETWEEN :fromDate AND :toDate AND o.operationType = :operationType AND o.disabled <> 1")
+    Optional<Integer> countTotalMonayOperation(Date fromDate,Date toDate, OperationType operationType);
        
     
     

@@ -2,37 +2,62 @@ package com.svcg.StockCustom.service.dto;
 
 public class MonthlyOperationsReportDTO {
 
-	private double totalSale;
+	private double totalMoneySale;
 	
-	private double totalBuy;
+	private double totalMoneyBuy;
+	
+	private double totalCountSale;
+	
+	private double totalCountBuy;
+	
 		
 	public MonthlyOperationsReportDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public MonthlyOperationsReportDTO(double totalSale, double totalBuy) {
-		super();
-		this.totalSale = totalSale;
-		this.totalBuy = totalBuy;
+
+	public double getTotalMoneySale() {
+		return totalMoneySale;
 	}
 
-	public double getTotalSale() {
-		return totalSale;
+
+	public void setTotalMoneySale(double totalMoneySale) {
+		this.totalMoneySale = totalMoneySale;
 	}
 
-	public void setTotalSale(double totalSale) {
-		this.totalSale = totalSale;
+
+	public double getTotalMoneyBuy() {
+		return totalMoneyBuy;
 	}
 
-	public double getTotalBuy() {
-		return totalBuy;
+
+	public void setTotalMoneyBuy(double totalMoneyBuy) {
+		this.totalMoneyBuy = totalMoneyBuy;
 	}
 
-	public void setTotalBuy(double totalBuy) {
-		this.totalBuy = totalBuy;
+
+	public double getTotalCountSale() {
+		return totalCountSale;
 	}
+
+
+	public void setTotalCountSale(double totalCountSale) {
+		this.totalCountSale = totalCountSale;
+	}
+
+
+	public double getTotalCountBuy() {
+		return totalCountBuy;
+	}
+
+
+	public void setTotalCountBuy(double totalCountBuy) {
+		this.totalCountBuy = totalCountBuy;
+	}
+
 	
+		
 	
 	
 	
