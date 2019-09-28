@@ -398,11 +398,11 @@ public class OperationServiceImpl implements OperationService {
 		// obtengo cantidad de días maximos para el mes indicado
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.YEAR, year);
-		calendar.set(Calendar.MONTH - 1, month);
+		calendar.set(Calendar.MONTH, month);
 		int numDays = calendar.getActualMaximum(Calendar.DATE);
 
-		Date fromDate = new GregorianCalendar(year, month - 1, 1).getTime();
-		Date toDate = new GregorianCalendar(year, month - 1, numDays).getTime();
+		Date fromDate = new GregorianCalendar(year, month, 1).getTime();
+		Date toDate = new GregorianCalendar(year, month, numDays).getTime();
 
 		MonthlyOperationsReportDTO monthlyOperationsReportDTO = new MonthlyOperationsReportDTO();
 		Optional<Double> totalSale = operationRepository.sumTotalOperation(fromDate, toDate, OperationType.SALE);
