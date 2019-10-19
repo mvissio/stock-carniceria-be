@@ -69,6 +69,9 @@ public class Article {
 
 	@Column(name = "disabled")
 	private Boolean disabled;
+
+	@Column(name = "code_article")
+	private Long codeArticle;
 	
 	
 
@@ -81,7 +84,7 @@ public class Article {
 			@NotEmpty @Size(max = 100, message = "{validation.rol.username.size}") String name,
 			@Size(max = 100, message = "{validation.rol.username.size}") String brand,
 			@Size(max = 255, message = "{validation.rol.username.size}") String description, 
-			Double currentQuantity, Double currentPrice, Date createDate, Date disabledDate, Boolean disabled) {
+			Double currentQuantity, Double currentPrice, Date createDate, Date disabledDate, Boolean disabled, Long codeArticle) {
 		super();
 		this.articleId = articleId;
 		this.measurementUnitId = measurementUnitId;
@@ -94,6 +97,7 @@ public class Article {
 		this.createDate = createDate;
 		this.disabledDate = disabledDate;
 		this.disabled = disabled;
+		this.codeArticle= codeArticle;
 	}
 
 	public String getName() {
@@ -187,6 +191,13 @@ public class Article {
 		this.categoryId = categoryId;
 	}
 
+	public Long getCodeArticle() {
+		return codeArticle;
+	}
+
+	public void setCodeArticle(Long codeArticle) {
+		this.codeArticle = codeArticle;
+	}
 
 	@Override
 	public String toString() {
