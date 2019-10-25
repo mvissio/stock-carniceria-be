@@ -17,6 +17,8 @@ public interface ArticleService {
 
     ArticleDTO getArticleById(Long id);
 
+    ArticleDTO getArticleByCodebar(Long codeArticle);
+
     ArticleDTO updateArticle(ArticleDTO articleDTO);
     
     ArticleDTO enabledArticle(Boolean disabled, Long id);

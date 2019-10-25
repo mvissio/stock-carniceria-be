@@ -96,6 +96,10 @@ public class ArticleController {
     	this.articleService.deleteArticle(id);
     	return ResponseEntity.noContent().build();
     }
-    
+
+    @GetMapping("/barcode/{codeArticle}")
+    public ResponseEntity<ArticleDTO> getArticleByCodeArticle(@PathVariable("codeArticle")Long codeArticle) {
+        return ResponseEntity.ok(this.articleService.getArticleByCodebar(codeArticle));
+    }
 
 }

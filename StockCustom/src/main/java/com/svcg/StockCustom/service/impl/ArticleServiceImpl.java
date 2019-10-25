@@ -112,6 +112,16 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	@Override
+	public ArticleDTO getArticleByCodebar(Long codeArticle) {
+		Optional<Article> article = this.articleRepository.findByCodeArticle(codeArticle);
+		if (!article.isPresent()) {
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT, this.messages.get(Constant.MESSAGE_NOT_FOUND_ARTICLE));
+		}
+
+		return this.articleConverter.toDTO(article.get());
+	}
+
+	@Override
 	public ArticleDTO updateArticle(ArticleDTO articleDTO) {
 
 		if (articleDTO == null) {
